@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es-SV">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0a1628" />
+  <meta name="description" content="Simulador Declaración de ISR Anual F-11 en El Salvador 2026." />
+  <title>ISR Anual F-11 — RentaSV El Salvador 2026</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: ['selector', '[data-theme="dark"]'], theme: { extend: { fontFamily: { sans: ['Outfit', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'], }, colors: { ink: { DEFAULT: '#0a1628', 2: '#1e2d45', 3: '#334155' }, primary: { DEFAULT: '#1a56db', dark: '#1e40af', light: '#eff6ff', mid: '#3b82f6' }, }, }, }, };
+  </script>
+
+  <link rel="stylesheet" href="/css/app.css" />
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+</head>
+<body class="font-sans antialiased bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen">
+
+<div id="app-isranual">
+
+<!-- Navbar -->
+<header class="sticky top-0 z-50 bg-[#0a1628]/95 backdrop-blur border-b border-white/[0.07]">
+  <div class="max-w-4xl mx-auto px-5 h-16 flex items-center justify-between gap-4">
+    <div class="flex items-center gap-4">
+      <a href="/" class="text-slate-500 hover:text-white transition-colors text-sm flex items-center gap-1.5"><span class="hidden sm:inline">Inicio</span></a>
+      <div class="h-5 w-px bg-white/10"></div>
+      <a href="/" class="flex items-center gap-2">
+        <div class="w-7 h-7 bg-primary rounded-lg flex items-center justify-center">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </div>
+        <span class="font-extrabold text-white tracking-tight">Renta<span class="text-primary-mid">SV</span></span>
+      </a>
+    </div>
+
+    <!-- Nav tabs -->
+    <nav class="hidden md:flex items-center gap-1">
+      <a href="/salario.html" class="text-xs font-semibold px-3 py-1.5 rounded-full transition-all text-slate-500 hover:text-white">Salario</a>
+      <a href="/liquidaciones.html" class="text-xs font-semibold px-3 py-1.5 rounded-full transition-all text-slate-500 hover:text-white">Liquidaciones</a>
+      <a href="/isr-anual.html" class="text-xs font-semibold px-3 py-1.5 rounded-full transition-all bg-white/15 text-white">ISR Anual</a>
+      <a href="/comparador.html" class="text-xs font-semibold px-3 py-1.5 rounded-full transition-all text-slate-500 hover:text-white">Asal. vs Freelance</a>
+    </nav>
+
+    <button @click="toggleTheme" class="theme-toggle shrink-0">
+      <span class="iconify text-lg" data-icon="lucide:sun" v-show="!isDarkMode"></span>
+      <span class="iconify text-lg" data-icon="lucide:moon" v-show="isDarkMode"></span>
+    </button>
+  </div>
+</header>
+
+<div class="bg-[#0a1628] border-b border-white/[0.07] py-10">
+  <div class="max-w-2xl mx-auto px-5 text-center">
+    <h1 class="text-2xl font-bold text-white mb-1.5">Simulador ISR Anual F-11</h1>
+    <p class="text-sm text-slate-400">Anticipa tu declaración y previene sorpresas ante Hacienda.</p>
+  </div>
+</div>
+
+<main class="max-w-2xl mx-auto px-5 py-10">
+  <div class="tab-nav mb-5">
+    <a href="/salario.html" class="tab-btn" style="text-decoration:none;"><span class="tab-text">Salario Neto</span></a>
+    <a href="/liquidaciones.html" class="tab-btn" style="text-decoration:none;"><span class="tab-text">Liquidación</span></a>
+    <a href="/isr-anual.html" class="tab-btn active" style="text-decoration:none;"><span class="tab-text">F-11</span></a>
+    <a href="/comparador.html" class="tab-btn" style="text-decoration:none;"><span class="tab-text">Freelance</span></a>
+  </div>
+
+  <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden mb-5">
+      <div class="p-7">
+      <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-5">Ingresa salarios mes a mes y retenciones por servicios profesionales para generar tu cálculo general anual.</p>
+
+      <!-- Relleno rápido -->
+      <div class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-4 mb-5">
+        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Relleno rápido — mismo salario todos los meses</p>
+        <div class="flex gap-2">
+          <div class="inp-prefix flex-1">
+            <span class="inp-prefix-symbol">$</span>
+            <input id="salarioRapido" v-model="salarioRapidoInput" type="number" min="0" step="0.01" placeholder="Salario uniforme" class="inp" style="padding:10px 10px 10px 28px;" />
+          </div>
+          <button class="btn-accent" @click="llenarSalarioUniforme(salarioRapidoInput)">Aplicar a todos</button>
+        </div>
+      </div>
+
+      <!-- Toggle meses -->
+      <button @click="mostrandoMeses=!mostrandoMeses"
+              class="btn-toggle-meses w-full flex items-center justify-between bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-3 cursor-pointer font-semibold text-sm text-slate-600 dark:text-slate-300 mb-3 transition-all hover:border-slate-300 dark:hover:border-slate-500">
+        <span>Detalle mensual interactivo ({{ mesesDeclaracion.filter(m=>m.activo).length }}/12 activos)</span>
+        <svg :style="{ transform: mostrandoMeses?'rotate(180deg)':'rotate(0)', transition:'transform .2s' }" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+
+      <!-- Tabla de meses -->
+      <div v-if="mostrandoMeses" class="flex flex-col gap-1.5 mb-4 p-4 border border-slate-200 dark:border-slate-700 rounded-xl bg-slate-50 dark:bg-slate-900/50">
+        <div class="grid grid-cols-[44px_1fr_1fr] gap-1.5 px-0.5 mb-1">
+          <div></div>
+          <p class="text-xs text-slate-400 font-medium">Salario bruto</p>
+          <p class="text-xs text-slate-400 font-medium">Ret. servicios (10%)</p>
+        </div>
+        <div v-for="mes in mesesDeclaracion" :key="mes.index" class="grid grid-cols-[44px_1fr_1fr] gap-1.5 items-center">
+          <button @click="toggleMes(mes.index)" :class="['mes-chip', mes.activo?'on':'off']">{{ mes.nombre.slice(0,3) }}</button>
+          <div class="inp-prefix">
+            <span class="inp-prefix-symbol" style="font-size:.82rem;">$</span>
+            <input v-model="mes.salarioBruto" type="number" min="0" step="0.01"
+                   :disabled="!mes.activo" :placeholder="mes.activo?'Salario':'—'"
+                   class="inp" style="padding:8px 8px 8px 26px; font-size:.85rem;"
+                   :style="{ opacity: mes.activo?1:0.4 }" />
+          </div>
+          <div class="inp-prefix">
+            <span class="inp-prefix-symbol" style="font-size:.82rem;">$</span>
+            <input v-model="mes.retencionServicios" type="number" min="0" step="0.01"
+                   :disabled="!mes.activo" placeholder="0.00"
+                   class="inp" style="padding:8px 8px 8px 26px; font-size:.85rem;"
+                   :style="{ opacity: mes.activo?1:0.4 }" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Otros ingresos y deducciones -->
+      <div class="grid grid-cols-2 gap-3 mb-6">
+        <div>
+          <label class="field-label">Otros ingresos anuales</label>
+          <div class="inp-prefix">
+            <span class="inp-prefix-symbol">$</span>
+            <input v-model="otrosIngresos" type="number" min="0" step="0.01" placeholder="0.00" class="inp" />
+          </div>
+        </div>
+        <div>
+          <label class="field-label">Gastos deducibles</label>
+          <div class="inp-prefix">
+            <span class="inp-prefix-symbol">$</span>
+            <input v-model="gastosDeducibles" type="number" min="0" step="0.01" placeholder="0.00" class="inp" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Botones -->
+      <div class="flex gap-2.5 mb-6">
+        <button class="btn-main flex-1" @click="simularAnual">Simular declaración</button>
+        <button class="btn-ghost" @click="limpiarAnual">Limpiar</button>
+      </div>
+
+      <!-- Resultado anual -->
+      <div v-if="resultadoAnual" class="result-card">
+        <!-- Saldo -->
+        <div :class="resultadoAnual.tipoSaldo==='A_FAVOR' ? 'saldo-favor' : 'saldo-pagar'" class="mb-4">
+          <p class="text-sm font-semibold mb-2" :class="resultadoAnual.tipoSaldo==='A_FAVOR' ? 'text-emerald-700' : 'text-red-600'">
+            {{ resultadoAnual.tipoSaldo==='A_FAVOR' ? '✓ El Estado debe devolverte' : '⚠ Deberás pagar en abril 2026' }}
+          </p>
+          <div class="saldo-num" :class="resultadoAnual.tipoSaldo==='A_FAVOR' ? 'text-emerald-700' : 'text-red-600'">
+            {{ fmt(resultadoAnual.saldo) }}
+          </div>
+          <p class="text-sm mt-2" :class="resultadoAnual.tipoSaldo==='A_FAVOR' ? 'text-emerald-600' : 'text-red-500'">
+            Tasa efectiva ISR: {{ pct(resultadoAnual.tasaEfectiva) }}
+          </p>
+        </div>
+
+        <!-- Desglose -->
+        <div class="result-panel">
+          <div class="result-panel-header"><span class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Desglose anual</span></div>
+          <div class="result-row"><span class="result-row-label">Total salarios brutos</span><span class="result-row-value">{{ fmt(resultadoAnual.totalSalariosBruto) }}</span></div>
+          <div class="result-row"><span class="result-row-label">Deducción ISSS anual</span><span class="result-row-value negative">— {{ fmt(resultadoAnual.deduccionISSSAnual) }}</span></div>
+          <div class="result-row"><span class="result-row-label">Deducción AFP anual</span><span class="result-row-value negative">— {{ fmt(resultadoAnual.deduccionAFPAnual) }}</span></div>
+          <div v-if="resultadoAnual.gastosDeducibles>0" class="result-row"><span class="result-row-label">Gastos deducibles</span><span class="result-row-value negative">— {{ fmt(resultadoAnual.gastosDeducibles) }}</span></div>
+          <div class="result-row" style="background:#f0f9ff;"><span class="text-sm text-blue-700 font-medium">Renta neta anual base</span><span class="font-bold text-blue-700 font-mono text-sm">{{ fmt(resultadoAnual.rentaNetaAnual) }}</span></div>
+          <div class="result-row"><span class="result-row-label">ISR determinado por ley</span><span class="result-row-value">{{ fmt(resultadoAnual.isrDeterminado) }}</span></div>
+          <div class="result-row"><span class="result-row-label">Retenciones pagadas mes a mes</span><span class="result-row-value negative">— {{ fmt(resultadoAnual.totalRetencionesAsalariado) }}</span></div>
+          <div v-if="resultadoAnual.totalRetencionesServicios>0" class="result-row"><span class="result-row-label">Retenciones por honorarios (10%)</span><span class="result-row-value negative">— {{ fmt(resultadoAnual.totalRetencionesServicios) }}</span></div>
+        </div>
+
+        <button @click="generarPDF" class="btn-ghost w-full mt-3 text-center text-sm">
+          Exportar borrador F-11 en PDF
+        </button>
+      </div>
+
+    </div>
+  </div>
+</main>
+</div>
+<script type="module">import '/js/app-isranual.js';</script>
+</body>
+</html>

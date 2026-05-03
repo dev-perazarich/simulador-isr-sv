@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="es-SV">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0a1628" />
+  <meta name="description" content="Calculadora gratuita de ISR, salario neto, aguinaldo e indemnización para El Salvador 2025-2026. 100% privada, sin servidores, sin registro." />
+  <title>RentaSV — Simulador ISR El Salvador 2026</title>
+  <link rel="manifest" href="/manifest.json" />
+
+  <!-- Fuentes -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: ['selector', '[data-theme="dark"]'],
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Outfit', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            ink: { DEFAULT: '#0a1628', 2: '#1e2d45', 3: '#334155' },
+            primary: { DEFAULT: '#1a56db', dark: '#1e40af', light: '#eff6ff', mid: '#3b82f6' },
+          },
+          maxWidth: { '1100': '1100px', '720': '720px', '780': '780px' },
+        },
+      },
+    };
+  </script>
+
+  <!-- Estilos custom (solo lo que Tailwind no cubre) -->
+  <link rel="stylesheet" href="/css/app.css" />
+
+  <!-- Vue 3 -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+
+  <!-- Iconify para íconos en lugar de emojis -->
+  <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+</head>
+<body class="font-sans antialiased bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 overflow-x-hidden">
+
+<div id="app">
+
+<!-- ═══════════════════════════════════════ NAVBAR ══════════════════════════════════════ -->
+<header class="fixed top-0 inset-x-0 z-50 bg-[#0a1628]/95 backdrop-blur border-b border-white/[0.07]">
+  <div class="max-w-[1100px] mx-auto px-5 h-16 flex items-center justify-between gap-4">
+
+    <!-- Logo -->
+    <a href="/" class="flex items-center gap-2.5 shrink-0">
+      <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+        </svg>
+      </div>
+      <span class="font-extrabold text-white tracking-tight text-lg">Renta<span class="text-primary-mid">SV</span></span>
+    </a>
+
+    <!-- Nav links (desktop) -->
+    <nav class="hidden md:flex items-center gap-6">
+      <a href="#caracteristicas" class="text-sm text-slate-400 hover:text-white transition-colors">Qué incluye</a>
+      <a href="#como-funciona"   class="text-sm text-slate-400 hover:text-white transition-colors">Cómo funciona</a>
+      <a href="/salario.html"
+         class="bg-primary hover:bg-primary-dark text-white text-sm font-semibold px-5 py-2.5 rounded-full transition-all hover:-translate-y-px hover:shadow-lg hover:shadow-blue-900/40">
+        Usar ahora →
+      </a>
+    </nav>
+
+    <!-- Theme toggle -->
+    <button @click="toggleTheme" class="theme-toggle shrink-0" :title="isDarkMode ? 'Modo claro' : 'Modo oscuro'">
+      <span class="iconify text-lg" data-icon="lucide:sun" v-show="!isDarkMode"></span>
+      <span class="iconify text-lg" data-icon="lucide:moon" v-show="isDarkMode"></span>
+    </button>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════ HERO ════════════════════════════════════════ -->
+<section id="inicio" class="relative overflow-hidden bg-[#0a1628] min-h-screen flex flex-col justify-center pt-16">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow-2"></div>
+
+  <div class="relative z-10 max-w-[1100px] mx-auto px-5 py-24 lg:py-32">
+    <div class="max-w-[680px]">
+
+      <!-- Badge -->
+      <div class="inline-flex items-center gap-2 bg-blue-500/15 border border-blue-400/30 text-blue-300 rounded-full px-4 py-1.5 text-sm font-medium mb-8">
+        <div class="hero-badge-dot"></div>
+        Actualizado · Parámetros 2025–2026 vigentes
+      </div>
+
+      <!-- Título -->
+      <h1 class="text-5xl sm:text-6xl lg:text-[4.2rem] font-black tracking-tight text-white leading-[1.06] mb-6">
+        Tu salario, calculado<br>
+        <span class="hero-title-grad">sin pagar a nadie.</span>
+      </h1>
+
+      <!-- Subtítulo -->
+      <p class="text-lg text-slate-400 max-w-xl leading-relaxed mb-10">
+        Descubre exactamente cuánto te descuenta el fisco cada mes. Simula tu declaración anual, calcula tu aguinaldo e indemnización — en segundos, gratis y sin salir de tu navegador.
+      </p>
+
+      <!-- CTAs -->
+      <div class="flex flex-wrap gap-4 mb-12">
+        <a href="/salario.html"
+           class="inline-flex items-center gap-2 bg-primary hover:bg-primary-dark text-white font-semibold px-7 py-4 rounded-xl transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-900/40 text-base">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/>
+          </svg>
+          Calcular mi salario ahora
+        </a>
+        <a href="#como-funciona"
+           class="inline-flex items-center gap-2 bg-white/[0.07] border border-white/10 text-slate-300 hover:text-white hover:bg-white/[0.12] font-medium px-6 py-4 rounded-xl transition-all text-sm">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>
+          </svg>
+          ¿Cómo funciona?
+        </a>
+      </div>
+
+      <!-- Trust chips -->
+      <div class="flex flex-wrap gap-2.5">
+        <div class="trust-chip">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Sin servidores
+        </div>
+        <div class="trust-chip">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          100% gratuito
+        </div>
+        <div class="trust-chip">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          Sin registro
+        </div>
+        <div class="trust-chip">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2.5"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+          Art. 37 ISR reformado
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stat bar -->
+  <div class="relative z-10 max-w-[1100px] mx-auto px-5 w-full">
+    <div class="border-t border-white/[0.07] grid grid-cols-2 sm:grid-cols-4">
+      <div class="py-7 px-6 border-r border-white/[0.07] text-center last:border-r-0">
+        <div class="text-3xl font-extrabold text-white tracking-tight">$550</div>
+        <div class="text-xs text-slate-500 mt-1">Base exenta mensual ISR</div>
+      </div>
+      <div class="py-7 px-6 border-r border-white/[0.07] text-center last:border-r-0">
+        <div class="text-3xl font-extrabold text-white tracking-tight">3</div>
+        <div class="text-xs text-slate-500 mt-1">Herramientas integradas</div>
+      </div>
+      <div class="py-7 px-6 border-r border-white/[0.07] text-center border-t sm:border-t-0 last:border-r-0">
+        <div class="text-3xl font-extrabold text-white tracking-tight">0</div>
+        <div class="text-xs text-slate-500 mt-1">Datos enviados a servidores</div>
+      </div>
+      <div class="py-7 px-6 text-center border-t sm:border-t-0">
+        <div class="text-3xl font-extrabold text-white tracking-tight">100%</div>
+        <div class="text-xs text-slate-500 mt-1">Gratuito para siempre</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="relative z-10 text-center py-8">
+    <div class="scroll-bounce inline-flex flex-col items-center gap-1 text-slate-600 text-xs" @click="scrollTo('caracteristicas')">
+      <span>Descubre más</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ CARACTERÍSTICAS ═════════════════════════════════════ -->
+<section id="caracteristicas" class="py-24 bg-white dark:bg-slate-900">
+  <div class="max-w-[1100px] mx-auto px-5">
+
+    <!-- Header -->
+    <div class="text-center mb-16">
+      <div class="inline-flex items-center gap-1.5 bg-blue-50 dark:bg-blue-950 text-primary dark:text-blue-400 rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-wider mb-4">
+        Herramientas incluidas
+      </div>
+      <h2 class="text-4xl sm:text-5xl font-bold tracking-tight text-slate-900 dark:text-white mb-4">
+        Todo lo que necesitas<br class="hidden sm:block"> en un solo lugar
+      </h2>
+      <p class="text-lg text-slate-500 dark:text-slate-400 max-w-lg mx-auto leading-relaxed">
+        Sin gestores, sin formularios complicados, sin costos. Solo ingresa tus datos y obtén resultados precisos al instante.
+      </p>
+    </div>
+
+    <!-- Grid de cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+
+      <!-- Card 1: Salario -->
+      <div class="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-7 hover:border-blue-300 dark:hover:border-blue-600 hover:shadow-2xl hover:shadow-blue-900/10 hover:-translate-y-1.5 transition-all duration-300">
+        <div class="w-12 h-12 bg-blue-50 dark:bg-blue-950 rounded-xl flex items-center justify-center mb-5">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1a56db" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/>
+          </svg>
+        </div>
+        <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Calculadora de Salario Neto</h3>
+        <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-5">
+          Ingresa tu salario bruto y obtén al instante el desglose exacto: ISSS (3%), AFP (7.25%) e ISR según tu tramo, con topes legales aplicados automáticamente.
+        </p>
+        <ul class="space-y-2">
+          <li class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Tope ISSS: $30.00 / AFP: $581.21
+          </li>
+          <li class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Todos los tramos ISR vigentes (Art. 37)
+          </li>
+          <li class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Comparación con salario mínimo por sector
+          </li>
+        </ul>
+      </div>
+
+      <!-- Card 2: Prestaciones -->
+      <div class="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-7 hover:border-amber-300 dark:hover:border-amber-600 hover:shadow-2xl hover:shadow-amber-900/10 hover:-translate-y-1.5 transition-all duration-300">
+        <div class="w-12 h-12 bg-amber-50 dark:bg-amber-950 rounded-xl flex items-center justify-center mb-5">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2">
+            <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+        </div>
+        <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Aguinaldo e Indemnización</h3>
+        <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-5">
+          Calcula exactamente cuánto te corresponde de aguinaldo (Dec. 432) y tu indemnización legal (Art. 58 CT), incluyendo el tope de los 4 salarios mínimos.
+        </p>
+        <ul class="space-y-2">
+          <li class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            15, 19 o 21 días según tu antigüedad
+          </li>
+          <li class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Exención ISR aguinaldo hasta $1,500
+          </li>
+          <li class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Indemnización proporcional por meses/días
+          </li>
+        </ul>
+      </div>
+
+      <!-- Card 3: F-11 -->
+      <div class="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-7 hover:border-emerald-300 dark:hover:border-emerald-600 hover:shadow-2xl hover:shadow-emerald-900/10 hover:-translate-y-1.5 transition-all duration-300">
+        <div class="w-12 h-12 bg-emerald-50 dark:bg-emerald-950 rounded-xl flex items-center justify-center mb-5">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2">
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
+          </svg>
+        </div>
+        <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Simulador F-11 Anual</h3>
+        <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-5">
+          Anticipa tu declaración de renta antes de abril. Ingresa mes a mes, suma retenciones por servicios profesionales y descubre si tienes saldo a favor.
+        </p>
+        <ul class="space-y-2">
+          <li class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Consolida salarios + servicios profesionales
+          </li>
+          <li class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Gastos deducibles y deducciones de ley
+          </li>
+          <li class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Exporta borrador en PDF
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Privacy callout -->
+    <div class="bg-[#0a1628] rounded-2xl p-8 flex flex-col lg:flex-row items-start lg:items-center gap-8">
+      <div class="flex-1">
+        <div class="flex items-center gap-3 mb-3">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span class="font-bold text-white text-base">Arquitectura Zero-Server</span>
+        </div>
+        <p class="text-sm text-slate-400 leading-relaxed">
+          Todo el cálculo ocurre en tu dispositivo. Ningún dato sale de tu navegador. Los valores se guardan en <code class="code-inline">sessionStorage</code> y se eliminan al cerrar la pestaña.
+        </p>
+      </div>
+      <div class="flex flex-col gap-3 shrink-0">
+        <div class="flex items-center gap-2.5 text-sm text-slate-400">
+          <div class="status-dot"></div> Sin base de datos
+        </div>
+        <div class="flex items-center gap-2.5 text-sm text-slate-400">
+          <div class="status-dot"></div> Sin tracking ni cookies
+        </div>
+        <div class="flex items-center gap-2.5 text-sm text-slate-400">
+          <div class="status-dot"></div> Sin registro de ningún tipo
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ CÓMO FUNCIONA ═══════════════════════════════════════ -->
+<section id="como-funciona" class="py-24 bg-slate-50 dark:bg-slate-950">
+  <div class="max-w-[780px] mx-auto px-5">
+    <div class="text-center mb-14">
+      <div class="inline-flex items-center bg-blue-50 dark:bg-blue-950 text-primary dark:text-blue-400 rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-wider mb-4">
+        Proceso
+      </div>
+      <h2 class="text-4xl sm:text-5xl font-bold tracking-tight text-slate-900 dark:text-white mb-3">
+        Tres pasos, resultado inmediato
+      </h2>
+      <p class="text-lg text-slate-500 dark:text-slate-400">Sin tutoriales, sin documentos que subir, sin esperar.</p>
+    </div>
+
+    <div class="relative">
+      <!-- línea conectora -->
+      <div class="absolute left-[21px] top-12 bottom-12 w-px bg-slate-200 dark:bg-slate-800 hidden sm:block"></div>
+
+      <div class="flex flex-col gap-4">
+        <div class="flex gap-5 p-6 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl hover:border-blue-200 dark:hover:border-blue-700 hover:shadow-lg transition-all">
+          <div class="w-9 h-9 rounded-full bg-blue-50 dark:bg-blue-950 text-primary dark:text-blue-400 font-bold text-sm flex items-center justify-center shrink-0">1</div>
+          <div>
+            <h3 class="font-bold text-slate-900 dark:text-white mb-1">Selecciona la herramienta que necesitas</h3>
+            <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">Salario neto, aguinaldo/indemnización, o simulación anual. Todo visible desde las tres pestañas del panel.</p>
+          </div>
+        </div>
+        <div class="flex gap-5 p-6 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl hover:border-blue-200 dark:hover:border-blue-700 hover:shadow-lg transition-all">
+          <div class="w-9 h-9 rounded-full bg-blue-50 dark:bg-blue-950 text-primary dark:text-blue-400 font-bold text-sm flex items-center justify-center shrink-0">2</div>
+          <div>
+            <h3 class="font-bold text-slate-900 dark:text-white mb-1">Ingresa tu salario y años de servicio</h3>
+            <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">Solo los datos necesarios. No pedimos nombre, DUI ni ningún dato personal identificable. Solo números.</p>
+          </div>
+        </div>
+        <div class="flex gap-5 p-6 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl hover:border-blue-200 dark:hover:border-blue-700 hover:shadow-lg transition-all">
+          <div class="w-9 h-9 rounded-full bg-blue-50 dark:bg-blue-950 text-primary dark:text-blue-400 font-bold text-sm flex items-center justify-center shrink-0">3</div>
+          <div>
+            <h3 class="font-bold text-slate-900 dark:text-white mb-1">Obtén el desglose detallado al instante</h3>
+            <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">Resultado inmediato con tramo ISR, tasa efectiva y todas las deducciones. Exporta en PDF si necesitas compartirlo.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mt-10">
+      <a href="/calculadora.html"
+         class="inline-flex items-center gap-2 bg-primary hover:bg-primary-dark text-white font-semibold px-8 py-4 rounded-xl transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-900/40">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="13 17 18 12 13 7"/><path d="M6 12h12"/></svg>
+        Ir a las herramientas
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ FOOTER ══════════════════════════════════════ -->
+<footer class="bg-[#0a1628] pt-16 pb-8">
+  <div class="max-w-[1100px] mx-auto px-5">
+    <div class="flex flex-wrap gap-12 justify-between mb-12">
+
+      <!-- Brand -->
+      <div class="max-w-xs">
+        <div class="flex items-center gap-2.5 mb-4">
+          <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+          <span class="font-extrabold text-white tracking-tight">Renta<span class="text-blue-400">SV</span></span>
+        </div>
+        <p class="text-sm text-slate-500 leading-relaxed mb-5">
+          Herramienta gratuita para que los salvadoreños conozcan sus derechos fiscales sin depender de intermediarios costosos.
+        </p>
+        <a href="https://buymeacoffee.com/rentasv" target="_blank" rel="noopener" class="btn-coffee">
+          <span class="iconify" data-icon="lucide:coffee" style="font-size: 1.25em;"></span> Invítame un café
+        </a>
+      </div>
+
+      <!-- Herramientas -->
+      <div>
+        <p class="text-xs font-bold text-slate-600 uppercase tracking-widest mb-4">Herramientas</p>
+        <div class="flex flex-col gap-3">
+          <a href="/salario.html"        class="text-sm text-slate-500 hover:text-white transition-colors">Calculadora salario neto</a>
+          <a href="/liquidaciones.html"  class="text-sm text-slate-500 hover:text-white transition-colors">Aguinaldos y Liquidaciones</a>
+          <a href="/isr-anual.html"      class="text-sm text-slate-500 hover:text-white transition-colors">Simulador ISR anual F-11</a>
+          <a href="/comparador.html"     class="text-sm text-slate-500 hover:text-white transition-colors">Planilla vs Honorarios</a>
+        </div>
+      </div>
+
+      <!-- Legal -->
+      <div>
+        <p class="text-xs font-bold text-slate-600 uppercase tracking-widest mb-4">Base legal</p>
+        <div class="flex flex-col gap-3">
+          <span class="text-sm text-slate-500">Art. 37 ISR reformado</span>
+          <span class="text-sm text-slate-500">Decreto Legislativo 432</span>
+          <span class="text-sm text-slate-500">Art. 58 Código de Trabajo</span>
+          <span class="text-sm text-slate-500">Salarios mínimos Jun. 2025</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom -->
+    <div class="border-t border-white/[0.06] pt-6 flex flex-wrap gap-4 justify-between items-center">
+      <p class="text-xs text-slate-600 max-w-lg leading-relaxed">
+        ⚠ <strong class="text-slate-500">Nota legal:</strong> Este simulador es informativo y no sustituye asesoría profesional ni el dictamen del Ministerio de Hacienda de El Salvador.
+      </p>
+      <div class="flex items-center gap-4">
+        <p class="text-xs text-slate-600">v2026.1 · Hecho en 🇸🇻 El Salvador</p>
+        <button @click="toggleTheme" class="theme-toggle" :title="isDarkMode ? 'Modo claro' : 'Modo oscuro'">
+          <span class="iconify text-lg" data-icon="lucide:sun" v-show="!isDarkMode"></span>
+          <span class="iconify text-lg" data-icon="lucide:moon" v-show="isDarkMode"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</div><!-- #app -->
+
+<script type="module">
+  import '/js/main.js';
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
+  }
+</script>
+</body>
+</html>

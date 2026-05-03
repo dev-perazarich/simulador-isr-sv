@@ -1,0 +1,39 @@
+{
+  "name": "Simulador ISR El Salvador 2026",
+  "short_name": "RentaSV",
+  "description": "Calcula tu salario neto, aguinaldo, indemnización y simula tu declaración de renta 2025-2026. 100% gratuito y privado.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a1628",
+  "theme_color": "#0a1628",
+  "orientation": "portrait-primary",
+  "lang": "es-SV",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='24' fill='%230f766e'/><text x='96' y='130' text-anchor='middle' font-size='110' font-family='Arial'>💵</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='64' fill='%230f766e'/><text x='256' y='350' text-anchor='middle' font-size='290' font-family='Arial'>💵</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["finance", "utilities"],
+  "shortcuts": [
+    {
+      "name": "Calcular Salario",
+      "short_name": "Salario",
+      "description": "Calcular salario neto mensual",
+      "url": "/?tab=salario"
+    },
+    {
+      "name": "Simular ISR Anual",
+      "short_name": "F-11",
+      "description": "Simular declaración de renta anual",
+      "url": "/?tab=declaracion"
+    }
+  ]
+}

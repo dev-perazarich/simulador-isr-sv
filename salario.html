@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es-SV">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0a1628" />
+  <meta name="description" content="Calculadora de Salario Neto El Salvador 2026 — Deducciones ISSS, AFP y Renta." />
+  <title>Salario Neto — RentaSV El Salvador 2026</title>
+  <link rel="manifest" href="/manifest.json" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: ['selector', '[data-theme="dark"]'], theme: { extend: { fontFamily: { sans: ['Outfit', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'], }, colors: { ink: { DEFAULT: '#0a1628', 2: '#1e2d45', 3: '#334155' }, primary: { DEFAULT: '#1a56db', dark: '#1e40af', light: '#eff6ff', mid: '#3b82f6' }, }, }, }, };
+  </script>
+
+  <link rel="stylesheet" href="/css/app.css" />
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+</head>
+<body class="font-sans antialiased bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen">
+
+<div id="app-salario">
+
+<header class="sticky top-0 z-50 bg-[#0a1628]/95 backdrop-blur border-b border-white/[0.07]">
+  <div class="max-w-4xl mx-auto px-5 h-16 flex items-center justify-between gap-4">
+    <div class="flex items-center gap-4">
+      <a href="/" class="text-slate-500 hover:text-white transition-colors text-sm flex items-center gap-1.5">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        <span class="hidden sm:inline">Inicio</span>
+      </a>
+      <div class="h-5 w-px bg-white/10"></div>
+      <a href="/" class="flex items-center gap-2">
+        <div class="w-7 h-7 bg-primary rounded-lg flex items-center justify-center">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </div>
+        <span class="font-extrabold text-white tracking-tight">Renta<span class="text-primary-mid">SV</span></span>
+      </a>
+    </div>
+
+    <!-- Nav tabs (desktop shortcuts via a tags) -->
+    <nav class="hidden md:flex items-center gap-1">
+      <a href="/salario.html" class="text-xs font-semibold px-3 py-1.5 rounded-full transition-all bg-white/15 text-white">Salario</a>
+      <a href="/liquidaciones.html" class="text-xs font-semibold px-3 py-1.5 rounded-full transition-all text-slate-500 hover:text-white">Liquidaciones</a>
+      <a href="/isr-anual.html" class="text-xs font-semibold px-3 py-1.5 rounded-full transition-all text-slate-500 hover:text-white">ISR Anual</a>
+      <a href="/comparador.html" class="text-xs font-semibold px-3 py-1.5 rounded-full transition-all text-slate-500 hover:text-white">Asal. vs Freelance</a>
+    </nav>
+
+    <button @click="toggleTheme" class="theme-toggle shrink-0" :title="isDarkMode ? 'Modo claro' : 'Modo oscuro'">
+      <span class="iconify text-lg" data-icon="lucide:sun" v-show="!isDarkMode"></span>
+      <span class="iconify text-lg" data-icon="lucide:moon" v-show="isDarkMode"></span>
+    </button>
+  </div>
+</header>
+
+<div class="bg-[#0a1628] border-b border-white/[0.07] py-10">
+  <div class="max-w-2xl mx-auto px-5 text-center">
+    <h1 class="text-2xl font-bold text-white mb-1.5">Calculadora de Salario Neto</h1>
+    <p class="text-sm text-slate-400">Verifica cuánto te corresponde recibir quitando descuentos de ley.</p>
+  </div>
+</div>
+
+<main class="max-w-2xl mx-auto px-5 py-10">
+
+  <!-- Tab nav (MPA style) -->
+  <div class="tab-nav mb-5">
+    <a href="/salario.html" class="tab-btn active" style="text-decoration:none;">
+      <span class="tab-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg></span>
+      <span class="tab-text">Salario Neto</span>
+    </a>
+    <a href="/liquidaciones.html" class="tab-btn" style="text-decoration:none;">
+      <span class="tab-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
+      <span class="tab-text">Liquidación</span>
+    </a>
+    <a href="/isr-anual.html" class="tab-btn" style="text-decoration:none;">
+      <span class="tab-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span>
+      <span class="tab-text">F-11</span>
+    </a>
+    <a href="/comparador.html" class="tab-btn" style="text-decoration:none;">
+      <span class="tab-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M18 20V4M6 20v-4"/></svg></span>
+      <span class="tab-text">Freelance</span>
+    </a>
+  </div>
+
+  <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden mb-5">
+    
+    <div class="p-7">
+      <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-6">Ingresa tu salario bruto mensual y obtén el desglose completo de descuentos de ley según los parámetros 2026.</p>
+
+      <div class="mb-4">
+        <label class="field-label">Sector laboral</label>
+        <div class="inp-prefix">
+          <select v-model="sectorSeleccionado" class="inp inp-select">
+            <option v-for="s in sectores" :key="s.key" :value="s.key">{{ s.label }} — Mín. ${{ s.salarioMinimo.toFixed(2) }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="mb-6">
+        <label class="field-label">Salario bruto mensual (USD)</label>
+        <div class="inp-prefix">
+          <span class="inp-prefix-symbol">$</span>
+          <input v-model="salarioInput" type="number" min="0" step="0.01" placeholder="Ej. 1,200.00" class="inp" @keydown.enter="calcularSalario" />
+        </div>
+
+        <div v-if="salarioInput && salarioEsSufiMinimo" class="mt-3">
+          <div class="flex justify-between items-center mb-1.5">
+            <span class="text-xs text-slate-400">vs. salario mínimo del sector</span>
+            <span class="text-xs font-bold" :class="salarioEsSufiMinimo.cumple ? 'text-emerald-600' : 'text-red-500'">
+              {{ salarioEsSufiMinimo.porcentaje }}%
+            </span>
+          </div>
+          <div class="prog-bar">
+            <div class="prog-fill" :style="{ width: Math.min(salarioEsSufiMinimo.porcentaje, 100) + '%', background: salarioEsSufiMinimo.cumple ? '#059669' : '#dc2626' }"></div>
+          </div>
+          <p v-if="!salarioEsSufiMinimo.cumple" class="text-xs text-red-500 mt-1.5">
+            ⚠ Salario inferior al mínimo del sector por ${{ salarioEsSufiMinimo.diferencia.toFixed(2) }}
+          </p>
+        </div>
+      </div>
+
+      <div class="flex gap-2.5 mb-6">
+        <button class="btn-main flex-1" @click="calcularSalario">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 3l14 9-14 9V3z"/></svg>
+          Calcular ahora
+        </button>
+        <button class="btn-ghost" @click="limpiarSalario">Limpiar</button>
+      </div>
+
+      <div v-if="resultadoSalario" class="result-card">
+        <div class="result-panel">
+          <div class="result-panel-header">
+            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Desglose mensual</span>
+            <span :class="['tramo-pill', `tramo-${DATA_2026.ISR_TRAMOS_MENSUAL.indexOf(resultadoSalario.tramoISR)}`]">
+              Tramo {{ ['I – Exento','II – 10%','III – 20%','IV – 30%'][DATA_2026.ISR_TRAMOS_MENSUAL.indexOf(resultadoSalario.tramoISR)] }}
+            </span>
+          </div>
+          <div class="result-row">
+            <span class="result-row-label">Salario bruto</span>
+            <span class="result-row-value">{{ fmt(resultadoSalario.salarioBruto) }}</span>
+          </div>
+          <div class="result-row">
+            <span class="result-row-label">Descuento ISSS (3%, tope $30)</span>
+            <span class="result-row-value negative">— {{ fmt(resultadoSalario.descuentoISSS) }}</span>
+          </div>
+          <div class="result-row">
+            <span class="result-row-label">Descuento AFP (7.25%, tope $581.21)</span>
+            <span class="result-row-value negative">— {{ fmt(resultadoSalario.descuentoAFP) }}</span>
+          </div>
+          <div class="result-row" style="background:#f0f9ff;">
+            <span class="text-sm text-blue-700 font-medium">Base imponible ISR</span>
+            <span class="font-bold text-blue-700 font-mono text-sm">{{ fmt(resultadoSalario.rentaNetaImponible) }}</span>
+          </div>
+          <div class="result-row">
+            <span class="result-row-label">ISR retenido</span>
+            <span class="result-row-value negative">— {{ fmt(resultadoSalario.isrMensual) }}</span>
+          </div>
+          <div class="result-total">
+            <span class="result-total-label">Salario neto a recibir</span>
+            <span class="result-total-value">{{ fmt(resultadoSalario.salarioNeto) }}</span>
+          </div>
+        </div>
+
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-label">ISSS + AFP</div>
+            <div class="metric-value">{{ pct((resultadoSalario.descuentoISSS + resultadoSalario.descuentoAFP) / resultadoSalario.salarioBruto * 100) }}</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Tasa ISR efectiva</div>
+            <div class="metric-value">{{ pct(resultadoSalario.efectividadISR) }}</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Carga total</div>
+            <div class="metric-value">{{ pct(resultadoSalario.efectividadTotal) }}</div>
+          </div>
+        </div>
+
+        <div class="flex gap-2 mt-3">
+          <a href="/isr-anual.html" class="btn-action-link flex-1 text-center" style="text-decoration:none;">
+            Calcular en forma anualída →
+          </a>
+          <button @click="generarPDF" class="btn-action-ghost">
+            Exportar PDF
+          </button>
+        </div>
+      </div>
+      
+      <div class="info-box mt-5">
+        <strong>Parámetros aplicados (2025-2026):</strong> Base exenta $550/mes. Tramos: 10% desde $550.01, 20% desde $895.25, 30% desde $2,038.11.
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden">
+    <div class="px-5 py-3.5 border-b border-slate-100 dark:border-slate-700">
+      <span class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Tabla ISR mensual — Art. 37 reformado</span>
+    </div>
+    <div class="p-5 overflow-x-auto">
+      <table class="ref-table">
+        <thead>
+          <tr>
+            <th>Tramo</th><th>Desde</th><th>Hasta</th><th>Tasa</th><th>Cuota fija</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(t,i) in DATA_2026.ISR_TRAMOS_MENSUAL" :key="i">
+            <td><span :class="['tramo-pill','tramo-'+i]">{{ ['I','II','III','IV'][i] }}</span></td>
+            <td class="mono">{{ fmt(t.desde) }}</td>
+            <td class="mono">{{ t.hasta===Infinity?'En adelante':fmt(t.hasta) }}</td>
+            <td class="font-bold" :style="{ color: t.tasa===0?'#059669':'#0a1628' }">{{ t.tasa===0?'Exento':(t.tasa*100)+'%' }}</td>
+            <td class="mono">{{ fmt(t.cuotaFija) }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</main>
+
+<footer class="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 py-6 mt-4">
+  <div class="max-w-2xl mx-auto px-5 flex flex-wrap gap-4 items-center justify-between">
+    <p class="text-xs text-slate-500 max-w-sm leading-relaxed">
+      ⚠ <strong>Nota legal:</strong> Simulador informativo. No sustituye asesoría profesional.
+    </p>
+    <div class="flex items-center gap-4">
+      <a href="https://buymeacoffee.com/rentasv" target="_blank" rel="noopener" class="btn-coffee text-sm"><span class="iconify" data-icon="lucide:coffee" style="font-size: 1.2em;"></span> Café</a>
+      <span class="text-xs text-slate-500">v{{ DATA_2026.VERSION }}</span>
+    </div>
+  </div>
+</footer>
+
+</div>
+
+<script type="module">
+  import '/js/app-salario.js';
+</script>
+<script>
+  if ('serviceWorker' in navigator) { window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {})); }
+</script>
+</body>
+</html>

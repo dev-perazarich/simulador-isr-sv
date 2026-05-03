@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es-SV">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0a1628" />
+  <meta name="description" content="Comparador de Salario en Planilla vs Servicios Profesionales (Freelancer) El Salvador." />
+  <title>Planilla vs Freelance — RentaSV El Salvador 2026</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: ['selector', '[data-theme="dark"]'], theme: { extend: { fontFamily: { sans: ['Outfit', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'], }, colors: { ink: { DEFAULT: '#0a1628', 2: '#1e2d45', 3: '#334155' }, primary: { DEFAULT: '#1a56db', dark: '#1e40af', light: '#eff6ff', mid: '#3b82f6' }, }, }, }, };
+  </script>
+
+  <link rel="stylesheet" href="/css/app.css" />
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+</head>
+<body class="font-sans antialiased bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen">
+
+<div id="app-comparador">
+
+<!-- Navbar -->
+<header class="sticky top-0 z-50 bg-[#0a1628]/95 backdrop-blur border-b border-white/[0.07]">
+  <div class="max-w-4xl mx-auto px-5 h-16 flex items-center justify-between gap-4">
+    <div class="flex items-center gap-4">
+      <a href="/" class="text-slate-500 hover:text-white transition-colors text-sm flex items-center gap-1.5"><span class="hidden sm:inline">Inicio</span></a>
+      <div class="h-5 w-px bg-white/10"></div>
+      <a href="/" class="flex items-center gap-2">
+        <div class="w-7 h-7 bg-primary rounded-lg flex items-center justify-center">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </div>
+        <span class="font-extrabold text-white tracking-tight">Renta<span class="text-primary-mid">SV</span></span>
+      </a>
+    </div>
+
+    <!-- Nav tabs -->
+    <nav class="hidden md:flex items-center gap-1">
+      <a href="/salario.html" class="text-xs font-semibold px-3 py-1.5 rounded-full transition-all text-slate-500 hover:text-white">Salario</a>
+      <a href="/liquidaciones.html" class="text-xs font-semibold px-3 py-1.5 rounded-full transition-all text-slate-500 hover:text-white">Liquidaciones</a>
+      <a href="/isr-anual.html" class="text-xs font-semibold px-3 py-1.5 rounded-full transition-all text-slate-500 hover:text-white">ISR Anual</a>
+      <a href="/comparador.html" class="text-xs font-semibold px-3 py-1.5 rounded-full transition-all bg-white/15 text-white">Asal. vs Freelance</a>
+    </nav>
+
+    <button @click="toggleTheme" class="theme-toggle shrink-0">
+      <span class="iconify text-lg" data-icon="lucide:sun" v-show="!isDarkMode"></span>
+      <span class="iconify text-lg" data-icon="lucide:moon" v-show="isDarkMode"></span>
+    </button>
+  </div>
+</header>
+
+<div class="bg-[#0a1628] border-b border-white/[0.07] py-10">
+  <div class="max-w-4xl mx-auto px-5 text-center">
+    <h1 class="text-2xl font-bold text-white mb-1.5">Planilla vs Honorarios</h1>
+    <p class="text-sm text-slate-400">Descubre qué régimen te conviene más por el mismo pago mensual.</p>
+  </div>
+</div>
+
+<main class="max-w-4xl mx-auto px-5 py-10">
+  <div class="tab-nav mb-5 max-w-2xl mx-auto">
+    <a href="/salario.html" class="tab-btn" style="text-decoration:none;"><span class="tab-text">Salario Neto</span></a>
+    <a href="/liquidaciones.html" class="tab-btn" style="text-decoration:none;"><span class="tab-text">Liquidación</span></a>
+    <a href="/isr-anual.html" class="tab-btn" style="text-decoration:none;"><span class="tab-text">F-11</span></a>
+    <a href="/comparador.html" class="tab-btn active" style="text-decoration:none;"><span class="tab-text">Freelance</span></a>
+  </div>
+
+  <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden mb-5">
+    <div class="p-7">
+      <p class="text-sm text-center text-slate-500 dark:text-slate-400 leading-relaxed mb-6">Ingresa el monto que la empresa está dispuesta a pagarte mensualmente. Compara el ingreso neto (libre) entre firmar contrato como asalariado o facturar como freelancer.</p>
+      
+      <div class="max-w-sm mx-auto mb-8">
+        <label class="field-label text-center">Salario ofertado (USD)</label>
+        <div class="inp-prefix">
+          <span class="inp-prefix-symbol">$</span>
+          <input v-model="montoInput" type="number" min="0" step="0.01" class="inp text-xl text-center font-bold font-mono" placeholder="1000.00" @keydown.enter="compararOpciones" style="padding-left: 0;"/>
+        </div>
+        <div class="flex gap-2 mt-4">
+          <button class="btn-main flex-1" @click="compararOpciones">Simular Escenarios</button>
+        </div>
+      </div>
+
+      <!-- Tarjetas comparativas -->
+      <div v-if="resultadoPlanilla && resultadoHonorarios" class="grid md:grid-cols-2 gap-6 items-start">
+        
+        <!-- Tarjeta Planilla -->
+        <div class="result-panel h-full flex flex-col relative transition-all duration-300 hover:shadow-xl hover:border-blue-400">
+          <div v-if="resultadoPlanilla.salarioNeto > resultadoHonorarios.neto" class="absolute top-0 right-0 bg-emerald-500 text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg">MAYOR INGRESO NETO</div>
+          <div class="result-panel-header flex-col items-start gap-1" style="background:#f0f9ff; border-bottom:1px solid #bae6fd;">
+            <div class="flex items-center gap-2">
+              <span class="p-1.5 bg-blue-100 rounded-md text-blue-700"><span class="iconify" data-icon="lucide:building-2"></span></span>
+              <span class="font-bold text-blue-800 text-lg">Asalariado en Planilla</span>
+            </div>
+          </div>
+          <div class="p-5 grow flex flex-col gap-4">
+            <div class="border-b border-blue-50/50 pb-4">
+              <span class="text-xs text-slate-400 font-bold uppercase track-wide">Ingreso Bruto Mensual</span>
+              <div class="text-xl font-bold font-mono mt-1 text-slate-800 dark:text-white">{{ fmt(resultadoPlanilla.salarioBruto) }}</div>
+            </div>
+            
+            <div class="space-y-2.5 grow text-sm">
+              <div class="flex justify-between items-center"><span class="text-slate-500">Descuento ISSS (3%)</span><span class="font-mono text-red-500">- {{ fmt(resultadoPlanilla.descuentoISSS) }}</span></div>
+              <div class="flex justify-between items-center"><span class="text-slate-500">Descuento AFP (7.25%)</span><span class="font-mono text-red-500">- {{ fmt(resultadoPlanilla.descuentoAFP) }}</span></div>
+              <div class="flex justify-between items-center pt-2 border-t border-slate-100 dark:border-slate-700"><span class="text-blue-600 font-medium">Imponible</span><span class="font-mono font-medium">{{ fmt(resultadoPlanilla.rentaNetaImponible) }}</span></div>
+              <div class="flex justify-between items-center"><span class="text-slate-500">Deducción de Renta</span><span class="font-mono text-red-500">- {{ fmt(resultadoPlanilla.isrMensual) }}</span></div>
+            </div>
+
+            <div class="bg-blue-600 text-white rounded-xl p-4 mt-auto">
+              <span class="text-xs font-medium text-blue-100">Dinero Líquido a Recibir</span>
+              <div class="text-2xl font-bold font-mono mt-0.5">{{ fmt(resultadoPlanilla.salarioNeto) }}</div>
+            </div>
+          </div>
+
+          <div class="bg-slate-50 border-t border-slate-100 p-4 pt-3 flex flex-col gap-2">
+            <span class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Beneficios extra de ley ➕</span>
+            <span class="text-sm text-slate-600 flex items-center gap-1.5"><span class="iconify text-emerald-500" data-icon="lucide:check-circle-2"></span> Seguro Social y Jubilación (AFP).</span>
+            <span class="text-sm text-slate-600 flex items-center gap-1.5"><span class="iconify text-emerald-500" data-icon="lucide:check-circle-2"></span> Aguinaldo Anual.</span>
+            <span class="text-sm text-slate-600 flex items-center gap-1.5"><span class="iconify text-emerald-500" data-icon="lucide:check-circle-2"></span> 15 Días Remunerados + 30% Prima.</span>
+            <span class="text-sm text-slate-600 flex items-center gap-1.5"><span class="iconify text-emerald-500" data-icon="lucide:check-circle-2"></span> Estabilidad e Indemnización.</span>
+          </div>
+        </div>
+
+        <!-- Tarjeta Freelance -->
+        <div class="result-panel h-full flex flex-col relative transition-all duration-300 hover:shadow-xl hover:border-purple-400">
+          <div v-if="resultadoHonorarios.neto > resultadoPlanilla.salarioNeto" class="absolute top-0 right-0 bg-emerald-500 text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg">MAYOR INGRESO NETO</div>
+          <div class="result-panel-header flex-col items-start gap-1" style="background:#faf5ff; border-bottom:1px solid #e9d5ff;">
+            <div class="flex items-center gap-2">
+              <span class="p-1.5 bg-purple-100 rounded-md text-purple-700"><span class="iconify" data-icon="lucide:laptop"></span></span>
+              <span class="font-bold text-purple-800 text-lg">Servicios Profesionales / Freelance</span>
+            </div>
+          </div>
+          <div class="p-5 grow flex flex-col gap-4">
+            <div class="border-b border-purple-50/50 pb-4">
+              <span class="text-xs text-slate-400 font-bold uppercase track-wide">Ingreso Bruto Mensual</span>
+              <div class="text-xl font-bold font-mono mt-1 text-slate-800 dark:text-white">{{ fmt(resultadoHonorarios.montoBruto) }}</div>
+            </div>
+            
+            <div class="space-y-2.5 grow text-sm">
+              <div class="flex justify-between items-center"><span class="text-slate-500">Retención de Renta (10%)</span><span class="font-mono text-red-500">- {{ fmt(resultadoHonorarios.retencion) }}</span></div>
+              <div class="flex justify-between items-center"><span class="text-slate-400">ISSS</span><span class="font-mono text-slate-400">0.00</span></div>
+              <div class="flex justify-between items-center"><span class="text-slate-400">AFP</span><span class="font-mono text-slate-400">0.00</span></div>
+            </div>
+
+            <div class="bg-purple-600 text-white rounded-xl p-4 mt-auto">
+              <span class="text-xs font-medium text-purple-100">Dinero Líquido a Recibir</span>
+              <div class="text-2xl font-bold font-mono mt-0.5">{{ fmt(resultadoHonorarios.neto) }}</div>
+            </div>
+          </div>
+
+          <div class="bg-slate-50 border-t border-slate-100 p-4 pt-3 flex flex-col gap-2">
+            <span class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Responsabilidades Propias ⚠</span>
+            <span class="text-sm text-slate-600 flex items-center gap-1.5"><span class="iconify text-red-400" data-icon="lucide:x-circle"></span> Tú debes pagar tu AFP voluntaria.</span>
+            <span class="text-sm text-slate-600 flex items-center gap-1.5"><span class="iconify text-red-400" data-icon="lucide:x-circle"></span> Sin Aguinaldo ni Vacaciones pagadas.</span>
+            <span class="text-sm text-slate-600 flex items-center gap-1.5"><span class="iconify text-red-400" data-icon="lucide:x-circle"></span> Sin seguro médico.</span>
+            <span class="text-sm text-amber-600 flex items-center gap-1.5"><span class="iconify text-amber-500" data-icon="lucide:alert-circle"></span> Declaración Anual F-11 Obligatoria.</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</main>
+</div>
+<script type="module">import '/js/app-comparador.js';</script>
+</body>
+</html>
