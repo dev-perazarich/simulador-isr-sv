@@ -1,8 +1,8 @@
 // js/main.js — Vue app mínima para index.html (landing)
+// Vue is loaded globally from CDN: https://unpkg.com/vue@3/dist/vue.global.prod.js
 import { useTheme } from './composables/useTheme.js';
-import { onMounted } from 'vue';
 
-const { createApp } = Vue;
+const { createApp, ref, onMounted } = Vue;
 
 createApp({
   setup() {
@@ -13,62 +13,18 @@ createApp({
     }
 
     onMounted(() => {
-      // Hero section animations
-      anime.timeline()
-        .add({
-          targets: '.hero-badge-dot',
-          translateY: [50, 0],
-          opacity: [0, 1],
-          duration: 800,
-          easing: 'easeOutExpo'
-        })
-        .add({
-          targets: '.hero-title-grad',
-          translateY: [50, 0],
-          opacity: [0, 1],
-          duration: 800,
-          easing: 'easeOutExpo',
-          offset: '-=400'
-        })
-        .add({
-          targets: '.hero-section p.text-lg',
-          translateY: [50, 0],
-          opacity: [0, 1],
-          duration: 800,
-          easing: 'easeOutExpo',
-          offset: '-=600'
-        })
-        .add({
-          targets: '.hero-section .flex.flex-wrap.gap-4.mb-12 a',
-          translateY: [50, 0],
-          opacity: [0, 1],
-          duration: 800,
-          easing: 'easeOutExpo',
-          offset: '-=400',
-          delay: anime.stagger(100)
-        })
-        .add({
-          targets: '.trust-chip',
-          translateY: [50, 0],
-          opacity: [0, 1],
-          duration: 800,
-          easing: 'easeOutExpo',
-          offset: '-=600',
-          delay: anime.stagger(100)
-        });
+      // Initialize AOS (Animate On Scroll Library)
+      AOS.init({
+        duration: 800,
+        easing: 'ease-out-cubic',
+        once: false,
+        mirror: false
+      });
 
-      // Características cards animation
+      // Force a refresh of AOS after content loads
       setTimeout(() => {
-        anime.timeline()
-          .add({
-            targets: '.group',
-            translateY: [50, 0],
-            opacity: [0, 1],
-            duration: 800,
-            easing: 'easeOutExpo',
-            delay: anime.stagger(100)
-          });
-      }, 800);
+        AOS.refresh();
+      }, 100);
     });
 
     return { theme, isDarkMode, toggleTheme, scrollTo };

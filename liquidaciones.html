@@ -8,20 +8,45 @@
   <title>Liquidaciones y Vacaciones — RentaSV El Salvador 2026</title>
   <link rel="manifest" href="/manifest.json" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  
+
+  <!-- Fuentes -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
 
+  <!-- Tailwind CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = { darkMode: ['selector', '[data-theme="dark"]'], theme: { extend: { fontFamily: { sans: ['Outfit', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'], }, colors: { ink: { DEFAULT: '#0a1628', 2: '#1e2d45', 3: '#334155' }, primary: { DEFAULT: '#1a56db', dark: '#1e40af', light: '#eff6ff', mid: '#3b82f6' }, }, }, }, };
+  </script>
+
+  <!-- Theme detection - runs before body renders to prevent flash -->
+  <script>
+    // Check for saved theme preference or use system preference
+    const THEME_KEY = 'sv-isr-theme';
+    let savedTheme = null;
+    try {
+      savedTheme = localStorage.getItem(THEME_KEY);
+    } catch (e) {
+      console.warn('localStorage not available');
+    }
+    
+    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    const themeToApply = savedTheme || systemTheme;
+    
+    // Apply theme immediately to prevent flash
+    if (themeToApply === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
   </script>
 
   <link rel="stylesheet" href="/css/app.css" />
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+  <!-- AOS para animaciones sutiles -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 </head>
 <body class="font-sans antialiased bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen">
 

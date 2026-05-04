@@ -35,6 +35,26 @@
     };
   </script>
 
+  <!-- Theme detection - runs before body renders to prevent flash -->
+  <script>
+    // Check for saved theme preference or use system preference
+    const THEME_KEY = 'sv-isr-theme';
+    let savedTheme = null;
+    try {
+      savedTheme = localStorage.getItem(THEME_KEY);
+    } catch (e) {
+      console.warn('localStorage not available');
+    }
+    
+    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    const themeToApply = savedTheme || systemTheme;
+    
+    // Apply theme immediately to prevent flash
+    if (themeToApply === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+  </script>
+
   <!-- Estilos custom (solo lo que Tailwind no cubre) -->
   <link rel="stylesheet" href="/css/app.css" />
 
@@ -43,8 +63,9 @@
 
   <!-- Iconify para íconos en lugar de emojis -->
   <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
-  <!-- Anime.js para animaciones -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+  <!-- AOS para animaciones sutiles -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 </head>
 <body class="font-sans antialiased bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 overflow-x-hidden">
 
@@ -64,15 +85,15 @@
       <span class="font-extrabold text-white tracking-tight text-lg">Renta<span class="text-primary-mid">SV</span></span>
     </a>
 
-    <!-- Nav links (desktop) -->
-    <nav class="hidden md:flex items-center gap-6">
-      <a href="#caracteristicas" class="text-sm text-slate-400 hover:text-white transition-colors">Qué incluye</a>
-      <a href="#como-funciona"   class="text-sm text-slate-400 hover:text-white transition-colors">Cómo funciona</a>
-      <a href="/salario.html"
-         class="bg-primary hover:bg-primary-dark text-white text-sm font-semibold px-5 py-2.5 rounded-full transition-all hover:-translate-y-px hover:shadow-lg hover:shadow-blue-900/40">
-        Usar ahora →
-      </a>
-    </nav>
+     <!-- Nav links (desktop) -->
+     <nav class="hidden md:flex items-center gap-6">
+       <a href="#caracteristicas" @click.prevent="scrollTo('caracteristicas')" class="text-sm text-slate-400 hover:text-white transition-colors">Qué incluye</a>
+       <a href="#como-funciona" @click.prevent="scrollTo('como-funciona')" class="text-sm text-slate-400 hover:text-white transition-colors">Cómo funciona</a>
+       <a href="/salario.html"
+          class="bg-primary hover:bg-primary-dark text-white text-sm font-semibold px-5 py-2.5 rounded-full transition-all hover:-translate-y-px hover:shadow-lg hover:shadow-blue-900/40">
+         Usar ahora →
+       </a>
+     </nav>
 
     <!-- Theme toggle -->
     <button @click="toggleTheme" class="theme-toggle shrink-0" :title="isDarkMode ? 'Modo claro' : 'Modo oscuro'">
@@ -91,60 +112,60 @@
   <div class="relative z-10 max-w-[1100px] mx-auto px-5 py-24 lg:py-32">
     <div class="max-w-[680px]">
 
-      <!-- Badge -->
-      <div class="inline-flex items-center gap-2 bg-blue-500/15 border border-blue-400/30 text-blue-300 rounded-full px-4 py-1.5 text-sm font-medium mb-8">
-        <div class="hero-badge-dot"></div>
-        Actualizado · Parámetros 2025–2026 vigentes
-      </div>
+  <!-- Badge -->
+  <div class="inline-flex items-center gap-2 bg-blue-500/15 border border-blue-400/30 text-blue-300 rounded-full px-4 py-1.5 text-sm font-medium mb-8" data-aos="fade-up" data-aos-delay="100">
+    <div class="hero-badge-dot"></div>
+    Actualizado · Parámetros 2025–2026 vigentes
+  </div>
 
-      <!-- Título -->
-      <h1 class="text-5xl sm:text-6xl lg:text-[4.2rem] font-black tracking-tight text-white leading-[1.06] mb-6">
-        Tu salario, calculado<br>
-        <span class="hero-title-grad">sin pagar a nadie.</span>
-      </h1>
+  <!-- Título -->
+  <h1 class="text-5xl sm:text-6xl lg:text-[4.2rem] font-black tracking-tight text-white leading-[1.06] mb-6" data-aos="fade-up" data-aos-delay="200">
+    Tu salario, calculado<br>
+    <span class="hero-title-grad">sin pagar a nadie.</span>
+  </h1>
 
-      <!-- Subtítulo -->
-      <p class="text-lg text-slate-400 max-w-xl leading-relaxed mb-10">
-        Descubre exactamente cuánto te descuenta el fisco cada mes. Simula tu declaración anual, calcula tu aguinaldo e indemnización — en segundos, gratis y sin salir de tu navegador.
-      </p>
+  <!-- Subtítulo -->
+  <p class="lg:text-lg text-slate-400 max-w-xl leading-relaxed mb-10" data-aos="fade-up" data-aos-delay="300">
+    Descubre exactamente cuánto te descuenta el fisco cada mes. Simula tu declaración anual, calcula tu aguinaldo e indemnización — en segundos, gratis y sin salir de tu navegador.
+  </p>
 
-      <!-- CTAs -->
-      <div class="flex flex-wrap gap-4 mb-12">
-        <a href="/salario.html"
-           class="inline-flex items-center gap-2 bg-primary hover:bg-primary-dark text-white font-semibold px-7 py-4 rounded-xl transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-900/40 text-base">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-            <circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/>
-          </svg>
-          Calcular mi salario ahora
-        </a>
-        <a href="#como-funciona"
-           class="inline-flex items-center gap-2 bg-white/[0.07] border border-white/10 text-slate-300 hover:text-white hover:bg-white/[0.12] font-medium px-6 py-4 rounded-xl transition-all text-sm">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-            <circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>
-          </svg>
-          ¿Cómo funciona?
-        </a>
-      </div>
+  <!-- CTAs -->
+  <div class="flex flex-wrap gap-4 mb-12" data-aos="fade-up" data-aos-delay="400">
+    <a href="/salario.html"
+       class="inline-flex items-center gap-2 bg-primary hover:bg-primary-dark text-white font-semibold px-7 py-4 rounded-xl transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-900/40 text-base">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+        <circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/>
+      </svg>
+      Calcular mi salario ahora
+    </a>
+    <a href="#como-funciona"
+       class="inline-flex items-center gap-2 bg-white/[0.07] border border-white/10 text-slate-300 hover:text-white hover:bg-white/[0.12] font-medium px-6 py-4 rounded-xl transition-all text-sm">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+        <circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>
+      </svg>
+      ¿Cómo funciona?
+    </a>
+  </div>
 
-      <!-- Trust chips -->
-      <div class="flex flex-wrap gap-2.5">
-        <div class="trust-chip">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          Sin servidores
-        </div>
-        <div class="trust-chip">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-          100% gratuito
-        </div>
-        <div class="trust-chip">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-          Sin registro
-        </div>
-        <div class="trust-chip">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2.5"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
-          Art. 37 ISR reformado
-        </div>
-      </div>
+  <!-- Trust chips -->
+  <div class="flex flex-wrap gap-2.5" data-aos="fade-up" data-aos-delay="500">
+    <div class="trust-chip">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Sin servidores
+    </div>
+    <div class="trust-chip">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      100% gratuito
+    </div>
+    <div class="trust-chip">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+      Sin registro
+    </div>
+    <div class="trust-chip">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2.5"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+      Art. 37 ISR reformado
+    </div>
+  </div>
     </div>
   </div>
 
@@ -179,8 +200,8 @@
   </div>
 </section>
 
-<!-- ═══════════════════════════════ CARACTERÍSTICAS ═════════════════════════════════════ -->
-<section id="caracteristicas" class="py-24 bg-white dark:bg-slate-900">
+<!-- ═══════════════════════════════ CARACTERÍSTICAS ══════════════════════════════════════ -->
+<section id="caracteristicas" class="py-24 bg-white dark:bg-slate-900" data-aos="fade-up" data-aos-delay="100">
   <div class="max-w-[1100px] mx-auto px-5">
 
     <!-- Header -->
@@ -196,11 +217,11 @@
       </p>
     </div>
 
-    <!-- Grid de cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+  <!-- Grid de cards -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16" data-aos="fade-up" data-aos-delay="100">
 
-      <!-- Card 1: Salario -->
-      <div class="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-7 hover:border-blue-300 dark:hover:border-blue-600 hover:shadow-2xl hover:shadow-blue-900/10 hover:-translate-y-1.5 transition-all duration-300">
+       <!-- Card 1: Salario -->
+       <div class="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-7 hover:border-blue-300 dark:hover:border-blue-600 hover:shadow-2xl hover:shadow-blue-900/10 hover:-translate-y-1.5 transition-all duration-300" data-aos="fade-up" data-aos-delay="150">
         <div class="w-12 h-12 bg-blue-50 dark:bg-blue-950 rounded-xl flex items-center justify-center mb-5">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1a56db" stroke-width="2">
             <circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/>
@@ -226,8 +247,8 @@
         </ul>
       </div>
 
-      <!-- Card 2: Prestaciones -->
-      <div class="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-7 hover:border-amber-300 dark:hover:border-amber-600 hover:shadow-2xl hover:shadow-amber-900/10 hover:-translate-y-1.5 transition-all duration-300">
+       <!-- Card 2: Prestaciones -->
+       <div class="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-7 hover:border-amber-300 dark:hover:border-amber-600 hover:shadow-2xl hover:shadow-amber-900/10 hover:-translate-y-1.5 transition-all duration-300" data-aos="fade-up" data-aos-delay="200">
         <div class="w-12 h-12 bg-amber-50 dark:bg-amber-950 rounded-xl flex items-center justify-center mb-5">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2">
             <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
@@ -253,8 +274,8 @@
         </ul>
       </div>
 
-      <!-- Card 3: F-11 -->
-      <div class="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-7 hover:border-emerald-300 dark:hover:border-emerald-600 hover:shadow-2xl hover:shadow-emerald-900/10 hover:-translate-y-1.5 transition-all duration-300">
+       <!-- Card 3: F-11 -->
+       <div class="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-7 hover:border-emerald-300 dark:hover:border-emerald-600 hover:shadow-2xl hover:shadow-emerald-900/10 hover:-translate-y-1.5 transition-all duration-300" data-aos="fade-up" data-aos-delay="250">
         <div class="w-12 h-12 bg-emerald-50 dark:bg-emerald-950 rounded-xl flex items-center justify-center mb-5">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2">
             <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
