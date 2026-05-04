@@ -1,7 +1,7 @@
 // sw.js — Service Worker · Estrategia: Cache First
 // Simulador ISR El Salvador 2026
 
-const CACHE_NAME = 'simulador-isr-sv-v1.8.0';
+const CACHE_NAME = 'simulador-isr-sv-v1.2.0';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -10,7 +10,10 @@ const ASSETS_TO_CACHE = [
   '/isr-anual.html',
   '/comparador.html',
   '/autor.html',
+  '/donaciones.html',
   '/manifest.json',
+  '/favicon.svg',
+  '/icons/qr-banco-agricola.jpeg',
   // ── CSS: design system ──
   '/css/app.css',
   // ── JS: módulos del núcleo ──

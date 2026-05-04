@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es-SV">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0a1628" />
+  <meta name="description" content="Apoya el desarrollo de RentaSV mediante donaciones." />
+  <title>Donaciones — RentaSV El Salvador 2026</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+
+  <!-- Fuentes -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: ['selector', '[data-theme="dark"]'],
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Outfit', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            ink: { DEFAULT: '#0a1628', 2: '#1e2d45', 3: '#334155' },
+            primary: { DEFAULT: '#1a56db', dark: '#1e40af', light: '#eff6ff', mid: '#3b82f6' },
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- Theme check -->
+  <script>
+    const THEME_KEY = 'sv-isr-theme';
+    let savedTheme = null;
+    try { savedTheme = localStorage.getItem(THEME_KEY); } catch (e) {}
+    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    if ((savedTheme || systemTheme) === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+  </script>
+
+  <link rel="stylesheet" href="/css/app.css" />
+
+  <!-- Vue 3 -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+</head>
+<body class="font-sans antialiased bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen">
+
+  <div id="app">
+    <!-- Navbar -->
+    <header class="glass-header sticky top-0 z-50">
+      <div class="max-w-4xl mx-auto px-5 h-16 flex items-center justify-between gap-4">
+        <div class="flex items-center gap-4">
+          <a href="/" class="text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors text-sm flex items-center gap-1.5">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+            <span class="hidden sm:inline">Inicio</span>
+          </a>
+          <div class="h-5 w-px bg-slate-200 dark:bg-white/10"></div>
+          <a href="/" class="flex items-center gap-2">
+            <img src="/favicon.svg" alt="RentaSV Logo" class="w-7 h-7 rounded-md">
+            <span class="font-extrabold tracking-tight text-slate-900 dark:text-white">Renta<span class="text-blue-500">SV</span></span>
+          </a>
+        </div>
+        <button @click="toggleTheme" class="theme-toggle shrink-0" :title="isDarkMode ? 'Modo claro' : 'Modo oscuro'">
+          <span class="iconify text-lg" data-icon="lucide:sun" v-show="!isDarkMode"></span>
+          <span class="iconify text-lg" data-icon="lucide:moon" v-show="isDarkMode"></span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-2xl mx-auto px-5 py-12">
+      <div class="text-center mb-10" data-aos="fade-up">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 dark:bg-blue-900/30 text-blue-600 rounded-full mb-6">
+          <span class="iconify text-3xl" data-icon="lucide:heart"></span>
+        </div>
+        <h1 class="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight mb-4">
+          Apoya a RentaSV
+        </h1>
+        <p class="text-lg text-slate-600 dark:text-slate-400">
+          Si esta plataforma gratuita te ha sido de utilidad y te ha ahorrado dinero, puedes ayudarme como desarrollador a mantenerla en línea. Tu aporte es fundamental.
+        </p>
+      </div>
+
+      <!-- Donaciones Bancarias -->
+      <div class="glass-panel p-8 mb-8" data-aos="fade-up" data-aos-delay="100">
+        <div class="flex flex-col md:flex-row items-center gap-8">
+          <div class="w-full md:w-1/2 flex justify-center">
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
+              <!-- Código QR Real -->
+              <img src="/icons/qr-banco-agricola.jpeg" alt="QR Banco Agrícola Ricardo Peraza" class="w-48 h-48 block rounded-lg shadow-inner object-contain" />
+            </div>
+          </div>
+          <div class="w-full md:w-1/2 text-center md:text-left">
+            <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">Transferencia Bancaria</h3>
+            <p class="text-slate-600 dark:text-slate-400 mb-6 text-sm">Escanea el código QR desde tu app de <strong>Banco Agrícola</strong> para hacer una transferencia directa a mi cuenta corriente.</p>
+            
+            <div class="space-y-4">
+              <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700">
+                <p class="text-xs text-slate-500 uppercase tracking-widest font-semibold mb-1">Banco</p>
+                <p class="font-medium text-slate-900 dark:text-white">Banco Agrícola de El Salvador</p>
+              </div>
+              <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700">
+                <p class="text-xs text-slate-500 uppercase tracking-widest font-semibold mb-1">A nombre de</p>
+                <p class="font-medium text-slate-900 dark:text-white">Ricardo Peraza</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+  </div>
+
+  <script type="module">
+    import '/js/main.js';
+  </script>
+</body>
+</html>

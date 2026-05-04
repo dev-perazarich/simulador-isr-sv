@@ -63,9 +63,7 @@
       </a>
       <div class="h-5 w-px bg-slate-200 dark:bg-white/10"></div>
       <a href="/" class="flex items-center gap-2">
-        <div class="w-7 h-7 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-        </div>
+        <img src="/favicon.svg" alt="RentaSV Logo" class="w-7 h-7 rounded-md">
         <span class="font-extrabold tracking-tight text-slate-900 dark:text-white">Renta<span class="text-blue-500">SV</span></span>
       </a>
     </div>
@@ -93,13 +91,16 @@
         <span class="iconify" data-icon="lucide:circle-dollar-sign"></span> Salario
       </a>
       <a href="/liquidaciones.html" class="tab-btn">
-        <span class="iconify" data-icon="lucide:briefcase"></span> Cese
+        <span class="iconify" data-icon="lucide:briefcase"></span> Indemnización
       </a>
       <a href="/isr-anual.html" class="tab-btn">
         <span class="iconify" data-icon="lucide:calculator"></span> F-11
       </a>
       <a href="/comparador.html" class="tab-btn">
         <span class="iconify" data-icon="lucide:scale"></span> VS
+      </a>
+      <a href="/autor.html" class="tab-btn">
+        <span class="iconify" data-icon="lucide:user"></span> Autor
       </a>
     </div>
   </div>
@@ -197,8 +198,6 @@
             <div class="metric-value">{{ pct(resultadoSalario.efectividadTotal) }}</div>
           </div>
         </div>
-
-        </div>
         
         <!-- Contenedor del Gráfico -->
         <div class="mt-6 flex justify-center">
@@ -215,19 +214,20 @@
             PDF
           </button>
         </div>
-      </div>
+      </div> <!-- Closes result-card -->
       
       <div class="info-box mt-5">
         <strong>Parámetros aplicados (2025-2026):</strong> Base exenta $550/mes. Tramos: 10% desde $550.01, 20% desde $895.25, 30% desde $2,038.11.
       </div>
-    </div>
-  </div>
+    </div> <!-- Closes p-7 -->
+  </div> <!-- Closes glass-panel -->
 
-  <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden">
-    <div class="px-5 py-3.5 border-b border-slate-100 dark:border-slate-700">
-      <span class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Tabla ISR mensual — Art. 37 reformado</span>
+  <div class="mt-8">
+    <div class="px-2 py-3.5 flex items-center gap-2">
+      <span class="iconify text-slate-400" data-icon="lucide:table-2"></span>
+      <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">Tabla ISR mensual — Art. 37 reformado</span>
     </div>
-    <div class="p-5 overflow-x-auto">
+    <div class="ref-table-container">
       <table class="ref-table">
         <thead>
           <tr>
@@ -237,9 +237,11 @@
         <tbody>
           <tr v-for="(t,i) in DATA_2026.ISR_TRAMOS_MENSUAL" :key="i">
             <td><span :class="['tramo-pill','tramo-'+i]">{{ ['I','II','III','IV'][i] }}</span></td>
-            <td class="mono">{{ fmt(t.desde) }}</td>
-            <td class="mono">{{ t.hasta===Infinity?'En adelante':fmt(t.hasta) }}</td>
-            <td class="font-bold" :style="{ color: t.tasa===0?'#059669':'#0a1628' }">{{ t.tasa===0?'Exento':(t.tasa*100)+'%' }}</td>
+            <td class="mono font-bold">{{ fmt(t.desde) }}</td>
+            <td class="mono font-bold">{{ t.hasta===Infinity?'En adelante':fmt(t.hasta) }}</td>
+            <td class="font-bold" :style="{ color: t.tasa===0?'var(--color-success)':'var(--color-text)' }">
+              {{ t.tasa===0?'Exento':(t.tasa*100)+'%' }}
+            </td>
             <td class="mono">{{ fmt(t.cuotaFija) }}</td>
           </tr>
         </tbody>
@@ -249,19 +251,41 @@
 
 </main>
 
-<footer class="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 py-6 mt-4">
-  <div class="max-w-2xl mx-auto px-5 flex flex-wrap gap-4 items-center justify-between">
-    <p class="text-xs text-slate-500 max-w-sm leading-relaxed">
-      ⚠ <strong>Nota legal:</strong> Simulador informativo. No sustituye asesoría profesional.
-    </p>
-    <div class="flex items-center gap-4">
-      <a href="https://buymeacoffee.com/rentasv" target="_blank" rel="noopener" class="btn-coffee text-sm"><span class="iconify" data-icon="lucide:coffee" style="font-size: 1.2em;"></span> Café</a>
-      <span class="text-xs text-slate-500">v{{ DATA_2026.VERSION }}</span>
+<footer class="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 py-10 mt-8">
+  <div class="max-w-2xl mx-auto px-5">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+      <div>
+        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Base legal</p>
+        <div class="flex flex-col gap-2">
+          <a href="https://www.hacienda.gob.sv/leyes-e-instr-fiscales/leyes-reformas-decretos-y-otras/" target="_blank" class="text-xs text-slate-500 hover:text-blue-500 transition-colors flex items-center gap-2">
+            <span class="iconify" data-icon="lucide:external-link"></span> Art. 37 ISR reformado
+          </a>
+          <a href="https://www.asamblea.gob.sv/decretos/detalles/748" target="_blank" class="text-xs text-slate-500 hover:text-blue-500 transition-colors flex items-center gap-2">
+            <span class="iconify" data-icon="lucide:external-link"></span> Decreto Legislativo 432
+          </a>
+          <a href="https://www.mtps.gob.sv/leyes-y-reglamentos/" target="_blank" class="text-xs text-slate-500 hover:text-blue-500 transition-colors flex items-center gap-2">
+            <span class="iconify" data-icon="lucide:external-link"></span> Art. 58 Código de Trabajo
+          </a>
+        </div>
+      </div>
+      <div class="flex flex-col items-start md:items-end">
+        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Apoyo</p>
+        <a href="/donaciones.html" class="btn-coffee text-sm">
+          <span class="iconify" data-icon="lucide:heart"></span> Apoyar proyecto
+        </a>
+      </div>
+    </div>
+    <div class="pt-8 border-t border-slate-100 dark:border-slate-800 flex flex-wrap gap-4 items-center justify-between">
+      <p class="text-[10px] text-slate-400 max-w-sm leading-relaxed flex items-start gap-1">
+        <span class="iconify shrink-0 text-amber-500" data-icon="lucide:alert-triangle"></span>
+        <span><strong>Nota legal:</strong> Simulador informativo. No sustituye asesoría profesional. v{{ DATA_2026.VERSION }}</span>
+      </p>
+      <div class="flex items-center gap-4">
+        <span class="text-[10px] text-slate-400 uppercase font-bold tracking-tight">El Salvador</span>
+      </div>
     </div>
   </div>
 </footer>
-
-</main>
 
 <!-- Bottom Nav (Mobile) -->
 <nav class="mobile-nav-dock">
@@ -269,13 +293,16 @@
     <span class="iconify" data-icon="lucide:circle-dollar-sign"></span> Salario
   </a>
   <a href="/liquidaciones.html" class="dock-btn">
-    <span class="iconify" data-icon="lucide:briefcase"></span> Cese
+    <span class="iconify" data-icon="lucide:briefcase"></span> Indemnización
   </a>
   <a href="/isr-anual.html" class="dock-btn">
     <span class="iconify" data-icon="lucide:calculator"></span> F-11
   </a>
   <a href="/comparador.html" class="dock-btn">
     <span class="iconify" data-icon="lucide:scale"></span> VS
+  </a>
+  <a href="/autor.html" class="dock-btn">
+    <span class="iconify" data-icon="lucide:user"></span> Autor
   </a>
 </nav>
 

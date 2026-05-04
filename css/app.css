@@ -1,28 +1,28 @@
 :root {
-  --color-bg: #f8fafc;
+  --color-bg: #fdfdfd;
   --color-bg-alt: #ffffff;
-  --color-bg-muted: #f1f5f9;
+  --color-bg-muted: #f8fafc;
   --color-border: #e2e8f0;
   --color-border-muted: #cbd5e1;
   --color-text: #0f172a;
-  --color-text-muted: #475569;
-  --color-primary: #0f172a;
-  --color-primary-light: #1e293b;
-  --color-accent: #2563eb;
+  --color-text-muted: #64748b;
+  --color-primary: #1a56db;
+  --color-primary-light: #3b82f6;
+  --color-accent: #1a56db;
   --color-accent-light: #3b82f6;
   --color-success: #059669;
   --color-warning: #ea580c;
   --color-error: #e11d48;
   --color-info: #0ea5e9;
-  --color-card-bg: rgba(255, 255, 255, 0.75);
-  --color-card-border: rgba(255, 255, 255, 0.5);
-  --color-hover: rgba(15, 23, 42, 0.04);
+  --color-card-bg: rgba(255, 255, 255, 0.85);
+  --color-card-border: rgba(255, 255, 255, 0.6);
+  --color-hover: rgba(26, 86, 219, 0.05);
   /* RGB variables */
-  --color-accent-rgb: 37, 99, 235;
+  --color-accent-rgb: 26, 86, 219;
   --color-accent-light-rgb: 59, 130, 246;
   --color-text-rgb: 15, 23, 42;
   --transition-smooth: 400ms cubic-bezier(0.16, 1, 0.3, 1);
-  --glass-blur: blur(16px);
+  --glass-blur: blur(12px);
 }
 
 [data-theme="dark"] {

@@ -69,42 +69,32 @@
 </head>
 <body class="font-sans antialiased bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen">
 
-  <div id="app-autor">
+  <div id="app">
     <!-- Navbar -->
-    <header class="sticky top-0 z-50 bg-[#0a1628]/95 backdrop-blur border-b border-white/[0.07]">
+    <header class="glass-header sticky top-0 z-50">
       <div class="max-w-4xl mx-auto px-5 h-16 flex items-center justify-between gap-4">
         <div class="flex items-center gap-4">
-          <a href="/" class="text-slate-500 hover:text-white transition-colors text-sm flex items-center gap-1.5">
+          <a href="/" class="text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors text-sm flex items-center gap-1.5">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
             <span class="hidden sm:inline">Inicio</span>
           </a>
-          <div class="h-5 w-px bg-white/10"></div>
+          <div class="h-5 w-px bg-slate-200 dark:bg-white/10"></div>
           <a href="/" class="flex items-center gap-2">
-            <div class="w-7 h-7 bg-primary rounded-lg flex items-center justify-center">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-            </div>
-            <span class="font-extrabold text-white tracking-tight">Renta<span class="text-primary-mid">SV</span></span>
+            <img src="/favicon.svg" alt="RentaSV Logo" class="w-7 h-7 rounded-md">
+            <span class="font-extrabold tracking-tight text-slate-900 dark:text-white">Renta<span class="text-blue-500">SV</span></span>
           </a>
         </div>
 
-        <!-- Nav tabs (desktop shortcuts via a tags) -->
-        <nav class="hidden md:flex items-center gap-1">
-          <a href="/salario.html" class="text-xs font-semibold px-3 py-1.5 rounded-full transition-all bg-white/15 text-white">Salario</a>
-          <a href="/liquidaciones.html" class="text-xs font-semibold px-3 py-1.5 rounded-full transition-all text-slate-500 hover:text-white">Liquidaciones</a>
-          <a href="/isr-anual.html" class="text-xs font-semibold px-3 py-1.5 rounded-full transition-all text-slate-500 hover:text-white">ISR Anual</a>
-          <a href="/comparador.html" class="text-xs font-semibold px-3 py-1.5 rounded-full transition-all text-slate-500 hover:text-white">Asal. vs Freelance</a>
-          <a href="/autor.html" class="text-xs font-semibold px-3 py-1.5 rounded-full transition-all bg-white/15 text-white">Autor</a>
-        </nav>
-
+        <!-- Theme toggle -->
         <button @click="toggleTheme" class="theme-toggle shrink-0" :title="isDarkMode ? 'Modo claro' : 'Modo oscuro'">
-          <span class="iconify text-lg" data-icon="lucide:sun" v-show="!isDarkMode" style="color: var(--color-text)"></span>
-          <span class="iconify text-lg" data-icon="lucide:moon" v-show="isDarkMode" style="color: var(--color-text)"></span>
+          <span class="iconify text-lg" data-icon="lucide:sun" v-show="!isDarkMode"></span>
+          <span class="iconify text-lg" data-icon="lucide:moon" v-show="isDarkMode"></span>
         </button>
       </div>
     </header>
 
     <!-- Main Content -->
-    <main class="max-w-3xl mx-auto px-5 py-12">
+    <main class="max-w-3xl mx-auto px-5 py-8">
       <!-- Autor Header -->
       <section class="mb-16" data-aos="fade-up" data-aos-delay="100">
         <div class="flex items-center gap-6">
@@ -195,7 +185,7 @@
       <section class="mb-16" data-aos="fade-up" data-aos-delay="400">
         <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">Enfoque en AppSheet y Apps Script</h2>
         <div class="space-y-6">
-          <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6">
+          <div class="glass-panel p-6 border-none">
             <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-3">AppSheet: Desarrollo Sin Código Profesional</h3>
             <p class="text-sm text-slate-500 dark:text-slate-400">
               Experto en crear aplicaciones móviles y web poderosas sin escribir una sola línea de código tradicional. 
@@ -208,7 +198,7 @@
             </p>
           </div>
           
-          <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6">
+          <div class="glass-panel p-6 border-none">
             <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-3">Apps Script: Automatización de Google Workspace</h3>
             <p class="text-sm text-slate-500 dark:text-slate-400">
               Especializado en extender la funcionalidad de Google Workspace mediante Apps Script. Creo 
@@ -232,97 +222,74 @@
         </p>
         <div class="flex flex-col gap-4">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-xs font-bold text-white">
-              📧
+            <div class="w-10 h-10 bg-primary/10 text-primary rounded-xl flex items-center justify-center">
+              <span class="iconify text-xl" data-icon="lucide:mail"></span>
             </div>
             <div>
               <p class="text-sm font-medium text-slate-500">Correo electrónico</p>
-              <p class="text-xs text-slate-400">richard.peraza@desarrollosv.com</p>
+              <p class="text-xs text-slate-400">
+                <a href="mailto:perazarich264@gmail.com" target="_blank"><strong>perazarich264@gmail.com</strong></a>
+              </p>
             </div>
           </div>
           
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-xs font-bold text-white">
-              💬
+            <div class="w-10 h-10 bg-primary/10 text-primary rounded-xl flex items-center justify-center">
+              <span class="iconify text-xl" data-icon="lucide:message-circle"></span>
             </div>
             <div>
               <p class="text-sm font-medium text-slate-500">WhatsApp</p>
-              <p class="text-xs text-slate-400">+503 7777 7777</p>
+              <p class="text-xs text-slate-400">
+                <a href="https://wa.me/50376929953" target="_blank"><strong>+503 7692 9953</strong></a>
+              </p>
             </div>
           </div>
           
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-xs font-bold text-white">
-              🌐
+          <!-- <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-primary/10 text-primary rounded-xl flex items-center justify-center">
+              <span class="iconify text-xl" data-icon="lucide:globe"></span>
             </div>
             <div>
               <p class="text-sm font-medium text-slate-500">Portfolio/Website</p>
               <p class="text-xs text-slate-400">https://richardperaza.dev</p>
             </div>
-          </div>
+          </div> -->
         </div>
       </section>
 
       <!-- Donaciones -->
       <section class="mb-16" data-aos="fade-up" data-aos-delay="600">
         <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">Apoya el Proyecto</h2>
-        <p class="text-lg text-slate-500 dark:text-slate-400 leading-relaxed">
-          Mantener y actualizar RentaSV requiere tiempo, recursos y dedicación. Si esta herramienta te ha 
-          sido útil y deseas apoyar su continuo desarrollo y mejora, puedes hacerlo a través de:
+        <p class="text-lg text-slate-500 dark:text-slate-400 leading-relaxed mb-6">
+          Mantener y actualizar RentaSV requiere tiempo y dedicación. Si esta herramienta te ha 
+          sido útil, puedes apoyar su mantenimiento.
         </p>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <!-- Banco Agrícola -->
-          <div class="border border-slate-200 dark:border-slate-700 rounded-xl p-6">
-            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Transferencia Bancaria</h3>
-            <p class="text-sm text-slate-500 dark:text-slate-400">
-              Banco Agrícola de El Salvador<br>
-              Cuenta Corriente: [NÚMERO DE CUENTA]<br>
-              A nombre de: Richard Peraza
+        <div class="glass-panel p-6 border-none flex flex-col sm:flex-row items-center gap-6">
+          <img src="/icons/qr-banco-agricola.jpeg" alt="QR Ricardo Peraza" class="w-32 h-32 rounded-lg object-contain bg-white p-2 shadow-sm" />
+          <div class="flex-1 text-center sm:text-left">
+            <h3 class="font-bold text-slate-900 dark:text-white mb-2">Ricardo Peraza</h3>
+            <p class="text-sm text-slate-500 dark:text-slate-400 mb-6 leading-relaxed">
+              Puedes realizar una transferencia directa escaneando el código QR (Banco Agrícola) o haz clic en el botón para ver todos los métodos disponibles.
             </p>
-            <div class="aspect-square bg-slate-50 dark:bg-slate-800 flex items-center justify-center mt-4">
-              <!-- QR Code Placeholder -->
-              <div class="text-center">
-                <div class="w-12 h-12 bg-primary rounded flex items-center justify-center text-xs font-bold text-white">
-                  Q
-                </div>
-                <p class="mt-2 text-xs text-slate-400">Escanea para transferir</p>
-              </div>
-            </div>
-            <p class="text-xs text-slate-400 mt-2 text-center">
-              Ideal para donaciones mayores o transferencias directas
-            </p>
-          </div>
-          
-          <!-- Buy Me a Coffee -->
-          <div class="border border-slate-200 dark:border-slate-700 rounded-xl p-6">
-            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Apoya con un Café</h3>
-            <p class="text-sm text-slate-500 dark:text-slate-400">
-              Plataforma internacional para pequeños aportos que ayudan a mantener el proyecto activo.
-            </p>
-            <div class="flex items-center gap-3">
-              <a href="https://buymeacoffee.com/rentasv" target="_blank" rel="noopener" class="btn-coffee flex-1">
-                <span class="iconify" data-icon="lucide:coffee" style="font-size: 1.25em;"></span> Invítame un café
-              </a>
-            </div>
-            <p class="text-xs text-slate-400 mt-2 text-center">
-              Perfecto para apoyo simbólico o mensual
-            </p>
+            <a href="/donaciones.html" class="btn-main text-sm">
+              <span class="iconify" data-icon="lucide:heart"></span> Ver opciones de apoyo
+            </a>
           </div>
         </div>
       </section>
     </main>
 
     <!-- Footer -->
-    <footer class="bg-[#0a1628] pt-12 pb-6">
+    <footer class="bg-white dark:bg-[#0a1628] border-t border-slate-200 dark:border-white/[0.06] pt-12 pb-6">
       <div class="max-w-4xl mx-auto px-5">
-        <div class="border-t border-white/[0.06] pt-8 flex flex-col lg:flex-row justify-between items-center">
-          <div class="text-center lg:text-left mb-4 lg:mb-0">
-            <p class="text-xs text-slate-600">v2026.1 · Hecho en 🇸🇻 El Salvador</p>
+        <div class="flex flex-col lg:flex-row justify-between items-center gap-4">
+          <div class="text-center lg:text-left">
+            <p class="text-xs text-slate-500 dark:text-slate-400">v2026.1 · Hecho en El Salvador</p>
           </div>
           <div class="flex items-center gap-4">
             <button @click="toggleTheme" class="theme-toggle" :title="isDarkMode ? 'Modo claro' : 'Modo oscuro'">
-              <span class="iconify text-lg" data-icon="lucide:sun" v-show="!isDarkMode" style="color: var(--color-text)"></span>
-              <span class="iconify text-lg" data-icon="lucide:moon" v-show="isDarkMode" style="color: var(--color-text)"></span>
+              <span class="iconify text-lg" data-icon="lucide:sun" v-show="!isDarkMode"></span>
+              <span class="iconify text-lg" data-icon="lucide:moon" v-show="isDarkMode"></span>
             </button>
           </div>
         </div>
