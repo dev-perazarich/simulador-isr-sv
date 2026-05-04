@@ -14,6 +14,10 @@ export function useShared() {
   // ── Estado global ──
   const tabActiva = ref('salario');
   const mostrarPrivacidad = ref(false);
+  const isMenuOpen = ref(false);
+
+  const toggleMenu = () => isMenuOpen.value = !isMenuOpen.value;
+  const closeMenu = () => isMenuOpen.value = false;
 
     // ── Helpers de formato (reutilizables) ──
   // Alias cortos para el template (fmt/pct) + nombres completos para JS
@@ -27,6 +31,9 @@ export function useShared() {
     // State
     tabActiva,
     mostrarPrivacidad,
+    isMenuOpen,
+    toggleMenu,
+    closeMenu,
     // Constants
     NOMBRES_MESES,
     // Formatters — exponer ambos nombres para template y JS externo

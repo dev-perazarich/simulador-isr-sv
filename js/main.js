@@ -1,12 +1,14 @@
 // js/main.js — Vue app mínima para index.html (landing)
 // Vue is loaded globally from CDN: https://unpkg.com/vue@3/dist/vue.global.prod.js
 import { useTheme } from './composables/useTheme.js';
+import { useShared } from './composables/useShared.js';
 
 const { createApp, ref, onMounted } = Vue;
 
 createApp({
   setup() {
     const { theme, isDarkMode, toggleTheme } = useTheme();
+    const shared = useShared();
 
     function scrollTo(id) {
       document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
@@ -27,6 +29,6 @@ createApp({
       }, 100);
     });
 
-    return { theme, isDarkMode, toggleTheme, scrollTo };
+    return { ...shared, theme, isDarkMode, toggleTheme, scrollTo };
   },
 }).mount('#app');

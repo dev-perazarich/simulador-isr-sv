@@ -71,33 +71,80 @@
 
 <div id="app">
 
-<!-- ═══════════════════════════════════════ NAVBAR ══════════════════════════════════════ -->
 <header class="glass-header fixed top-0 inset-x-0 z-50">
   <div class="max-w-[1100px] mx-auto px-5 h-16 flex items-center justify-between gap-4">
+    
+    <div class="flex items-center gap-3">
+      <!-- Hamburger Toggle (Mobile) -->
+      <button @click="toggleMenu" class="hamburger" aria-label="Menu">
+        <span class="iconify text-xl" data-icon="lucide:menu"></span>
+      </button>
 
-    <!-- Logo -->
-    <a href="/" class="flex items-center gap-2.5 shrink-0 group">
-      <img src="/favicon.svg" alt="RentaSV Logo" class="w-8 h-8 rounded-lg transition-transform group-hover:scale-105">
-      <span class="font-extrabold tracking-tight text-lg">Renta<span class="text-blue-500">SV</span></span>
-    </a>
+      <!-- Logo -->
+      <a href="/" class="flex items-center gap-2.5 shrink-0 group">
+        <img src="/favicon.svg" alt="RentaSV Logo" class="w-8 h-8 rounded-lg transition-transform group-hover:scale-105">
+        <span class="font-extrabold tracking-tight text-lg text-slate-900 dark:text-white">Renta<span class="text-blue-500">SV</span></span>
+      </a>
+    </div>
 
-     <!-- Nav links (desktop) -->
-     <nav class="hidden md:flex items-center gap-6">
-       <a href="#caracteristicas" @click.prevent="scrollTo('caracteristicas')" class="text-sm font-medium text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">Qué incluye</a>
-       <a href="#como-funciona" @click.prevent="scrollTo('como-funciona')" class="text-sm font-medium text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">Cómo funciona</a>
-       <a href="/autor.html" class="text-sm font-medium text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">Autor</a>
-       <a href="/salario.html" class="btn-main py-2 px-5 text-sm shadow-none hover:shadow-none">
-         Abrir Suite →
-       </a>
-     </nav>
+    <!-- Global Nav (Desktop) -->
+    <nav class="hidden md:flex items-center gap-6">
+      <a href="#caracteristicas" @click.prevent="scrollTo('caracteristicas')" class="text-sm font-medium text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">Características</a>
+      <a href="/salario.html" class="text-sm font-medium text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">Suite</a>
+      <a href="/donaciones.html" class="text-sm font-medium text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">Donar</a>
+      <a href="/salario.html" class="btn-main py-2 px-5 text-sm shadow-none hover:shadow-none bg-primary/10 text-primary hover:bg-primary hover:text-white">
+        Abrir Calculadora →
+      </a>
+    </nav>
 
-     <!-- Theme toggle -->
-     <button @click="toggleTheme" class="theme-toggle shrink-0" :title="isDarkMode ? 'Modo claro' : 'Modo oscuro'">
-       <span class="iconify text-lg" data-icon="lucide:sun" v-show="!isDarkMode"></span>
-       <span class="iconify text-lg" data-icon="lucide:moon" v-show="isDarkMode"></span>
-     </button>
+     <!-- Mobile Right Controls -->
+     <div class="flex items-center gap-2">
+       <!-- Theme toggle -->
+       <button @click="toggleTheme" class="theme-toggle" :title="isDarkMode ? 'Modo claro' : 'Modo oscuro'">
+         <span class="iconify text-lg" data-icon="lucide:sun" v-show="!isDarkMode"></span>
+         <span class="iconify text-lg" data-icon="lucide:moon" v-show="isDarkMode"></span>
+       </button>
+     </div>
   </div>
 </header>
+
+<!-- Sidebar Overlay -->
+<div class="sidebar-overlay" :class="{ active: isMenuOpen }" @click="closeMenu"></div>
+
+<!-- Sidebar -->
+<aside class="sidebar" :class="{ active: isMenuOpen }">
+  <div class="sidebar-header">
+    <span class="font-bold text-lg">Menú Principal</span>
+    <button @click="closeMenu" class="p-2 text-slate-400">
+      <span class="iconify text-xl" data-icon="lucide:x"></span>
+    </button>
+  </div>
+  <nav class="sidebar-nav">
+    <a href="/" class="sidebar-link active">
+      <span class="iconify" data-icon="lucide:home"></span> Inicio
+    </a>
+    <div class="px-4 py-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2">Herramientas</div>
+    <a href="/salario.html" class="sidebar-link">
+      <span class="iconify" data-icon="lucide:circle-dollar-sign"></span> Salario Neto
+    </a>
+    <a href="/liquidaciones.html" class="sidebar-link">
+      <span class="iconify" data-icon="lucide:briefcase"></span> Indemnización
+    </a>
+    <a href="/isr-anual.html" class="sidebar-link">
+      <span class="iconify" data-icon="lucide:calculator"></span> Declaración F-11
+    </a>
+    <a href="/comparador.html" class="sidebar-link">
+      <span class="iconify" data-icon="lucide:scale"></span> Planilla vs Honorarios
+    </a>
+    <div class="h-px bg-slate-100 dark:bg-slate-800 my-4"></div>
+    <a href="/autor.html" class="sidebar-link">
+      <span class="iconify" data-icon="lucide:user"></span> Sobre el Autor
+    </a>
+    <a href="/donaciones.html" class="sidebar-link text-blue-600 dark:text-blue-400">
+      <span class="iconify" data-icon="lucide:heart"></span> Apoyar Proyecto
+    </a>
+  </nav>
+</aside>
 
 <!-- ═══════════════════════════════════════ HERO ════════════════════════════════════════ -->
 <section id="inicio" class="relative overflow-hidden min-h-screen flex flex-col justify-center pt-16 mt-6">

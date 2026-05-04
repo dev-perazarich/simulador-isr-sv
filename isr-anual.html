@@ -55,14 +55,12 @@
 <!-- Navbar -->
 <header class="glass-header sticky top-0 z-50">
   <div class="max-w-4xl mx-auto px-5 h-16 flex items-center justify-between gap-4">
-    <div class="flex items-center gap-4">
-      <a href="/" class="text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors text-sm flex items-center gap-1.5">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
-        <span class="hidden sm:inline">Inicio</span>
-      </a>
-      <div class="h-5 w-px bg-slate-200 dark:bg-white/10"></div>
-      <a href="/" class="flex items-center gap-2">
-        <img src="/favicon.svg" alt="RentaSV Logo" class="w-7 h-7 rounded-md">
+    <div class="flex items-center gap-3">
+      <button @click="toggleMenu" class="hamburger" aria-label="Menu">
+        <span class="iconify text-xl" data-icon="lucide:menu"></span>
+      </button>
+      <a href="/" class="flex items-center gap-2 group">
+        <img src="/favicon.svg" alt="RentaSV Logo" class="w-7 h-7 rounded-md group-hover:scale-105 transition-transform">
         <span class="font-extrabold tracking-tight text-slate-900 dark:text-white">Renta<span class="text-blue-500">SV</span></span>
       </a>
     </div>
@@ -75,31 +73,68 @@
   </div>
 </header>
 
+<!-- Sidebar Overlay -->
+<div class="sidebar-overlay" :class="{ active: isMenuOpen }" @click="closeMenu"></div>
+
+<!-- Sidebar -->
+<aside class="sidebar" :class="{ active: isMenuOpen }">
+  <div class="sidebar-header">
+    <span class="font-bold text-lg">Menú Principal</span>
+    <button @click="closeMenu" class="p-2 text-slate-400 hover:text-slate-900 dark:hover:text-white">
+      <span class="iconify text-xl" data-icon="lucide:x"></span>
+    </button>
+  </div>
+  <nav class="sidebar-nav">
+    <a href="/" class="sidebar-link">
+      <span class="iconify" data-icon="lucide:home"></span> Inicio
+    </a>
+    <a href="/salario.html" class="sidebar-link">
+      <span class="iconify" data-icon="lucide:circle-dollar-sign"></span> Salario Neto
+    </a>
+    <a href="/liquidaciones.html" class="sidebar-link">
+      <span class="iconify" data-icon="lucide:briefcase"></span> Indemnización
+    </a>
+    <a href="/isr-anual.html" class="sidebar-link active">
+      <span class="iconify" data-icon="lucide:calculator"></span> Declaración F-11
+    </a>
+    <a href="/comparador.html" class="sidebar-link">
+      <span class="iconify" data-icon="lucide:scale"></span> Planilla vs Honorarios
+    </a>
+    <div class="h-px bg-slate-100 dark:bg-slate-800 my-4"></div>
+    <a href="/autor.html" class="sidebar-link">
+      <span class="iconify" data-icon="lucide:user"></span> Sobre el Autor
+    </a>
+    <a href="/donaciones.html" class="sidebar-link text-blue-600 dark:text-blue-400">
+      <span class="iconify" data-icon="lucide:heart"></span> Apoyar Proyecto
+    </a>
+  </nav>
+</aside>
+
 <main class="max-w-2xl mx-auto px-5 py-8">
 
   <!-- Encabezado sutil -->
-  <div class="mb-8 text-center">
-    <h1 class="text-3xl font-black text-slate-900 dark:text-white mb-2">Declaración F-11</h1>
-    <p class="text-slate-500 font-medium">Anticipa tu declaración y previene sorpresas ante Hacienda.</p>
+  <div class="mb-8 text-center" data-aos="fade-down">
+    <h1 class="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white mb-2 tracking-tight">Declaración ISR 🇸🇻</h1>
+    <p class="text-slate-500 font-medium">Cálculo de impuesto anual (F-11)</p>
   </div>
 
-  <!-- Tab nav (Desktop) -->
-  <div class="desktop-tabs-container max-w-xl mx-auto mb-8">
+  <!-- Tab nav (Responsive Scrollable) -->
+  <div class="desktop-tabs-container mb-10">
     <div class="desktop-tabs">
       <a href="/salario.html" class="tab-btn">
-        <span class="iconify" data-icon="lucide:circle-dollar-sign"></span> Salario
+        <span class="iconify" data-icon="lucide:circle-dollar-sign"></span> <span>Salario</span>
       </a>
       <a href="/liquidaciones.html" class="tab-btn">
-        <span class="iconify" data-icon="lucide:briefcase"></span> Indemnización
+        <span class="iconify" data-icon="lucide:briefcase"></span> <span>Indemnización</span>
       </a>
       <a href="/isr-anual.html" class="tab-btn active">
-        <span class="iconify" data-icon="lucide:calculator"></span> F-11
+        <span class="iconify" data-icon="lucide:calculator"></span> <span>F-11</span>
       </a>
       <a href="/comparador.html" class="tab-btn">
-        <span class="iconify" data-icon="lucide:scale"></span> VS
+        <span class="iconify" data-icon="lucide:scale"></span> <span>VS</span>
       </a>
       <a href="/autor.html" class="tab-btn">
-        <span class="iconify" data-icon="lucide:user"></span> Autor
+        <span class="iconify" data-icon="lucide:user"></span> <span>Autor</span>
       </a>
     </div>
   </div>
