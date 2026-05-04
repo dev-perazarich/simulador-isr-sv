@@ -95,11 +95,11 @@
        </a>
      </nav>
 
-    <!-- Theme toggle -->
-    <button @click="toggleTheme" class="theme-toggle shrink-0" :title="isDarkMode ? 'Modo claro' : 'Modo oscuro'">
-      <span class="iconify text-lg" data-icon="lucide:sun" v-show="!isDarkMode"></span>
-      <span class="iconify text-lg" data-icon="lucide:moon" v-show="isDarkMode"></span>
-    </button>
+     <!-- Theme toggle -->
+     <button @click="toggleTheme" class="theme-toggle shrink-0" :title="isDarkMode ? 'Modo claro' : 'Modo oscuro'">
+       <span class="iconify text-lg" data-icon="lucide:sun" v-show="!isDarkMode" style="color: var(--color-text)"></span>
+       <span class="iconify text-lg" data-icon="lucide:moon" v-show="isDarkMode" style="color: var(--color-text)"></span>
+     </button>
   </div>
 </header>
 
@@ -124,9 +124,11 @@
     <span class="hero-title-grad">sin pagar a nadie.</span>
   </h1>
 
-  <!-- Subtítulo -->
+  <!-- Subtítulo con puntos de dolor (psicología/neurociencia) -->
   <p class="lg:text-lg text-slate-400 max-w-xl leading-relaxed mb-10" data-aos="fade-up" data-aos-delay="300">
-    Descubre exactamente cuánto te descuenta el fisco cada mes. Simula tu declaración anual, calcula tu aguinaldo e indemnización — en segundos, gratis y sin salir de tu navegador.
+    ¿Cansado de perder horas calculando descuentos? ¿Frustrado por no saber exactamente cuánto te corresponde? 
+    Este herramienta elimina la incertidumbre y el estrés financiero al darte resultados precisos al instante, 
+    gratis y sin salir de tu navegador.
   </p>
 
   <!-- CTAs -->
@@ -385,25 +387,77 @@
   <div class="max-w-[1100px] mx-auto px-5">
     <div class="flex flex-wrap gap-12 justify-between mb-12">
 
-      <!-- Brand -->
-      <div class="max-w-xs">
-        <div class="flex items-center gap-2.5 mb-4">
-          <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2">
-              <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
-            </svg>
-          </div>
-          <span class="font-extrabold text-white tracking-tight">Renta<span class="text-blue-400">SV</span></span>
-        </div>
-        <p class="text-sm text-slate-500 leading-relaxed mb-5">
-          Herramienta gratuita para que los salvadoreños conozcan sus derechos fiscales sin depender de intermediarios costosos.
-        </p>
-        <a href="https://buymeacoffee.com/rentasv" target="_blank" rel="noopener" class="btn-coffee">
-          <span class="iconify" data-icon="lucide:coffee" style="font-size: 1.25em;"></span> Invítame un café
-        </a>
-      </div>
+       <!-- Brand -->
+       <div class="max-w-xs">
+         <div class="flex items-center gap-2.5 mb-4">
+           <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2">
+               <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+             </svg>
+           </div>
+           <span class="font-extrabold text-white tracking-tight">Renta<span class="text-blue-400">SV</span></span>
+         </div>
+         <p class="text-sm text-slate-500 leading-relaxed mb-5">
+           Herramienta gratuita para que los salvadoreños conozcan sus derechos fiscales sin depender de intermediarios costosos.
+         </p>
+         <a href="https://buymeacoffee.com/rentasv" target="_blank" rel="noopener" class="btn-coffee">
+           <span class="iconify" data-icon="lucide:coffee" style="font-size: 1.25em;"></span> Invítame un café
+         </a>
+       </div>
 
-      <!-- Herramientas -->
+       <!-- Autor -->
+       <div>
+         <p class="text-xs font-bold text-slate-600 uppercase tracking-widest mb-4">Autor</p>
+         <div class="flex flex-col gap-3">
+           <div class="flex items-start gap-3">
+             <div class="w-10 h-10 bg-primary rounded-flex flex items-center justify-center text-xs font-bold text-white">
+               RP
+             </div>
+             <div class="space-y-1">
+               <p class="text-sm font-medium text-slate-500">Richard Peraza</p>
+               <p class="text-xs text-slate-400">Desarrollador & Creador de RentaSV</p>
+             </div>
+           </div>
+           <p class="text-xs text-slate-400 max-w-xs leading-relaxed">
+             Creado con el propósito de democratizar el acceso a cálculos financieros laborales en El Salvador. 
+             Después de años luchando con la complejidad de los cálculos de ISR y prestaciones, decidí construir 
+             esta herramienta gratuita y 100% privada para que nadie más tenga que pasar por lo mismo.
+           </p>
+           <div class="flex items-center gap-3 mt-2">
+             <div class="w-10 h-10 bg-primary rounded-flex flex items-center justify-center text-xs font-bold text-white">
+               💻
+             </div>
+             <div class="space-y-1 text-xs text-slate-400">
+               <div class="flex items-center gap-1">
+                 <span class="iconify" data-icon="logos:python" style="width: 12px; height: 12px;"></span>
+                 <span>Python</span>
+               </div>
+               <div class="flex items-center gap-1">
+                 <span class="iconify" data-icon="logos:vue" style="width: 12px; height: 12px;"></span>
+                 <span>Vue.js</span>
+               </div>
+               <div class="flex items-center gap-1">
+                 <span class="iconify" data-icon="logos:html-5" style="width: 12px; height: 12px;"></span>
+                 <span>HTML5</span>
+               </div>
+               <div class="flex items-center gap-1">
+                 <span class="iconify" data-icon="logos:css-3" style="width: 12px; height: 12px;"></span>
+                 <span>CSS3</span>
+               </div>
+               <div class="flex items-center gap-1">
+                 <span class="iconify" data-icon="logos:tailwindcss-icon" style="width: 12px; height: 12px;"></span>
+                 <span>Tailwind CSS</span>
+               </div>
+               <div class="flex items-center gap-1">
+                 <span class="iconify" data-icon="logos:progressive-web-app" style="width: 12px; height: 12px;"></span>
+                 <span>PWA</span>
+               </div>
+             </div>
+           </div>
+         </div>
+       </div>
+
+       <!-- Herramientas -->
       <div>
         <p class="text-xs font-bold text-slate-600 uppercase tracking-widest mb-4">Herramientas</p>
         <div class="flex flex-col gap-3">
