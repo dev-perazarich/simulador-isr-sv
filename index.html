@@ -89,6 +89,7 @@
      <nav class="hidden md:flex items-center gap-6">
        <a href="#caracteristicas" @click.prevent="scrollTo('caracteristicas')" class="text-sm text-slate-400 hover:text-white transition-colors">Qué incluye</a>
        <a href="#como-funciona" @click.prevent="scrollTo('como-funciona')" class="text-sm text-slate-400 hover:text-white transition-colors">Cómo funciona</a>
+       <a href="/autor.html" @click.prevent="scrollTo('autor')" class="text-sm text-slate-400 hover:text-white transition-colors">Autor</a>
        <a href="/salario.html"
           class="bg-primary hover:bg-primary-dark text-white text-sm font-semibold px-5 py-2.5 rounded-full transition-all hover:-translate-y-px hover:shadow-lg hover:shadow-blue-900/40">
          Usar ahora →
@@ -408,11 +409,117 @@
        <!-- Autor -->
        <div>
          <p class="text-xs font-bold text-slate-600 uppercase tracking-widest mb-4">Autor</p>
-         <div class="flex flex-col gap-3">
-           <div class="flex items-start gap-3">
-             <div class="w-10 h-10 bg-primary rounded-flex flex items-center justify-center text-xs font-bold text-white">
+         <div class="flex flex-col gap-4">
+           <!-- Author Header -->
+           <div class="flex items-start gap-4">
+             <div class="w-12 h-12 bg-primary rounded-xl flex items-center justify-center text-xs font-bold text-white">
                RP
              </div>
+             <div class="space-y-1">
+               <p class="text-base font-medium text-slate-500">Richard Peraza</p>
+               <p class="text-xs text-slate-400">Autor de esta plataforma y Arquitecto de Soluciones</p>
+             </div>
+           </div>
+           
+           <!-- Experience -->
+           <div class="border-t border-slate-200 dark:border-slate-700 pt-3">
+             <p class="text-xs text-slate-400 mb-1"><strong>Experiencia:</strong> 5+ años en desarrollo de soluciones tecnológicas</p>
+             <p class="text-xs text-slate-400 mb-1"><strong>Sector:</strong> Público y Privado</p>
+             <p class="text-xs text-slate-400"><strong>Ubicación:</strong> El Salvador</p>
+           </div>
+           
+           <!-- Purpose -->
+           <div class="border-t border-slate-200 dark:border-slate-700 pt-3">
+             <p class="text-xs font-medium text-slate-500 mb-1">El Propósito de RentaSV</p>
+             <p class="text-xs text-slate-400 leading-relaxed">
+               RentaSV nació con una idea simple: hacer más fácil el acceso a cálculos financieros laborales en El Salvador. 
+               Después de años enfrentando la complejidad de los cálculos de ISR, prestaciones y otros beneficios laborales, 
+               decidí centralizar el conocimiento y crear herramientas accesibles para que cualquier persona pueda 
+               obtener resultados precisos al instante, sin depender de intermediarios costosos.
+             </p>
+           </div>
+           
+           <!-- Tecnologías -->
+           <div class="border-t border-slate-200 dark:border-slate-700 pt-3">
+             <p class="text-xs font-medium text-slate-500 mb-1">Mi Stack Tecnológico</p>
+             <div class="flex flex-wrap gap-2 mt-2">
+               <div class="flex items-center gap-1 px-2 py-1 bg-slate-50 dark:bg-slate-800 rounded text-xs">
+                 <span class="iconify" data-icon="logos:appsheet" style="width: 14px; height: 14px;"></span> AppSheet
+               </div>
+               <div class="flex items-center gap-1 px-2 py-1 bg-slate-50 dark:bg-slate-800 rounded text-xs">
+                 <span class="iconify" data-icon="google:apps-script" style="width: 14px; height: 14px;"></span> Apps Script
+               </div>
+               <div class="flex items-center gap-1 px-2 py-1 bg-slate-50 dark:bg-slate-800 rounded text-xs">
+                 <span class="iconify" data-icon="logos:vue" style="width: 14px; height: 14px;"></span> Vue.js
+               </div>
+               <div class="flex items-center gap-1 px-2 py-1 bg-slate-50 dark:bg-slate-800 rounded text-xs">
+                 <span class="iconify" data-icon="logos:python-icon" style="width: 14px; height: 14px;"></span> Python
+               </div>
+               <div class="flex items-center gap-1 px-2 py-1 bg-slate-50 dark:bg-slate-800 rounded text-xs">
+                 <span class="iconify" data-icon="logos:html-5" style="width: 14px; height: 14px;"></span> HTML5
+               </div>
+               <div class="flex items-center gap-1 px-2 py-1 bg-slate-50 dark:bg-slate-800 rounded text-xs">
+                 <span class="iconify" data-icon="logos:css-3" style="width: 14px; height: 14px;"></span> CSS3
+               </div>
+               <div class="flex items-center gap-1 px-2 py-1 bg-slate-50 dark:bg-slate-800 rounded text-xs">
+                 <span class="iconify" data-icon="logos:tailwindcss-icon" style="width: 14px; height: 14px;"></span> Tailwind CSS
+               </div>
+               <div class="flex items-center gap-1 px-2 py-1 bg-slate-50 dark:bg-slate-800 rounded text-xs">
+                 <span class="iconify" data-icon="logos:progressive-web-app" style="width: 14px; height: 14px;"></span> PWA
+               </div>
+             </div>
+           </div>
+           
+           <!-- Disponibilidad -->
+           <div class="border-t border-slate-200 dark:border-slate-700 pt-3">
+             <p class="text-xs font-medium text-slate-500 mb-1">¿Tienes un proyecto en mente?</p>
+             <p class="text-xs text-slate-400">
+               Estoy disponible para consultorías, desarrollo de aplicaciones y capacitación. 
+               Transformemos tu visión en realidad.
+             </p>
+             <div class="mt-2">
+               <a href="https://wa.me/50377777777" target="_blank" rel="noopener" class="inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-primary-dark">
+                 <span class="iconify" data-icon="logos:whatsapp" style="width: 16px; height: 16px;"></span>
+                 WhatsApp
+               </a>
+             </div>
+           </div>
+           
+           <!-- Donaciones -->
+           <div class="border-t border-slate-200 dark:border-slate-700 pt-3">
+             <p class="text-xs font-medium text-slate-500 mb-1">Apoya el Proyecto</p>
+             <p class="text-xs text-slate-400 leading-relaxed mb-2">
+               Mantener y actualizar este código toma tiempo y dedicación. Si te he ahorrado horas de trabajo, 
+               puedes apoyar el proyecto con una donación voluntaria.
+             </p>
+             <div class="flex flex-col gap-3">
+               <!-- Banco Agrícola QR -->
+               <div class="border border-slate-200 dark:border-slate-700 rounded-xl p-4">
+                 <div class="text-center mb-2">
+                   <p class="text-xs font-medium text-slate-500">Transferencia Bancaria</p>
+                   <p class="text-xs text-slate-400">Banco Agrícola de El Salvador</p>
+                 </div>
+                 <div class="aspect-square bg-slate-50 dark:bg-slate-800">
+                   <!-- QR Code Placeholder -->
+                   <div class="flex h-full w-full items-center justify-center text-slate-400">
+                     QR Code<br><span class="text-xs">Banco Agrícola</span>
+                   </div>
+                 </div>
+                 <p class="text-xs text-center text-slate-400 mt-2">
+                   Escanea para transferir directamente a mi cuenta
+                 </p>
+               </div>
+               
+               <!-- Buy Me a Coffee -->
+               <div class="flex items-center gap-3">
+                 <a href="https://buymeacoffee.com/rentasv" target="_blank" rel="noopener" class="btn-coffee flex-1">
+                   <span class="iconify" data-icon="lucide:coffee" style="font-size: 1.25em;"></span> Invítame un café
+                 </a>
+               </div>
+             </div>
+           </div>
+         </div>
+       </div>
              <div class="space-y-1">
                <p class="text-sm font-medium text-slate-500">Richard Peraza</p>
                <p class="text-xs text-slate-400">Desarrollador & Creador de RentaSV</p>
@@ -480,19 +587,22 @@
       </div>
     </div>
 
-    <!-- Bottom -->
-    <div class="border-t border-white/[0.06] pt-6 flex flex-wrap gap-4 justify-between items-center">
-      <p class="text-xs text-slate-600 max-w-lg leading-relaxed">
-        ⚠ <strong class="text-slate-500">Nota legal:</strong> Este simulador es informativo y no sustituye asesoría profesional ni el dictamen del Ministerio de Hacienda de El Salvador.
-      </p>
-      <div class="flex items-center gap-4">
-        <p class="text-xs text-slate-600">v2026.1 · Hecho en 🇸🇻 El Salvador</p>
-        <button @click="toggleTheme" class="theme-toggle" :title="isDarkMode ? 'Modo claro' : 'Modo oscuro'">
-          <span class="iconify text-lg" data-icon="lucide:sun" v-show="!isDarkMode"></span>
-          <span class="iconify text-lg" data-icon="lucide:moon" v-show="isDarkMode"></span>
-        </button>
-      </div>
-    </div>
+     <!-- Bottom -->
+     <div class="border-t border-white/[0.06] pt-6 flex flex-wrap gap-4 justify-between items-center">
+       <p class="text-xs text-slate-600 max-w-lg leading-relaxed">
+         ⚠ <strong class="text-slate-500">Nota legal:</strong> Este simulador es informativo y no sustituye asesoría profesional ni el dictamen del Ministerio de Hacienda de El Salvador.
+       </p>
+       <div class="flex items-center gap-4">
+         <p class="text-xs text-slate-600">v2026.1 · Hecho en 🇸🇻 El Salvador</p>
+         <div class="flex items-center gap-3">
+           <a href="/autor.html" class="text-xs text-slate-500 hover:text-white transition-colors">Autor</a>
+           <button @click="toggleTheme" class="theme-toggle" :title="isDarkMode ? 'Modo claro' : 'Modo oscuro'">
+             <span class="iconify text-lg" data-icon="lucide:sun" v-show="!isDarkMode" style="color: var(--color-text)"></span>
+             <span class="iconify text-lg" data-icon="lucide:moon" v-show="isDarkMode" style="color: var(--color-text)"></span>
+           </button>
+         </div>
+       </div>
+     </div>
   </div>
 </footer>
 

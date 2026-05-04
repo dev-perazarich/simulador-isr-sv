@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="es-SV">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0a1628" />
+  <meta name="description" informacion sobre el autor de RentaSV, desarrollador salvadoreño especializado en AppSheet, Apps Script y desarrollo web full stack." />
+  <title>Autor — RentaSV El Salvador 2026</title>
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+
+  <!-- Fuentes -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: ['selector', '[data-theme="dark"]'],
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Outfit', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            ink: { DEFAULT: '#0a1628', 2: '#1e2d45', 3: '#334155' },
+            primary: { DEFAULT: '#1a56db', dark: '#1e40af', light: '#eff6ff', mid: '#3b82f6' },
+          },
+          maxWidth: { '1100': '1100px', '720': '720px', '780': '780px' },
+        },
+      },
+    };
+  </script>
+
+  <!-- Theme detection - runs before body renders to prevent flash -->
+  <script>
+    // Check for saved theme preference or use system preference
+    const THEME_KEY = 'sv-isr-theme';
+    let savedTheme = null;
+    try {
+      savedTheme = localStorage.getItem(THEME_KEY);
+    } catch (e) {
+      console.warn('localStorage not available');
+    }
+    
+    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    const themeToApply = savedTheme || systemTheme;
+    
+    // Apply theme immediately to prevent flash
+    if (themeToApply === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+  </script>
+
+  <!-- Estilos custom (solo lo que Tailwind no cubre) -->
+  <link rel="stylesheet" href="/css/app.css" />
+
+  <!-- Vue 3 -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+
+  <!-- Iconify para íconos en lugar de emojis -->
+  <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+  <!-- AOS para animaciones sutiles -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+</head>
+<body class="font-sans antialiased bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen">
+
+  <div id="app-autor">
+    <!-- Navbar -->
+    <header class="sticky top-0 z-50 bg-[#0a1628]/95 backdrop-blur border-b border-white/[0.07]">
+      <div class="max-w-4xl mx-auto px-5 h-16 flex items-center justify-between gap-4">
+        <div class="flex items-center gap-4">
+          <a href="/" class="text-slate-500 hover:text-white transition-colors text-sm flex items-center gap-1.5">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+            <span class="hidden sm:inline">Inicio</span>
+          </a>
+          <div class="h-5 w-px bg-white/10"></div>
+          <a href="/" class="flex items-center gap-2">
+            <div class="w-7 h-7 bg-primary rounded-lg flex items-center justify-center">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+            </div>
+            <span class="font-extrabold text-white tracking-tight">Renta<span class="text-primary-mid">SV</span></span>
+          </a>
+        </div>
+
+        <!-- Nav tabs (desktop shortcuts via a tags) -->
+        <nav class="hidden md:flex items-center gap-1">
+          <a href="/salario.html" class="text-xs font-semibold px-3 py-1.5 rounded-full transition-all bg-white/15 text-white">Salario</a>
+          <a href="/liquidaciones.html" class="text-xs font-semibold px-3 py-1.5 rounded-full transition-all text-slate-500 hover:text-white">Liquidaciones</a>
+          <a href="/isr-anual.html" class="text-xs font-semibold px-3 py-1.5 rounded-full transition-all text-slate-500 hover:text-white">ISR Anual</a>
+          <a href="/comparador.html" class="text-xs font-semibold px-3 py-1.5 rounded-full transition-all text-slate-500 hover:text-white">Asal. vs Freelance</a>
+          <a href="/autor.html" class="text-xs font-semibold px-3 py-1.5 rounded-full transition-all bg-white/15 text-white">Autor</a>
+        </nav>
+
+        <button @click="toggleTheme" class="theme-toggle shrink-0" :title="isDarkMode ? 'Modo claro' : 'Modo oscuro'">
+          <span class="iconify text-lg" data-icon="lucide:sun" v-show="!isDarkMode" style="color: var(--color-text)"></span>
+          <span class="iconify text-lg" data-icon="lucide:moon" v-show="isDarkMode" style="color: var(--color-text)"></span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-3xl mx-auto px-5 py-12">
+      <!-- Autor Header -->
+      <section class="mb-16" data-aos="fade-up" data-aos-delay="100">
+        <div class="flex items-center gap-6">
+          <!-- Avatar -->
+          <div class="w-20 h-20 bg-primary rounded-xl flex items-center justify-center text-xs font-bold text-white">
+            RP
+          </div>
+          
+          <!-- Info -->
+          <div class="space-y-2">
+            <h1 class="text-3xl font-bold text-slate-900 dark:text-white">Richard Peraza</h1>
+            <p class="text-lg text-slate-500 dark:text-slate-400">Desarrollador Full Stack & Arquitecto de Soluciones</p>
+            <div class="flex flex-wrap gap-4">
+              <span class="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 text-primary rounded-full text-xs">
+                5+ años de experiencia
+              </span>
+              <span class="inline-flex items-center gap-2 px-3 py-1 bg-slate-100 dark:bg-slate-800/20 text-slate-600 dark:text-slate-300 rounded-full text-xs">
+                El Salvador
+              </span>
+              <span class="inline-flex items-center gap-2 px-3 py-1 bg-slate-100 dark:bg-slate-800/20 text-slate-600 dark:text-slate-300 rounded-full text-xs">
+                Público y Privado
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Propósito -->
+      <section class="mb-16" data-aos="fade-up" data-aos-delay="200">
+        <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">El Propósito de RentaSV</h2>
+        <p class="text-lg text-slate-500 dark:text-slate-400 leading-relaxed max-w-2xl">
+          RentaSV nació con una idea simple: hacer más fácil el acceso a cálculos financieros laborales en El Salvador. 
+          Después de años enfrentando la complejidad de los cálculos de ISR, prestaciones y otros beneficios laborales, 
+          decidí centralizar el conocimiento y crear herramientas accesibles para que cualquier persona pueda 
+          obtener resultados precisos al instante, sin depender de intermediarios costosos.
+        </p>
+        <p class="text-sm text-slate-500 dark:text-slate-400 mt-4">
+          Este proyecto representa mi compromiso con la educación financiera y la democratización del conocimiento 
+          tecnológico en mi país.
+        </p>
+      </section>
+
+      <!-- Experiencia -->
+      <section class="mb-16" data-aos="fade-up" data-aos-delay="300">
+        <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">Experiencia y Background</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="space-y-4">
+            <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">Desarrollo de Soluciones</h3>
+            <p class="text-sm text-slate-500 dark:text-slate-400">
+              Especializado en crear herramientas que resuelven problemas reales de negocio, desde automatización 
+              de procesos hasta sistemas de gestión completos.
+            </p>
+          </div>
+          
+          <div class="space-y-4">
+            <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">Tecnologías Dominadas</h3>
+            <div class="flex flex-wrap gap-2">
+              <span class="inline-flex items-center gap-1 px-2 py-1 bg-primary/10 text-primary rounded text-xs">
+                <span class="iconify" data-icon="logos:appsheet" style="width: 14px; height: 14px;"></span> AppSheet
+              </span>
+              <span class="inline-flex items-center gap-1 px-2 py-1 bg-primary/10 text-primary rounded text-xs">
+                <span class="iconify" data-icon="google:apps-script" style="width: 14px; height: 14px;"></span> Apps Script
+              </span>
+              <span class="inline-flex items-center gap-1 px-2 py-1 bg-primary/10 text-primary rounded text-xs">
+                <span class="iconify" data-icon="logos:vue" style="width: 14px; height: 14px;"></span> Vue.js
+              </span>
+              <span class="inline-flex items-center gap-1 px-2 py-1 bg-primary/10 text-primary rounded text-xs">
+                <span class="iconify" data-icon="logos:python-icon" style="width: 14px; height: 14px;"></span> Python
+              </span>
+              <span class="inline-flex items-center gap-1 px-2 py-1 bg-primary/10 text-primary rounded text-xs">
+                <span class="iconify" data-icon="logos:html-5" style="width: 14px; height: 14px;"></span> HTML5
+              </span>
+              <span class="inline-flex items-center gap-1 px-2 py-1 bg-primary/10 text-primary rounded text-xs">
+                <span class="iconify" data-icon="logos:css-3" style="width: 14px; height: 14px;"></span> CSS3
+              </span>
+              <span class="inline-flex items-center gap-1 px-2 py-1 bg-primary/10 text-primary rounded text-xs">
+                <span class="iconify" data-icon="logos:tailwindcss-icon" style="width: 14px; height: 14px;"></span> Tailwind CSS
+              </span>
+              <span class="inline-flex items-center gap-1 px-2 py-1 bg-primary/10 text-primary rounded text-xs">
+                <span class="iconify" data-icon="logos:progressive-web-app" style="width: 14px; height: 14px;"></span> PWA
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tecnologías Detalladas -->
+      <section class="mb-16" data-aos="fade-up" data-aos-delay="400">
+        <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">Enfoque en AppSheet y Apps Script</h2>
+        <div class="space-y-6">
+          <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6">
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-3">AppSheet: Desarrollo Sin Código Profesional</h3>
+            <p class="text-sm text-slate-500 dark:text-slate-400">
+              Experto en crear aplicaciones móviles y web poderosas sin escribir una sola línea de código tradicional. 
+  Desde sistemas de inventario hasta plataformas de gestión de recursos humanos, aprovecho al máximo las 
+  capacidades de AppSheet para entregar soluciones rápidas, escalables y mantenibles.
+            </p>
+            <p class="text-xs text-slate-400 mt-2">
+              <strong>Proyectos destacados:</strong> Sistemas de gestión escolar, plataformas de seguimiento 
+  de proyectos, herramientas de RR.HH. y aplicaciones de campo para trabajo remoto.
+            </p>
+          </div>
+          
+          <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6">
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-3">Apps Script: Automatización de Google Workspace</h3>
+            <p class="text-sm text-slate-500 dark:text-slate-400">
+              Especializado en extender la funcionalidad de Google Workspace mediante Apps Script. Creo 
+  soluciones que automatizan flujos de trabajo complejos entre Sheets, Docs, Gmail y otros servicios de Google.
+            </p>
+            <p class="text-xs text-slate-400 mt-2">
+              <strong>Ejemplos de automatización:</strong> Generación automática de reportes, sincronización 
+  de datos entre sistemas, flujos de aprobación personalizados y herramientas de productividad personal.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Disponibilidad -->
+      <section class="mb-16" data-aos="fade-up" data-aos-delay="500">
+        <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">¿Buscas un desarrollador?</h2>
+        <p class="text-lg text-slate-500 dark:text-slate-400 leading-relaxed max-w-xl">
+          Estoy disponible para consultorías, desarrollo de aplicaciones personalizadas y capacitación. 
+          Mi enfoque está en crear soluciones que realmente resuelvan problemas de negocio, no solo 
+          escribir código.
+        </p>
+        <div class="flex flex-col gap-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-xs font-bold text-white">
+              📧
+            </div>
+            <div>
+              <p class="text-sm font-medium text-slate-500">Correo electrónico</p>
+              <p class="text-xs text-slate-400">richard.peraza@desarrollosv.com</p>
+            </div>
+          </div>
+          
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-xs font-bold text-white">
+              💬
+            </div>
+            <div>
+              <p class="text-sm font-medium text-slate-500">WhatsApp</p>
+              <p class="text-xs text-slate-400">+503 7777 7777</p>
+            </div>
+          </div>
+          
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-xs font-bold text-white">
+              🌐
+            </div>
+            <div>
+              <p class="text-sm font-medium text-slate-500">Portfolio/Website</p>
+              <p class="text-xs text-slate-400">https://richardperaza.dev</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Donaciones -->
+      <section class="mb-16" data-aos="fade-up" data-aos-delay="600">
+        <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">Apoya el Proyecto</h2>
+        <p class="text-lg text-slate-500 dark:text-slate-400 leading-relaxed">
+          Mantener y actualizar RentaSV requiere tiempo, recursos y dedicación. Si esta herramienta te ha 
+          sido útil y deseas apoyar su continuo desarrollo y mejora, puedes hacerlo a través de:
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Banco Agrícola -->
+          <div class="border border-slate-200 dark:border-slate-700 rounded-xl p-6">
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Transferencia Bancaria</h3>
+            <p class="text-sm text-slate-500 dark:text-slate-400">
+              Banco Agrícola de El Salvador<br>
+              Cuenta Corriente: [NÚMERO DE CUENTA]<br>
+              A nombre de: Richard Peraza
+            </p>
+            <div class="aspect-square bg-slate-50 dark:bg-slate-800 flex items-center justify-center mt-4">
+              <!-- QR Code Placeholder -->
+              <div class="text-center">
+                <div class="w-12 h-12 bg-primary rounded flex items-center justify-center text-xs font-bold text-white">
+                  Q
+                </div>
+                <p class="mt-2 text-xs text-slate-400">Escanea para transferir</p>
+              </div>
+            </div>
+            <p class="text-xs text-slate-400 mt-2 text-center">
+              Ideal para donaciones mayores o transferencias directas
+            </p>
+          </div>
+          
+          <!-- Buy Me a Coffee -->
+          <div class="border border-slate-200 dark:border-slate-700 rounded-xl p-6">
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Apoya con un Café</h3>
+            <p class="text-sm text-slate-500 dark:text-slate-400">
+              Plataforma internacional para pequeños aportos que ayudan a mantener el proyecto activo.
+            </p>
+            <div class="flex items-center gap-3">
+              <a href="https://buymeacoffee.com/rentasv" target="_blank" rel="noopener" class="btn-coffee flex-1">
+                <span class="iconify" data-icon="lucide:coffee" style="font-size: 1.25em;"></span> Invítame un café
+              </a>
+            </div>
+            <p class="text-xs text-slate-400 mt-2 text-center">
+              Perfecto para apoyo simbólico o mensual
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#0a1628] pt-12 pb-6">
+      <div class="max-w-4xl mx-auto px-5">
+        <div class="border-t border-white/[0.06] pt-8 flex flex-col lg:flex-row justify-between items-center">
+          <div class="text-center lg:text-left mb-4 lg:mb-0">
+            <p class="text-xs text-slate-600">v2026.1 · Hecho en 🇸🇻 El Salvador</p>
+          </div>
+          <div class="flex items-center gap-4">
+            <button @click="toggleTheme" class="theme-toggle" :title="isDarkMode ? 'Modo claro' : 'Modo oscuro'">
+              <span class="iconify text-lg" data-icon="lucide:sun" v-show="!isDarkMode" style="color: var(--color-text)"></span>
+              <span class="iconify text-lg" data-icon="lucide:moon" v-show="isDarkMode" style="color: var(--color-text)"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script type="module">
+    import '/js/main.js';
+  </script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
+    }
+  </script>
+</body>
+</html>
