@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#0a1628" />
   <meta name="description" content="Comparador de Salario en Planilla vs Servicios Profesionales (Freelancer) El Salvador." />
-  <title>Planilla vs Freelance — RentaSV El Salvador 2026</title>
+  <title>Planilla vs Freelance — RentaSV El Salvador {{ currentYear }}</title>
   <link rel="manifest" href="/manifest.json" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 
@@ -112,8 +112,8 @@
 
   <!-- Encabezado sutil -->
   <div class="mb-8 text-center" data-aos="fade-down">
-    <h1 class="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white mb-2 tracking-tight">Planilla vs Honorarios 🇸🇻</h1>
-    <p class="text-slate-500 font-medium">Comparativa de ingresos netos reales</p>
+    <h1 class="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white mb-2 tracking-tight">Comparativa {{ currentYear }} 🇸🇻</h1>
+    <p class="text-slate-500 font-medium">Planilla vs. Servicios Profesionales</p>
   </div>
 
   <!-- Tab nav (Responsive Scrollable) -->
@@ -234,34 +234,50 @@
   </div>
 </main>
 
-<footer class="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 py-10 mt-8">
-  <div class="max-w-2xl mx-auto px-5">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+<footer class="bg-white dark:bg-[#0a1628] border-t border-slate-200 dark:border-white/[0.06] pt-12 pb-8">
+  <div class="max-w-4xl mx-auto px-5">
+    <!-- Grid de Recursos/Links -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10 pb-10 border-b border-slate-100 dark:border-white/5">
       <div>
-        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Base legal</p>
-        <div class="flex flex-col gap-2">
-          <a href="https://www.asamblea.gob.sv/sites/default/files/documents/decretos/D3E7B2C1-396C-4B44-B1F3-2B056D4C617F.pdf#page=35" target="_blank" class="text-xs text-slate-500 hover:text-blue-500 transition-colors flex items-center gap-2">
-            <span class="iconify" data-icon="lucide:external-link"></span> Ley de Impuesto sobre la Renta
+        <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">Base legal El Salvador</h4>
+        <div class="flex flex-col gap-3">
+          <a href="https://www.asamblea.gob.sv/sites/default/files/documents/decretos/D3E7B2C1-396C-4B44-B1F3-2B056D4C617F.pdf#page=35" target="_blank" class="text-xs text-slate-500 hover:text-blue-500 transition-colors flex items-center gap-2 group">
+            <span class="iconify group-hover:translate-x-0.5 transition-transform" data-icon="lucide:external-link"></span> Ley de Impuesto sobre la Renta
           </a>
-          <a href="https://www.asamblea.gob.sv/sites/default/files/documents/decretos/AD778A29-F1B3-495E-AE19-E2B05D93685D.pdf" target="_blank" class="text-xs text-slate-500 hover:text-blue-500 transition-colors flex items-center gap-2">
-            <span class="iconify" data-icon="lucide:external-link"></span> Código de Trabajo
+          <a href="https://www.asamblea.gob.sv/sites/default/files/documents/decretos/AD778A29-F1B3-495E-AE19-E2B05D93685D.pdf" target="_blank" class="text-xs text-slate-500 hover:text-blue-500 transition-colors flex items-center gap-2 group">
+            <span class="iconify group-hover:translate-x-0.5 transition-transform" data-icon="lucide:external-link"></span> Código de Trabajo
           </a>
         </div>
       </div>
-      <div class="flex flex-col items-start md:items-end">
-        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Apoyo</p>
-        <a href="/donaciones.html" class="btn-coffee text-sm">
+      <div class="flex flex-col md:items-end">
+        <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">Sostenibilidad</h4>
+        <a href="/donaciones.html" class="btn-main text-xs py-2 px-4">
           <span class="iconify" data-icon="lucide:heart"></span> Apoyar proyecto
         </a>
       </div>
     </div>
-    <div class="pt-8 border-t border-slate-100 dark:border-slate-800 flex flex-wrap gap-4 items-center justify-between">
-      <p class="text-[10px] text-slate-400 max-w-sm leading-relaxed flex items-start gap-1">
-        <span class="iconify shrink-0 text-amber-500" data-icon="lucide:alert-triangle"></span>
-        <span><strong>Nota legal:</strong> Simulador comparativo informativo. No sustituye asesoría fiscal profesional.</span>
-      </p>
-      <div class="flex items-center gap-4">
-        <span class="text-[10px] text-slate-400 uppercase font-bold tracking-tight">El Salvador</span>
+
+    <!-- Bottom Area -->
+    <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+      <div class="max-w-xl text-center md:text-left">
+        <p class="text-[11px] text-slate-500 leading-relaxed flex items-start gap-2">
+          <span class="iconify shrink-0 text-amber-500 text-sm" data-icon="lucide:alert-triangle"></span>
+          <span><strong>Nota legal:</strong> Este simulador es informativo y no sustituye asesoría profesional. Cálculos basados en legislación {{ currentYear }}.</span>
+        </p>
+      </div>
+
+      <div class="flex items-center gap-6 shrink-0">
+        <div class="text-right hidden sm:block">
+          <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">v{{ currentYear }}.1</p>
+          <p class="text-[10px] text-slate-500">El Salvador</p>
+        </div>
+        <div class="h-8 w-px bg-slate-200 dark:bg-white/10 hidden sm:block"></div>
+        <div class="flex items-center gap-3">
+           <button @click="toggleTheme" class="theme-toggle" :title="isDarkMode ? 'Modo claro' : 'Modo oscuro'">
+             <span class="iconify text-lg" v-if="!isDarkMode" data-icon="lucide:sun"></span>
+             <span class="iconify text-lg" v-else data-icon="lucide:moon"></span>
+           </button>
+        </div>
       </div>
     </div>
   </div>

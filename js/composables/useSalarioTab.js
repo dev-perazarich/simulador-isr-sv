@@ -5,7 +5,7 @@
 import {
   calcularSalarioNeto,
 } from '../modules/calculator.js';
-import { DATA_2026 } from '../modules/constants.js';
+import { DATA_APP } from '../modules/constants.js';
 import { storage, KEYS } from '../modules/storage.js';
 
 const { ref, computed, nextTick } = Vue;
@@ -20,7 +20,7 @@ export function useSalarioTab() {
 
   // ── Computed ──
   const sectores = computed(() =>
-    Object.entries(DATA_2026.SALARIOS_MINIMOS).map(([key, val]) => ({
+    Object.entries(DATA_APP.SALARIOS_MINIMOS).map(([key, val]) => ({
       key,
       label: val.label,
       salarioMinimo: val.mensual,
@@ -28,7 +28,7 @@ export function useSalarioTab() {
   );
 
   const sectorActual = computed(() =>
-    DATA_2026.SALARIOS_MINIMOS[sectorSeleccionado.value]
+    DATA_APP.SALARIOS_MINIMOS[sectorSeleccionado.value]
   );
 
   const salarioEsSufiMinimo = computed(() => {

@@ -1,6 +1,4 @@
-// ============================================================
-// useShared.js — Composable para estado y helpers compartidos
-// ============================================================
+import DATA_APP from '../modules/constants.js';
 
 const { ref } = Vue;
 
@@ -10,6 +8,8 @@ const NOMBRES_MESES = [
 ];
 
 export function useShared() {
+  const currentYear = DATA_APP.CURRENT_YEAR;
+  const fiscalYear = DATA_APP.FISCAL_YEAR;
   
   // ── Estado global ──
   const tabActiva = ref('salario');
@@ -36,6 +36,9 @@ export function useShared() {
     closeMenu,
     // Constants
     NOMBRES_MESES,
+    DATA_APP,
+    currentYear,
+    fiscalYear,
     // Formatters — exponer ambos nombres para template y JS externo
     fmt,
     pct,

@@ -3,7 +3,7 @@ import { useSalarioTab }       from './composables/useSalarioTab.js';
 import { useShared }           from './composables/useShared.js';
 import { useTheme }            from './composables/useTheme.js';
 import PDFService              from './services/PDFService.js';
-import { DATA_2026 }           from './modules/constants.js';
+import { DATA_APP }           from './modules/constants.js';
 
 const { createApp, onMounted } = Vue;
 
@@ -29,7 +29,7 @@ createApp({
       ...salarioTab,
       theme, isDarkMode, toggleTheme,
       generarPDF,
-      DATA_2026,
+      DATA_APP,
     };
   },
 }).mount('#app-salario');

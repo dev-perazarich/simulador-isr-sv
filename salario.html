@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#0a1628" />
   <meta name="description" content="Calculadora de Salario Neto El Salvador 2026 — Deducciones ISSS, AFP y Renta." />
-  <title>Salario Neto — RentaSV El Salvador 2026</title>
+  <title>Salario Neto — RentaSV El Salvador {{ currentYear }}</title>
   <link rel="manifest" href="/manifest.json" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 
@@ -115,8 +115,8 @@
 
   <!-- Encabezado sutil -->
   <div class="mb-8 text-center" data-aos="fade-down">
-    <h1 class="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white mb-2 tracking-tight">Salario Neto 🇸🇻</h1>
-    <p class="text-slate-500 font-medium">Calculadora de retenciones ley 2026</p>
+    <h1 class="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white mb-2 tracking-tight">Salario Neto {{ currentYear }} 🇸🇻</h1>
+    <p class="text-slate-500 font-medium">Calculadora de retenciones ley vigente</p>
   </div>
 
   <!-- Tab nav (Responsive Scrollable) -->
@@ -310,13 +310,28 @@
         </a>
       </div>
     </div>
-    <div class="pt-8 border-t border-slate-100 dark:border-slate-800 flex flex-wrap gap-4 items-center justify-between">
-      <p class="text-[10px] text-slate-400 max-w-sm leading-relaxed flex items-start gap-1">
-        <span class="iconify shrink-0 text-amber-500" data-icon="lucide:alert-triangle"></span>
-        <span><strong>Nota legal:</strong> Simulador informativo. No sustituye asesoría profesional. v{{ DATA_2026.VERSION }}</span>
-      </p>
-      <div class="flex items-center gap-4">
-        <span class="text-[10px] text-slate-400 uppercase font-bold tracking-tight">El Salvador</span>
+    
+    <!-- Bottom Area -->
+    <div class="border-t border-slate-100 dark:border-white/5 pt-8 mt-8 flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left">
+      <div class="max-w-xl">
+        <p class="text-[11px] text-slate-500 leading-relaxed flex items-start gap-2">
+          <span class="iconify shrink-0 text-amber-500 text-sm" data-icon="lucide:alert-triangle"></span>
+          <span><strong>Nota legal:</strong> Este simulador es informativo y no sustituye asesoría profesional. Los cálculos corresponden a la legislación {{ currentYear }}.</span>
+        </p>
+      </div>
+
+      <div class="flex items-center gap-6 shrink-0">
+        <div class="text-right hidden sm:block">
+          <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">v{{ currentYear }}.1</p>
+          <p class="text-[10px] text-slate-500">El Salvador</p>
+        </div>
+        <div class="h-8 w-px bg-slate-200 dark:bg-white/10 hidden sm:block"></div>
+        <div class="flex items-center gap-3">
+           <button @click="toggleTheme" class="theme-toggle" :title="isDarkMode ? 'Modo claro' : 'Modo oscuro'">
+             <span class="iconify text-lg" v-if="!isDarkMode" data-icon="lucide:sun"></span>
+             <span class="iconify text-lg" v-else data-icon="lucide:moon"></span>
+           </button>
+        </div>
       </div>
     </div>
   </div>

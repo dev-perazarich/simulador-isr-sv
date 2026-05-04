@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#0a1628" />
   <meta name="description" content="Apoya el desarrollo de RentaSV mediante donaciones." />
-  <title>Donaciones — RentaSV El Salvador 2026</title>
+  <title>Donaciones — RentaSV {{ currentYear }}</title>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 
   <!-- Fuentes -->
@@ -153,6 +153,23 @@
       </div>
     </main>
 
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-[#0a1628] border-t border-slate-200 dark:border-white/[0.06] pt-12 pb-8">
+      <div class="max-w-4xl mx-auto px-5">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+          <div class="text-center md:text-left">
+            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Versión {{ currentYear }}.1</p>
+            <p class="text-[10px] text-slate-500">Hecho en El Salvador</p>
+          </div>
+          <div class="flex items-center gap-4">
+             <button @click="toggleTheme" class="theme-toggle" :title="isDarkMode ? 'Modo claro' : 'Modo oscuro'">
+               <span class="iconify text-lg" v-if="!isDarkMode" data-icon="lucide:sun"></span>
+               <span class="iconify text-lg" v-else data-icon="lucide:moon"></span>
+             </button>
+          </div>
+        </div>
+      </div>
+    </footer>
   </div>
 
   <script type="module">
