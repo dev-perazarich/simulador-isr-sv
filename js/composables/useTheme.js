@@ -2,13 +2,11 @@
 // useTheme.js — Composable para gestión de Temas (Light/Dark)
 // ============================================================
 
-const { ref, watch, onMounted } = Vue;
-
 export function useTheme() {
   
   // ── Estado ──
-  const theme = ref('light');
-  const isDarkMode = ref(false);
+  const theme = Vue.ref('light');
+  const isDarkMode = Vue.ref(false);
 
   // Clave de localStorage
   const THEME_KEY = 'sv-isr-theme';
@@ -85,7 +83,7 @@ export function useTheme() {
   }
 
   // ── Inicializar al montar ──
-  onMounted(() => {
+  Vue.onMounted(() => {
     const savedTheme = getSavedTheme();
     applyTheme(savedTheme);
     setupSystemThemeListener();

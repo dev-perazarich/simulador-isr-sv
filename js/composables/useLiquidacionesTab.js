@@ -1,11 +1,10 @@
 import { calcularAguinaldo, calcularIndemnizacion, calcularVacacion, calcularRenunciaVoluntaria } from '../modules/calculator.js';
 import { storage } from '../modules/storage.js';
 
-const { ref, watch, computed } = Vue;
 
 export function useLiquidacionesTab() {
   // Estado del formulario
-  const liqForm = ref({
+  const liqForm = Vue.ref({
     modo: 'despido', // 'despido', 'renuncia', 'aguinaldo', 'vacacion'
     salario: null,
     anios: 1,
@@ -14,13 +13,13 @@ export function useLiquidacionesTab() {
   });
 
   // Resultados
-  const resultadoDespido = ref(null);
-  const resultadoRenuncia = ref(null);
-  const resultadoAguinaldo = ref(null);
-  const resultadoVacacion = ref(null);
+  const resultadoDespido = Vue.ref(null);
+  const resultadoRenuncia = Vue.ref(null);
+  const resultadoAguinaldo = Vue.ref(null);
+  const resultadoVacacion = Vue.ref(null);
 
   // Computado auxiliar
-  const totalAniosDecimal = computed(() => {
+  const totalAniosDecimal = Vue.computed(() => {
     return Number(liqForm.value.anios) + (Number(liqForm.value.meses) / 12) + (Number(liqForm.value.dias) / 365);
   });
 
@@ -66,7 +65,7 @@ export function useLiquidacionesTab() {
   }
 
   // Automáticamente borrar resultados si el usuario cambia montos (para no tener data vieja)
-  watch(() => liqForm.value.salario, () => {
+  Vue.watch(() => liqForm.value.salario, () => {
     resultadoDespido.value = null;
     resultadoRenuncia.value = null;
     resultadoAguinaldo.value = null;

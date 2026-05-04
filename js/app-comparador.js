@@ -1,16 +1,15 @@
 import { useComparadorTab }    from './composables/useComparadorTab.js';
 import { useShared }           from './composables/useShared.js';
 import { useTheme }            from './composables/useTheme.js';
+import { DATA_APP }         from './modules/constants.js';
 
-const { createApp, onMounted } = Vue;
-
-createApp({
+Vue.createApp({
   setup() {
     const shared         = useShared();
     const compTab        = useComparadorTab();
     const { theme, isDarkMode, toggleTheme } = useTheme();
 
-    onMounted(() => {
+    Vue.onMounted(() => {
       compTab.restaurarDatos();
     });
 
@@ -18,6 +17,7 @@ createApp({
       ...shared,
       ...compTab,
       theme, isDarkMode, toggleTheme,
+      DATA_APP,
     };
   },
 }).mount('#app-comparador');

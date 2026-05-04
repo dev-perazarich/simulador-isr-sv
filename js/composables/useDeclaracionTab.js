@@ -7,8 +7,6 @@ import {
 } from '../modules/calculator.js';
 import { storage, KEYS } from '../modules/storage.js';
 
-const { ref } = Vue;
-
 const NOMBRES_MESES = [
   'Enero','Febrero','Marzo','Abril','Mayo','Junio',
   'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'
@@ -17,7 +15,7 @@ const NOMBRES_MESES = [
 export function useDeclaracionTab() {
   
   // ── Estado ──
-  const mesesDeclaracion = ref(
+  const mesesDeclaracion = Vue.ref(
     NOMBRES_MESES.map((nombre, i) => ({
       nombre,
       index: i,
@@ -27,12 +25,12 @@ export function useDeclaracionTab() {
     }))
   );
 
-  const otrosIngresos = ref('');
-  const gastosDeducibles = ref('');
-  const resultadoAnual = ref(null);
-  const mostrandoMeses = ref(false);
+  const otrosIngresos = Vue.ref('');
+  const gastosDeducibles = Vue.ref('');
+  const resultadoAnual = Vue.ref(null);
+  const mostrandoMeses = Vue.ref(false);
   // Ref reactiva para el campo "Relleno rápido" — reemplaza document.getElementById()
-  const salarioRapidoInput = ref('');
+  const salarioRapidoInput = Vue.ref('');
 
   // ── Métodos ──
   function simularAnual() {

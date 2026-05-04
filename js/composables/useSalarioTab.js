@@ -8,18 +8,16 @@ import {
 import { DATA_APP } from '../modules/constants.js';
 import { storage, KEYS } from '../modules/storage.js';
 
-const { ref, computed, nextTick } = Vue;
-
 export function useSalarioTab() {
   
   // ── Estado ──
-  const salarioInput = ref('');
-  const resultadoSalario = ref(null);
-  const sectorSeleccionado = ref('COMERCIO_INDUSTRIA_SERVICIOS');
+  const salarioInput = Vue.ref('');
+  const resultadoSalario = Vue.ref(null);
+  const sectorSeleccionado = Vue.ref('COMERCIO_INDUSTRIA_SERVICIOS');
   let chartInst = null;
 
   // ── Computed ──
-  const sectores = computed(() =>
+  const sectores = Vue.computed(() =>
     Object.entries(DATA_APP.SALARIOS_MINIMOS).map(([key, val]) => ({
       key,
       label: val.label,
@@ -27,11 +25,11 @@ export function useSalarioTab() {
     }))
   );
 
-  const sectorActual = computed(() =>
+  const sectorActual = Vue.computed(() =>
     DATA_APP.SALARIOS_MINIMOS[sectorSeleccionado.value]
   );
 
-  const salarioEsSufiMinimo = computed(() => {
+  const salarioEsSufiMinimo = Vue.computed(() => {
     if (!salarioInput.value) return null;
     const min = sectorActual.value.mensual;
     const bruto = parseFloat(salarioInput.value);
@@ -44,7 +42,7 @@ export function useSalarioTab() {
 
   // ── Chart.js ──
   function renderChart(resultado) {
-    nextTick(() => {
+    Vue.nextTick(() => {
       const ctx = document.getElementById('salarioChart');
       if (!ctx) return;
       if (chartInst) { chartInst.destroy(); }

@@ -4,9 +4,7 @@ import { useTheme }            from './composables/useTheme.js';
 import PDFService              from './services/PDFService.js';
 import { DATA_APP }           from './modules/constants.js';
 
-const { createApp, onMounted } = Vue;
-
-createApp({
+Vue.createApp({
   setup() {
     const shared         = useShared();
     const declaracionTab = useDeclaracionTab();
@@ -19,7 +17,7 @@ createApp({
       }
     }
 
-    onMounted(() => {
+    Vue.onMounted(() => {
       declaracionTab.restaurarDatos();
     });
 

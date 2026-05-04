@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#0a1628" />
   <meta name="description" content="Simulador Declaración de ISR Anual F-11 en El Salvador 2026." />
-  <title>Declaración F-11 — RentaSV El Salvador {{ currentYear }}</title>
+  <title>RentaSV — Simulador ISR El Salvador 2025-2026</title>
   <link rel="manifest" href="/manifest.json" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 
@@ -114,7 +114,7 @@
 
   <!-- Encabezado sutil -->
   <div class="mb-8 text-center" data-aos="fade-down">
-    <h1 class="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white mb-2 tracking-tight">ISR Anual {{ fiscalYear }} 🇸🇻</h1>
+    <h1 class="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white mb-2 tracking-tight">ISR Anual <span v-text="DATA_APP.FISCAL_YEAR">2024</span> 🇸🇻</h1>
     <p class="text-slate-500 font-medium">Simulador de declaración F-11 (Ejercicio fiscal anterior)</p>
   </div>
 
@@ -217,7 +217,7 @@
         <!-- Saldo -->
         <div :class="resultadoAnual.tipoSaldo==='A_FAVOR' ? 'saldo-favor' : 'saldo-pagar'" class="mb-4">
           <p class="text-sm font-semibold mb-2" :class="resultadoAnual.tipoSaldo==='A_FAVOR' ? 'text-emerald-700' : 'text-red-600'">
-            {{ resultadoAnual.tipoSaldo==='A_FAVOR' ? '✓ El Estado debe devolverte' : '⚠ Deberás pagar en abril 2026' }}
+            {{ resultadoAnual.tipoSaldo==='A_FAVOR' ? '✓ El Estado debe devolverte' : '⚠ Deberás pagar en abril ' + (DATA_APP.CURRENT_YEAR) }}
           </p>
           <div class="saldo-num" :class="resultadoAnual.tipoSaldo==='A_FAVOR' ? 'text-emerald-700' : 'text-red-600'">
             {{ fmt(resultadoAnual.saldo) }}
@@ -277,13 +277,13 @@
       <div class="max-w-xl">
         <p class="text-[11px] text-slate-500 leading-relaxed flex items-start gap-2">
           <span class="iconify shrink-0 text-amber-500 text-sm" data-icon="lucide:alert-triangle"></span>
-          <span><strong>Nota legal:</strong> Este simulador es informativo y no sustituye asesoría profesional. Los cálculos corresponden a la legislación {{ currentYear }}.</span>
+          <span><strong>Nota legal:</strong> Este simulador es informativo y no sustituye asesoría profesional. Los cálculos corresponden a la declaración de <span v-text="DATA_APP.FISCAL_YEAR">2024</span>.</span>
         </p>
       </div>
 
       <div class="flex items-center gap-6 shrink-0">
         <div class="text-right hidden sm:block">
-          <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">v{{ currentYear }}.1</p>
+          <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">v<span v-text="DATA_APP.VERSION">2025.1</span></p>
           <p class="text-[10px] text-slate-500">El Salvador</p>
         </div>
         <div class="h-8 w-px bg-slate-200 dark:bg-white/10 hidden sm:block"></div>

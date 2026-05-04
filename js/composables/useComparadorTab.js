@@ -1,12 +1,10 @@
 import { calcularSalarioNeto, calcularHonorarios } from '../modules/calculator.js';
 import { storage } from '../modules/storage.js';
 
-const { ref } = Vue;
-
 export function useComparadorTab() {
-  const montoInput = ref('');
-  const resultadoPlanilla = ref(null);
-  const resultadoHonorarios = ref(null);
+  const montoInput = Vue.ref('');
+  const resultadoPlanilla = Vue.ref(null);
+  const resultadoHonorarios = Vue.ref(null);
 
   function compararOpciones() {
     const monto = parseFloat(montoInput.value);

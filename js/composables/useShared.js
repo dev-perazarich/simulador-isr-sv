@@ -1,6 +1,4 @@
-import DATA_APP from '../modules/constants.js';
-
-const { ref } = Vue;
+import { DATA_APP } from '../modules/constants.js';
 
 const NOMBRES_MESES = [
   'Enero','Febrero','Marzo','Abril','Mayo','Junio',
@@ -12,9 +10,9 @@ export function useShared() {
   const fiscalYear = DATA_APP.FISCAL_YEAR;
   
   // ── Estado global ──
-  const tabActiva = ref('salario');
-  const mostrarPrivacidad = ref(false);
-  const isMenuOpen = ref(false);
+  const tabActiva = Vue.ref('salario');
+  const mostrarPrivacidad = Vue.ref(false);
+  const isMenuOpen = Vue.ref(false);
 
   const toggleMenu = () => isMenuOpen.value = !isMenuOpen.value;
   const closeMenu = () => isMenuOpen.value = false;
