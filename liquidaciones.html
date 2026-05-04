@@ -52,53 +52,57 @@
 
 <div id="app-liquidaciones">
 
-<!-- Navbar -->
-<header class="sticky top-0 z-50 bg-[#0a1628]/95 backdrop-blur border-b border-white/[0.07]">
+<header class="glass-header sticky top-0 z-50">
   <div class="max-w-4xl mx-auto px-5 h-16 flex items-center justify-between gap-4">
     <div class="flex items-center gap-4">
-      <a href="/" class="text-slate-500 hover:text-white transition-colors text-sm flex items-center gap-1.5">
+      <a href="/" class="text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors text-sm flex items-center gap-1.5">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
         <span class="hidden sm:inline">Inicio</span>
       </a>
-      <div class="h-5 w-px bg-white/10"></div>
+      <div class="h-5 w-px bg-slate-200 dark:bg-white/10"></div>
       <a href="/" class="flex items-center gap-2">
-        <div class="w-7 h-7 bg-primary rounded-lg flex items-center justify-center">
+        <div class="w-7 h-7 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
         </div>
-        <span class="font-extrabold text-white tracking-tight">Renta<span class="text-primary-mid">SV</span></span>
+        <span class="font-extrabold tracking-tight text-slate-900 dark:text-white">Renta<span class="text-blue-500">SV</span></span>
       </a>
     </div>
 
-    <!-- Nav tabs -->
-    <nav class="hidden md:flex items-center gap-1">
-      <a href="/salario.html" class="text-xs font-semibold px-3 py-1.5 rounded-full transition-all text-slate-500 hover:text-white">Salario</a>
-      <a href="/liquidaciones.html" class="text-xs font-semibold px-3 py-1.5 rounded-full transition-all bg-white/15 text-white">Liquidaciones</a>
-      <a href="/isr-anual.html" class="text-xs font-semibold px-3 py-1.5 rounded-full transition-all text-slate-500 hover:text-white">ISR Anual</a>
-      <a href="/comparador.html" class="text-xs font-semibold px-3 py-1.5 rounded-full transition-all text-slate-500 hover:text-white">Asal. vs Freelance</a>
-    </nav>
-
-    <button @click="toggleTheme" class="theme-toggle shrink-0">
+    <!-- Theme toggle -->
+    <button @click="toggleTheme" class="theme-toggle shrink-0" :title="isDarkMode ? 'Modo claro' : 'Modo oscuro'">
       <span class="iconify text-lg" data-icon="lucide:sun" v-show="!isDarkMode"></span>
       <span class="iconify text-lg" data-icon="lucide:moon" v-show="isDarkMode"></span>
     </button>
   </div>
 </header>
 
-<div class="bg-[#0a1628] border-b border-white/[0.07] py-10">
-  <div class="max-w-2xl mx-auto px-5 text-center">
-    <h1 class="text-2xl font-bold text-white mb-1.5">Liquidaciones y Prestaciones</h1>
-    <p class="text-sm text-slate-400">Despido injustificado, renuncia voluntaria, aguinaldos y vacaciones.</p>
-  </div>
-</div>
+<main class="max-w-2xl mx-auto px-5 py-8">
 
-<main class="max-w-2xl mx-auto px-5 py-10">
-  <div class="tab-nav mb-5">
-    <a href="/salario.html" class="tab-btn" style="text-decoration:none;"><span class="tab-text">Salario Neto</span></a>
-    <a href="/liquidaciones.html" class="tab-btn active" style="text-decoration:none;"><span class="tab-text">Liquidación</span></a>
-    <a href="/isr-anual.html" class="tab-btn" style="text-decoration:none;"><span class="tab-text">F-11</span></a>
-    <a href="/comparador.html" class="tab-btn" style="text-decoration:none;"><span class="tab-text">Freelance</span></a>
+  <!-- Encabezado sutil -->
+  <div class="mb-8 text-center">
+    <h1 class="text-3xl font-black text-slate-900 dark:text-white mb-2">Renuncias y Ceses</h1>
+    <p class="text-slate-500 font-medium">Ley de indemnizaciones y prestaciones 2026</p>
   </div>
 
-  <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden mb-5 p-7">
+  <!-- Tab nav (Desktop) -->
+  <div class="desktop-tabs-container max-w-xl mx-auto mb-8">
+    <div class="desktop-tabs">
+      <a href="/salario.html" class="tab-btn">
+        <span class="iconify" data-icon="lucide:circle-dollar-sign"></span> Salario
+      </a>
+      <a href="/liquidaciones.html" class="tab-btn active">
+        <span class="iconify" data-icon="lucide:briefcase"></span> Cese
+      </a>
+      <a href="/isr-anual.html" class="tab-btn">
+        <span class="iconify" data-icon="lucide:calculator"></span> F-11
+      </a>
+      <a href="/comparador.html" class="tab-btn">
+        <span class="iconify" data-icon="lucide:scale"></span> VS
+      </a>
+    </div>
+  </div>
+
+  <div class="glass-panel p-7 mb-8">
     <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-5">Selecciona qué prestación quieres calcular e indica el tiempo laborado. Las lógicas difieren según la modalidad.</p>
 
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-2 mb-6">
@@ -181,7 +185,25 @@
     </div>
 
   </div>
+  </div>
 </main>
+
+<!-- Bottom Nav (Mobile) -->
+<nav class="mobile-nav-dock">
+  <a href="/salario.html" class="dock-btn">
+    <span class="iconify" data-icon="lucide:circle-dollar-sign"></span> Salario
+  </a>
+  <a href="/liquidaciones.html" class="dock-btn active">
+    <span class="iconify" data-icon="lucide:briefcase"></span> Cese
+  </a>
+  <a href="/isr-anual.html" class="dock-btn">
+    <span class="iconify" data-icon="lucide:calculator"></span> F-11
+  </a>
+  <a href="/comparador.html" class="dock-btn">
+    <span class="iconify" data-icon="lucide:scale"></span> VS
+  </a>
+</nav>
+
 </div>
 <script type="module">import '/js/app-liquidaciones.js';</script>
 </body>

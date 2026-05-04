@@ -8,7 +8,7 @@ import {
 import { DATA_2026 } from '../modules/constants.js';
 import { storage, KEYS } from '../modules/storage.js';
 
-const { ref, computed } = Vue;
+const { ref, computed, nextTick } = Vue;
 
 export function useSalarioTab() {
   
@@ -16,6 +16,7 @@ export function useSalarioTab() {
   const salarioInput = ref('');
   const resultadoSalario = ref(null);
   const sectorSeleccionado = ref('COMERCIO_INDUSTRIA_SERVICIOS');
+  let chartInst = null;
 
   // ── Computed ──
   const sectores = computed(() =>
@@ -41,17 +42,54 @@ export function useSalarioTab() {
     };
   });
 
+  // ── Chart.js ──
+  function renderChart(resultado) {
+    nextTick(() => {
+      const ctx = document.getElementById('salarioChart');
+      if (!ctx) return;
+      if (chartInst) { chartInst.destroy(); }
+      
+      chartInst = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['ISSS', 'AFP', 'Renta / ISR', 'Dinero a Recibir'],
+          datasets: [{
+            data: [
+              resultado.descuentoISSS, 
+              resultado.descuentoAFP, 
+              resultado.isrMensual, 
+              resultado.salarioNeto
+            ].map(x => x || 0),
+            backgroundColor: ['#f43f5e', '#ea580c', '#38bdf8', '#10b981'],
+            borderWidth: 0,
+            hoverOffset: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'bottom', labels: { color: '#94a3b8', font: { family: 'Outfit', size: 11 } } }
+          },
+          cutout: '65%'
+        }
+      });
+    });
+  }
+
   // ── Métodos ──
   function calcularSalario() {
     const bruto = parseFloat(salarioInput.value);
     if (!bruto || bruto <= 0) return;
     resultadoSalario.value = calcularSalarioNeto(bruto);
     storage.set(KEYS.SALARIO, { bruto, resultado: resultadoSalario.value });
+    renderChart(resultadoSalario.value);
   }
 
   function limpiarSalario() {
     salarioInput.value = '';
     resultadoSalario.value = null;
+    if (chartInst) { chartInst.destroy(); chartInst = null; }
     storage.remove(KEYS.SALARIO);
   }
 
@@ -61,6 +99,7 @@ export function useSalarioTab() {
     if (savedSalario) {
       salarioInput.value = savedSalario.bruto;
       resultadoSalario.value = savedSalario.resultado;
+      renderChart(savedSalario.resultado);
     }
   }
 
