@@ -68,8 +68,7 @@
 
     <!-- Theme toggle -->
     <button @click="toggleTheme" class="theme-toggle shrink-0" :title="isDarkMode ? 'Modo claro' : 'Modo oscuro'">
-      <span class="iconify text-lg" data-icon="lucide:sun" v-show="!isDarkMode"></span>
-      <span class="iconify text-lg" data-icon="lucide:moon" v-show="isDarkMode"></span>
+      <span class="iconify text-lg" :data-icon="isDarkMode ? 'lucide:moon' : 'lucide:sun'"></span>
     </button>
   </div>
 </header>
@@ -173,6 +172,11 @@
 
   <script type="module">
     import '/js/main.js';
+  </script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js?v=1.9.3').catch(() => {}));
+    }
   </script>
 </body>
 </html>
