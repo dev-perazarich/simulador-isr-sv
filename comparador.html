@@ -65,8 +65,7 @@
 
     <!-- Theme toggle -->
     <button @click="toggleTheme" class="theme-toggle shrink-0" :title="isDarkMode ? 'Modo claro' : 'Modo oscuro'">
-      <span class="iconify text-lg" data-icon="lucide:sun" v-show="!isDarkMode"></span>
-      <span class="iconify text-lg" data-icon="lucide:moon" v-show="isDarkMode"></span>
+      <span class="iconify text-lg" :data-icon="isDarkMode ? 'lucide:moon' : 'lucide:sun'"></span>
     </button>
   </div>
 </header>
@@ -112,7 +111,7 @@
 
   <!-- Encabezado sutil -->
   <div class="mb-8 text-center" data-aos="fade-down">
-    <h1 class="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white mb-2 tracking-tight">Comparativa <span v-text="DATA_APP.CURRENT_YEAR">2025</span> 🇸🇻</h1>
+    <h1 class="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white mb-2 tracking-tight">Comparativa <span v-text="DATA_2026.CURRENT_YEAR"></span> 🇸🇻</h1>
     <p class="text-slate-500 font-medium">Planilla vs. Servicios Profesionales</p>
   </div>
 
@@ -145,7 +144,7 @@
         <label class="field-label text-center">Salario ofertado (USD)</label>
         <div class="inp-prefix">
           <span class="inp-prefix-symbol">$</span>
-          <input v-model="montoInput" type="number" min="0" step="0.01" class="inp text-xl text-center font-bold font-mono" placeholder="1000.00" @keydown.enter="compararOpciones" style="padding-left: 0;"/>
+          <input v-model="montoInput" type="number" min="0" step="0.01" class="inp text-center font-bold font-mono" placeholder="1000.00" @keydown.enter="compararOpciones" style="padding-left: 16px;"/>
         </div>
         <div class="flex gap-2 mt-4">
           <button class="btn-main flex-1" @click="compararOpciones">Simular Escenarios</button>
@@ -158,10 +157,10 @@
         <!-- Tarjeta Planilla -->
         <div class="result-panel h-full flex flex-col relative transition-all duration-300 hover:shadow-xl hover:border-blue-400">
           <div v-if="resultadoPlanilla.salarioNeto > resultadoHonorarios.neto" class="absolute top-0 right-0 bg-emerald-500 text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg">MAYOR INGRESO NETO</div>
-          <div class="result-panel-header flex-col items-start gap-1" style="background:#f0f9ff; border-bottom:1px solid #bae6fd;">
+          <div class="result-panel-header flex-col items-start gap-1 bg-blue-50 dark:bg-blue-900/20 border-b border-blue-100 dark:border-blue-800/50">
             <div class="flex items-center gap-2">
-              <span class="p-1.5 bg-blue-100 rounded-md text-blue-700"><span class="iconify" data-icon="lucide:building-2"></span></span>
-              <span class="font-bold text-blue-800 text-lg">Asalariado en Planilla</span>
+              <span class="p-1.5 bg-blue-100 dark:bg-blue-800 rounded-md text-blue-700 dark:text-blue-300"><span class="iconify" data-icon="lucide:building-2"></span></span>
+              <span class="font-bold text-blue-800 dark:text-blue-200 text-lg">Asalariado en Planilla</span>
             </div>
           </div>
           <div class="p-5 grow flex flex-col gap-4">
@@ -195,10 +194,10 @@
         <!-- Tarjeta Freelance -->
         <div class="result-panel h-full flex flex-col relative transition-all duration-300 hover:shadow-xl hover:border-purple-400">
           <div v-if="resultadoHonorarios.neto > resultadoPlanilla.salarioNeto" class="absolute top-0 right-0 bg-emerald-500 text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg">MAYOR INGRESO NETO</div>
-          <div class="result-panel-header flex-col items-start gap-1" style="background:#faf5ff; border-bottom:1px solid #e9d5ff;">
+          <div class="result-panel-header flex-col items-start gap-1 bg-purple-50 dark:bg-purple-900/20 border-b border-purple-100 dark:border-purple-800/50">
             <div class="flex items-center gap-2">
-              <span class="p-1.5 bg-purple-100 rounded-md text-purple-700"><span class="iconify" data-icon="lucide:laptop"></span></span>
-              <span class="font-bold text-purple-800 text-lg">Servicios Profesionales / Freelance</span>
+              <span class="p-1.5 bg-purple-100 dark:bg-purple-800 rounded-md text-purple-700 dark:text-purple-300"><span class="iconify" data-icon="lucide:laptop"></span></span>
+              <span class="font-bold text-purple-800 dark:text-purple-200 text-lg">Servicios Profesionales / Freelance</span>
             </div>
           </div>
           <div class="p-5 grow flex flex-col gap-4">
@@ -262,20 +261,19 @@
       <div class="max-w-xl text-center md:text-left">
         <p class="text-[11px] text-slate-500 leading-relaxed flex items-start gap-2">
           <span class="iconify shrink-0 text-amber-500 text-sm" data-icon="lucide:alert-triangle"></span>
-          <span><strong>Nota legal:</strong> Este simulador es informativo y no sustituye asesoría profesional. Cálculos basados en legislación <span v-text="DATA_APP.CURRENT_YEAR">2025</span>.</span>
+          <span><strong>Nota legal:</strong> Este simulador es informativo y no sustituye asesoría profesional. Cálculos basados en legislación <span v-text="DATA_2026.CURRENT_YEAR"></span>.</span>
         </p>
       </div>
 
       <div class="flex items-center gap-6 shrink-0">
         <div class="text-right hidden sm:block">
-          <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">v<span v-text="DATA_APP.VERSION">2025.1</span></p>
+          <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">v<span v-text="DATA_2026.VERSION"></span></p>
           <p class="text-[10px] text-slate-500">El Salvador</p>
         </div>
         <div class="h-8 w-px bg-slate-200 dark:bg-white/10 hidden sm:block"></div>
         <div class="flex items-center gap-3">
            <button @click="toggleTheme" class="theme-toggle" :title="isDarkMode ? 'Modo claro' : 'Modo oscuro'">
-             <span class="iconify text-lg" v-if="!isDarkMode" data-icon="lucide:sun"></span>
-             <span class="iconify text-lg" v-else data-icon="lucide:moon"></span>
+             <span class="iconify text-lg" :data-icon="isDarkMode ? 'lucide:moon' : 'lucide:sun'"></span>
            </button>
         </div>
       </div>

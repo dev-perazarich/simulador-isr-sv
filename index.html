@@ -92,7 +92,7 @@
       <a href="#caracteristicas" @click.prevent="scrollTo('caracteristicas')" class="text-sm font-medium text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">Características</a>
       <a href="/salario.html" class="text-sm font-medium text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">Suite</a>
       <a href="/donaciones.html" class="text-sm font-medium text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">Donar</a>
-      <a href="/salario.html" class="btn-main py-2 px-5 text-sm shadow-none hover:shadow-none bg-primary/10 text-primary hover:bg-primary hover:text-white">
+      <a href="/salario.html" class="btn-main text-sm">
         Abrir Calculadora →
       </a>
     </nav>
@@ -100,10 +100,9 @@
      <!-- Mobile Right Controls -->
      <div class="flex items-center gap-2">
        <!-- Theme toggle -->
-       <button @click="toggleTheme" class="theme-toggle" :title="isDarkMode ? 'Modo claro' : 'Modo oscuro'">
-         <span class="iconify text-lg" data-icon="lucide:sun" v-show="!isDarkMode"></span>
-         <span class="iconify text-lg" data-icon="lucide:moon" v-show="isDarkMode"></span>
-       </button>
+       <button @click="toggleTheme" class="theme-toggle shrink-0" :title="isDarkMode ? 'Modo claro' : 'Modo oscuro'">
+      <span class="iconify text-lg" :data-icon="isDarkMode ? 'lucide:moon' : 'lucide:sun'"></span>
+    </button>
      </div>
   </div>
 </header>
@@ -151,11 +150,11 @@
   
   <div class="relative z-10 max-w-[1100px] mx-auto px-5 py-24 flex flex-col items-center text-center">
 
-  <!-- Badge -->
-  <div class="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 rounded-full px-5 py-2 text-sm font-bold mb-8" data-aos="fade-up" data-aos-delay="100">
-    <div class="hero-badge-dot"></div>
-    Legislación Fiscal El Salvador <span v-text="DATA_APP.CURRENT_YEAR">2025</span> Vigente
-  </div>
+    <!-- Badge -->
+    <div class="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 rounded-full px-5 py-2 text-sm font-bold mb-8" data-aos="fade-up" data-aos-delay="100">
+      <div class="hero-badge-dot"></div>
+      Legislación Fiscal El Salvador <span v-text="DATA_2026.CURRENT_YEAR"></span> Vigente
+    </div>
 
   <!-- Título -->
   <h1 class="text-5xl sm:text-6xl md:text-[5rem] font-black tracking-tight leading-[1.05] mb-6 max-w-4xl text-slate-900 dark:text-white" data-aos="fade-up" data-aos-delay="200">
@@ -472,24 +471,23 @@
       <!-- Bottom Area -->
       <div class="border-t border-slate-100 dark:border-white/5 pt-8 mt-8 flex flex-col md:flex-row justify-between items-center gap-6">
         <div class="max-w-xl">
-          <p class="text-[11px] text-slate-500 leading-relaxed flex items-start gap-2">
-            <span class="iconify shrink-0 text-amber-500 text-sm" data-icon="lucide:alert-triangle"></span>
-            <span><strong>Nota legal:</strong> Este simulador es informativo y no sustituye asesoría profesional ni el dictamen del Ministerio de Hacienda. Los cálculos corresponden a la legislación vigente de El Salvador para el periodo <span v-text="DATA_APP.CURRENT_YEAR + '-' + (DATA_APP.CURRENT_YEAR + 1)">2025-2026</span>.</span>
-          </p>
+           <p class="text-[11px] text-slate-500 leading-relaxed flex items-start gap-2">
+             <span class="iconify shrink-0 text-amber-500 text-sm" data-icon="lucide:alert-triangle"></span>
+             <span><strong>Nota legal:</strong> Este simulador es informativo y no sustituye asesoría profesional ni el dictamen del Ministerio de Hacienda. Los cálculos corresponden a la legislación vigente de El Salvador para el periodo <span v-text="DATA_2026.CURRENT_YEAR + '-' + (DATA_2026.CURRENT_YEAR + 1)"></span>.</span>
+           </p>
         </div>
 
         <div class="flex items-center gap-6 shrink-0">
           <div class="text-right">
-            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Versión <span v-text="DATA_APP.VERSION">2025.1</span></p>
+             <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Versión <span v-text="DATA_2026.VERSION"></span></p>
             <p class="text-[10px] text-slate-500">Hecho en El Salvador</p>
           </div>
           <div class="h-8 w-px bg-slate-200 dark:bg-white/10"></div>
           <div class="flex items-center gap-3">
              <a href="/autor.html" class="text-xs font-bold text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">Autor</a>
              <button @click="toggleTheme" class="theme-toggle" :title="isDarkMode ? 'Modo claro' : 'Modo oscuro'">
-               <span class="iconify text-lg" v-if="!isDarkMode" data-icon="lucide:sun"></span>
-               <span class="iconify text-lg" v-else data-icon="lucide:moon"></span>
-             </button>
+             <span class="iconify text-lg" :data-icon="isDarkMode ? 'lucide:moon' : 'lucide:sun'"></span>
+           </button>
           </div>
         </div>
       </div>

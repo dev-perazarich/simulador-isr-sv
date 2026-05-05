@@ -67,8 +67,7 @@
 
     <!-- Theme toggle -->
     <button @click="toggleTheme" class="theme-toggle shrink-0" :title="isDarkMode ? 'Modo claro' : 'Modo oscuro'">
-      <span class="iconify text-lg" data-icon="lucide:sun" v-show="!isDarkMode"></span>
-      <span class="iconify text-lg" data-icon="lucide:moon" v-show="isDarkMode"></span>
+      <span class="iconify text-lg" :data-icon="isDarkMode ? 'lucide:moon' : 'lucide:sun'"></span>
     </button>
   </div>
 </header>
@@ -114,7 +113,7 @@
 
   <!-- Encabezado sutil -->
   <div class="mb-8 text-center" data-aos="fade-down">
-    <h1 class="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white mb-2 tracking-tight">ISR Anual <span v-text="DATA_APP.FISCAL_YEAR">2024</span> 🇸🇻</h1>
+    <h1 class="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white mb-2 tracking-tight">ISR Anual <span v-text="DATA_2026.FISCAL_YEAR"></span> 🇸🇻</h1>
     <p class="text-slate-500 font-medium">Simulador de declaración F-11 (Ejercicio fiscal anterior)</p>
   </div>
 
@@ -151,7 +150,7 @@
             <span class="inp-prefix-symbol">$</span>
             <input id="salarioRapido" v-model="salarioRapidoInput" type="number" min="0" step="0.01" placeholder="Salario uniforme" class="inp" style="padding:10px 10px 10px 28px;" />
           </div>
-          <button class="btn-accent" @click="llenarSalarioUniforme(salarioRapidoInput)">Aplicar a todos</button>
+          <button class="btn-secondary" style="padding: 10px 16px;" @click="llenarSalarioUniforme(salarioRapidoInput)">Aplicar a todos</button>
         </div>
       </div>
 
@@ -206,10 +205,9 @@
         </div>
       </div>
 
-      <!-- Botones -->
-      <div class="flex gap-2.5 mb-6">
+      <div class="flex gap-3 mb-6">
         <button class="btn-main flex-1" @click="simularAnual">Simular declaración</button>
-        <button class="btn-ghost" @click="limpiarAnual">Limpiar</button>
+        <button class="btn-secondary" @click="limpiarAnual">Limpiar</button>
       </div>
 
       <!-- Resultado anual -->
@@ -217,7 +215,7 @@
         <!-- Saldo -->
         <div :class="resultadoAnual.tipoSaldo==='A_FAVOR' ? 'saldo-favor' : 'saldo-pagar'" class="mb-4">
           <p class="text-sm font-semibold mb-2" :class="resultadoAnual.tipoSaldo==='A_FAVOR' ? 'text-emerald-700' : 'text-red-600'">
-            {{ resultadoAnual.tipoSaldo==='A_FAVOR' ? '✓ El Estado debe devolverte' : '⚠ Deberás pagar en abril ' + (DATA_APP.CURRENT_YEAR) }}
+            {{ resultadoAnual.tipoSaldo==='A_FAVOR' ? '✓ El Estado debe devolverte' : '⚠ Deberás pagar en abril ' + (DATA_2026.CURRENT_YEAR) }}
           </p>
           <div class="saldo-num" :class="resultadoAnual.tipoSaldo==='A_FAVOR' ? 'text-emerald-700' : 'text-red-600'">
             {{ fmt(resultadoAnual.saldo) }}
@@ -234,13 +232,13 @@
           <div class="result-row"><span class="result-row-label">Deducción ISSS anual</span><span class="result-row-value negative">— {{ fmt(resultadoAnual.deduccionISSSAnual) }}</span></div>
           <div class="result-row"><span class="result-row-label">Deducción AFP anual</span><span class="result-row-value negative">— {{ fmt(resultadoAnual.deduccionAFPAnual) }}</span></div>
           <div v-if="resultadoAnual.gastosDeducibles>0" class="result-row"><span class="result-row-label">Gastos deducibles</span><span class="result-row-value negative">— {{ fmt(resultadoAnual.gastosDeducibles) }}</span></div>
-          <div class="result-row" style="background:#f0f9ff;"><span class="text-sm text-blue-700 font-medium">Renta neta anual base</span><span class="font-bold text-blue-700 font-mono text-sm">{{ fmt(resultadoAnual.rentaNetaAnual) }}</span></div>
+          <div class="result-row bg-blue-50 dark:bg-blue-900/20"><span class="text-sm text-blue-700 dark:text-blue-300 font-medium">Renta neta anual base</span><span class="font-bold text-blue-700 dark:text-blue-300 font-mono text-sm">{{ fmt(resultadoAnual.rentaNetaAnual) }}</span></div>
           <div class="result-row"><span class="result-row-label">ISR determinado por ley</span><span class="result-row-value">{{ fmt(resultadoAnual.isrDeterminado) }}</span></div>
           <div class="result-row"><span class="result-row-label">Retenciones pagadas mes a mes</span><span class="result-row-value negative">— {{ fmt(resultadoAnual.totalRetencionesAsalariado) }}</span></div>
           <div v-if="resultadoAnual.totalRetencionesServicios>0" class="result-row"><span class="result-row-label">Retenciones por honorarios (10%)</span><span class="result-row-value negative">— {{ fmt(resultadoAnual.totalRetencionesServicios) }}</span></div>
         </div>
 
-        <button @click="generarPDF" class="btn-ghost w-full mt-3 text-center text-sm">
+        <button @click="generarPDF" class="btn-secondary w-full mt-3 text-center text-sm">
           Exportar borrador F-11 en PDF
         </button>
       </div>
@@ -277,20 +275,19 @@
       <div class="max-w-xl">
         <p class="text-[11px] text-slate-500 leading-relaxed flex items-start gap-2">
           <span class="iconify shrink-0 text-amber-500 text-sm" data-icon="lucide:alert-triangle"></span>
-          <span><strong>Nota legal:</strong> Este simulador es informativo y no sustituye asesoría profesional. Los cálculos corresponden a la declaración de <span v-text="DATA_APP.FISCAL_YEAR">2024</span>.</span>
+          <span><strong>Nota legal:</strong> Este simulador es informativo y no sustituye asesoría profesional. Los cálculos corresponden a la declaración de <span v-text="DATA_2026.FISCAL_YEAR"></span>.</span>
         </p>
       </div>
 
       <div class="flex items-center gap-6 shrink-0">
         <div class="text-right hidden sm:block">
-          <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">v<span v-text="DATA_APP.VERSION">2025.1</span></p>
+          <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">v<span v-text="DATA_2026.VERSION"></span></p>
           <p class="text-[10px] text-slate-500">El Salvador</p>
         </div>
         <div class="h-8 w-px bg-slate-200 dark:bg-white/10 hidden sm:block"></div>
         <div class="flex items-center gap-3">
            <button @click="toggleTheme" class="theme-toggle" :title="isDarkMode ? 'Modo claro' : 'Modo oscuro'">
-             <span class="iconify text-lg" v-if="!isDarkMode" data-icon="lucide:sun"></span>
-             <span class="iconify text-lg" v-else data-icon="lucide:moon"></span>
+             <span class="iconify text-lg" :data-icon="isDarkMode ? 'lucide:moon' : 'lucide:sun'"></span>
            </button>
         </div>
       </div>

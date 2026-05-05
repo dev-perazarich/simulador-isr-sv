@@ -1,10 +1,13 @@
+// js/app-isranual.js
 import { useDeclaracionTab }   from './composables/useDeclaracionTab.js';
 import { useShared }           from './composables/useShared.js';
 import { useTheme }            from './composables/useTheme.js';
 import PDFService              from './services/PDFService.js';
-import { DATA_APP }           from './modules/constants.js';
+import { DATA_2026 }           from './modules/constants.js';
 
-Vue.createApp({
+const { createApp, onMounted } = Vue;
+
+createApp({
   setup() {
     const shared         = useShared();
     const declaracionTab = useDeclaracionTab();
@@ -17,7 +20,7 @@ Vue.createApp({
       }
     }
 
-    Vue.onMounted(() => {
+    onMounted(() => {
       declaracionTab.restaurarDatos();
     });
 
@@ -26,7 +29,7 @@ Vue.createApp({
       ...declaracionTab,
       theme, isDarkMode, toggleTheme,
       generarPDF,
-      DATA_APP,
+      DATA_2026,
     };
   },
 }).mount('#app-isranual');

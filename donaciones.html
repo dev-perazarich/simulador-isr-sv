@@ -158,13 +158,12 @@
       <div class="max-w-4xl mx-auto px-5">
         <div class="flex flex-col md:flex-row justify-between items-center gap-6">
           <div class="text-center md:text-left">
-            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Versión <span v-text="DATA_APP.VERSION">2025.1</span></p>
+            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Versión <span v-text="DATA_2026.VERSION"></span></p>
             <p class="text-[10px] text-slate-500">Hecho en El Salvador</p>
           </div>
           <div class="flex items-center gap-4">
              <button @click="toggleTheme" class="theme-toggle" :title="isDarkMode ? 'Modo claro' : 'Modo oscuro'">
-               <span class="iconify text-lg" v-if="!isDarkMode" data-icon="lucide:sun"></span>
-               <span class="iconify text-lg" v-else data-icon="lucide:moon"></span>
+               <span class="iconify text-lg" :data-icon="isDarkMode ? 'lucide:moon' : 'lucide:sun'"></span>
              </button>
           </div>
         </div>

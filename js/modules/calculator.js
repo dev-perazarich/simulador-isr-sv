@@ -1,9 +1,4 @@
-// ============================================================
-// calculator.js — Algoritmos puros de cálculo fiscal
-// Todos los valores monetarios en USD ($)
-// ============================================================
-
-import { DATA_APP } from './constants.js';
+import { DATA_2026 } from './constants.js';
 
 /**
  * Aplica la tabla de ISR mensual y retorna el impuesto a retener.
@@ -11,7 +6,7 @@ import { DATA_APP } from './constants.js';
  * @returns {number} Monto de ISR mensual
  */
 export function calcularISRMensual(rentaNetaImponible) {
-  const tramos = DATA_APP.ISR_TRAMOS_MENSUAL;
+  const tramos = DATA_2026.ISR_TRAMOS_MENSUAL;
   for (const tramo of tramos) {
     if (rentaNetaImponible >= tramo.desde && rentaNetaImponible <= tramo.hasta) {
       if (tramo.tasa === 0) return 0;
@@ -27,7 +22,7 @@ export function calcularISRMensual(rentaNetaImponible) {
  * @returns {number} ISR anual
  */
 export function calcularISRAnual(rentaNetaAnual) {
-  const tramos = DATA_APP.ISR_TRAMOS_ANUAL;
+  const tramos = DATA_2026.ISR_TRAMOS_ANUAL;
   for (const tramo of tramos) {
     if (rentaNetaAnual >= tramo.desde && rentaNetaAnual <= tramo.hasta) {
       if (tramo.tasa === 0) return 0;
@@ -43,7 +38,7 @@ export function calcularISRAnual(rentaNetaAnual) {
  * @returns {object} Desglose completo
  */
 export function calcularSalarioNeto(salarioBruto) {
-  const { ISSS, AFP } = DATA_APP.DESCUENTOS;
+  const { ISSS, AFP } = DATA_2026.DESCUENTOS;
 
   // ── Descuento ISSS ──
   const baseISS = Math.min(salarioBruto, ISSS.baseMaxima);
@@ -67,7 +62,7 @@ export function calcularSalarioNeto(salarioBruto) {
   const salarioNeto = salarioBruto - totalDescuentos;
 
   // ── Tramo ISR aplicado ──
-  const tramosISR = DATA_APP.ISR_TRAMOS_MENSUAL;
+  const tramosISR = DATA_2026.ISR_TRAMOS_MENSUAL;
   let tramoAplicado = tramosISR[0];
   for (const t of tramosISR) {
     if (rentaNetaImponible >= t.desde && rentaNetaImponible <= t.hasta) {
@@ -100,7 +95,7 @@ export function calcularSalarioNeto(salarioBruto) {
  * @returns {object} Desglose de indemnización
  */
 export function calcularIndemnizacion(salarioBruto, anios, meses = 0, dias = 0) {
-  const { DIAS_POR_ANIO, TOPE_SALARIO_MENSUAL } = DATA_APP.INDEMNIZACION;
+  const { DIAS_POR_ANIO, TOPE_SALARIO_MENSUAL } = DATA_2026.INDEMNIZACION;
 
   // Aplicar tope salarial ($1,635.20)
   const salarioBase = Math.min(salarioBruto, TOPE_SALARIO_MENSUAL);
@@ -138,7 +133,7 @@ export function calcularIndemnizacion(salarioBruto, anios, meses = 0, dias = 0) 
  * @returns {object} Desglose de aguinaldo
  */
 export function calcularAguinaldo(salarioBruto, aniosServicio) {
-  const { TRAMOS_DIAS, EXENCION_ISR } = DATA_APP.AGUINALDO;
+  const { TRAMOS_DIAS, EXENCION_ISR } = DATA_2026.AGUINALDO;
 
   // Determinar días de aguinaldo
   let diasAguinaldo = 0;
@@ -212,7 +207,7 @@ export function calcularAguinaldo(salarioBruto, aniosServicio) {
  * @returns {object}
  */
 export function calcularVacacion(salarioBruto, anios = 1) {
-  const { DIAS_REMUNERADOS, PRIMA } = DATA_APP.VACACIONES;
+  const { DIAS_REMUNERADOS, PRIMA } = DATA_2026.VACACIONES;
   const salarioDiario = salarioBruto / 30;
   
   // Si anios > 1, calculamos vacacion de 1 año (completa). 
@@ -248,7 +243,7 @@ export function calcularVacacion(salarioBruto, anios = 1) {
  * @param {number} dias - Días adicionales (0-30)
  */
 export function calcularRenunciaVoluntaria(salarioBruto, anios, meses = 0, dias = 0) {
-  const { DIAS_POR_ANIO, TOPE_SALARIO_MENSUAL } = DATA_APP.RENUNCIA_VOLUNTARIA;
+  const { DIAS_POR_ANIO, TOPE_SALARIO_MENSUAL } = DATA_2026.RENUNCIA_VOLUNTARIA;
 
   // Si no tiene al menos 2 años laborados completos, no aplica por ley (Art. 2)
   const totalAnios = anios + (meses / 12) + (dias / 365);
@@ -288,7 +283,7 @@ export function calcularRenunciaVoluntaria(salarioBruto, anios, meses = 0, dias 
  * @param {number} montoBruto
  */
 export function calcularHonorarios(montoBruto) {
-  const { TASA_RETENCION, EXENCION_MENSUAL } = DATA_APP.SERVICIOS_PROFESIONALES;
+  const { TASA_RETENCION, EXENCION_MENSUAL } = DATA_2026.SERVICIOS_PROFESIONALES;
   
   const retencion = montoBruto >= EXENCION_MENSUAL ? (montoBruto * TASA_RETENCION) : 0;
   const neto = montoBruto - retencion;
@@ -349,7 +344,7 @@ export function simularDeclaracionAnual(meses, otrosIngresos = 0, gastosDeducibl
   for (const mes of meses) {
     if (!mes || !mes.activo || !mes.salarioBruto) continue;
     const salB = mes.salarioBruto || 0;
-    const { ISSS, AFP } = DATA_APP.DESCUENTOS;
+    const { ISSS, AFP } = DATA_2026.DESCUENTOS;
     // ISSS mensual con tope
     deduccionISSSAnual += Math.min(Math.min(salB, ISSS.baseMaxima) * ISSS.tasa, ISSS.tope);
     // AFP mensual con tope
@@ -400,7 +395,7 @@ export function simularDeclaracionAnual(meses, otrosIngresos = 0, gastosDeducibl
  * @returns {object}
  */
 export function compararConSalarioMinimo(salario) {
-  const sm = DATA_APP.SALARIOS_MINIMOS;
+  const sm = DATA_2026.SALARIOS_MINIMOS;
   return {
     vsComercio:  round2((salario / sm.COMERCIO_INDUSTRIA_SERVICIOS.mensual) * 100),
     vsMaquila:   round2((salario / sm.MAQUILA.mensual) * 100),

@@ -66,8 +66,7 @@
 
     <!-- Theme toggle -->
     <button @click="toggleTheme" class="theme-toggle shrink-0" :title="isDarkMode ? 'Modo claro' : 'Modo oscuro'">
-      <span class="iconify text-lg" data-icon="lucide:sun" v-show="!isDarkMode"></span>
-      <span class="iconify text-lg" data-icon="lucide:moon" v-show="isDarkMode"></span>
+      <span class="iconify text-lg" :data-icon="isDarkMode ? 'lucide:moon' : 'lucide:sun'"></span>
     </button>
   </div>
 </header>
@@ -113,7 +112,7 @@
 
   <!-- Encabezado sutil -->
   <div class="mb-8 text-center" data-aos="fade-down">
-    <h1 class="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white mb-2 tracking-tight">Indemnización <span v-text="DATA_APP.CURRENT_YEAR">2025</span> 🇸🇻</h1>
+    <h1 class="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white mb-2 tracking-tight">Indemnización <span v-text="DATA_2026.CURRENT_YEAR"></span> 🇸🇻</h1>
     <p class="text-slate-500 font-medium">Ley de indemnizaciones y prestaciones vigente</p>
   </div>
 
@@ -172,15 +171,16 @@
       </div>
     </div>
 
-    <div class="flex gap-2.5 mb-6">
+    <div class="flex gap-3 mb-6">
       <button class="btn-main flex-1" @click="calcularLiquidaciones">Calcular</button>
+      <button class="btn-secondary" @click="limpiarLiquidaciones">Limpiar</button>
     </div>
 
     <!-- Resultados -->
     <div v-show="liqForm.modo === 'despido' && resultadoDespido">
        <!-- Template clásico del despido -->
-       <div class="result-panel">
-         <div class="result-panel-header" style="background:#eff6ff;"><span class="text-xs font-bold text-blue-800">Despido Injustificado (Indemnización)</span></div>
+        <div class="result-panel">
+          <div class="result-panel-header bg-blue-50 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300">Despido Injustificado (Indemnización)</div>
          <div class="result-row"><span class="result-row-label">Base de cálculo mensual (tope 4 mín.)</span><span class="result-row-value">{{ fmt(resultadoDespido?.salarioBaseCalculo) }}</span></div>
          <div class="result-row"><span class="result-row-label">Días correspondientes</span><span class="result-row-value">{{ resultadoDespido?.diasIndemnizacion.toFixed(2) }}</span></div>
          <div class="result-total"><span class="result-total-label">Subtotal Indemnización</span><span class="result-total-value">{{ fmt(resultadoDespido?.montoTotal) }}</span></div>
@@ -193,7 +193,7 @@
          {{ resultadoRenuncia?.mensaje }}
        </div>
        <div v-if="resultadoRenuncia?.elegible" class="result-panel">
-         <div class="result-panel-header" style="background:#faf5ff;"><span class="text-xs font-bold text-fuchsia-800">Ley Renuncia Voluntaria (Art. 8)</span></div>
+          <div class="result-panel-header bg-purple-50 dark:bg-purple-900/20 text-purple-800 dark:text-purple-300">Ley Renuncia Voluntaria (Art. 8)</div>
          <div class="result-row"><span class="result-row-label">Base (tope 2 mínimos vigentes)</span><span class="result-row-value">{{ fmt(resultadoRenuncia?.salarioBaseCalculo) }}</span></div>
          <div class="result-row"><span class="result-row-label">Días compensables (15/año)</span><span class="result-row-value">{{ resultadoRenuncia?.diasCompensacion.toFixed(2) }}</span></div>
          <div class="result-total"><span class="result-total-label">Total Renuncia Voluntaria</span><span class="result-total-value">{{ fmt(resultadoRenuncia?.montoTotal) }}</span></div>
@@ -202,8 +202,8 @@
 
     <div v-show="liqForm.modo === 'aguinaldo' && resultadoAguinaldo">
        <!-- Template Aguinaldo -->
-       <div class="result-panel">
-         <div class="result-panel-header" style="background:#fffbeb;"><span class="text-xs font-bold text-amber-800">Aguinaldo</span></div>
+        <div class="result-panel">
+          <div class="result-panel-header bg-amber-50 dark:bg-amber-900/20 text-amber-800 dark:text-amber-300">Aguinaldo</div>
          <div class="result-row"><span class="result-row-label">Días de aguinaldo a pagar</span><span class="result-row-value">{{ resultadoAguinaldo?.diasAguinaldo }}</span></div>
          <div class="result-row"><span class="result-row-label">Aguinaldo Neto (Sin ISR aplicable/exento)</span><span class="result-row-value">{{ fmt(resultadoAguinaldo?.montoNeto) }}</span></div>
        </div>
@@ -211,12 +211,15 @@
 
     <div v-show="liqForm.modo === 'vacacion' && resultadoVacacion">
        <!-- Template Vacacion -->
-       <div class="result-panel">
-         <div class="result-panel-header" style="background:#ecfdf5;"><span class="text-xs font-bold text-emerald-800">Vacación Anual</span></div>
+        <div class="result-panel">
+          <div class="result-panel-header bg-emerald-50 dark:bg-emerald-900/20 text-emerald-800 dark:text-emerald-300">Vacación Anual</div>
          <div class="result-row"><span class="result-row-label">Pago ordinario ({{resultadoVacacion?.diasOtorgados.toFixed(1)}} días)</span><span class="result-row-value">{{ fmt(resultadoVacacion?.pagoOrdinario) }}</span></div>
          <div class="result-row"><span class="result-row-label">Prima Vacacional (30% ley)</span><span class="result-row-value positive">+ {{ fmt(resultadoVacacion?.primaVacacional) }}</span></div>
          <div class="result-row"><span class="result-row-label">Descuentos de (ISSS, AFP, ISR)</span><span class="result-row-value negative">- {{ fmt(resultadoVacacion?.descuentoISSS + resultadoVacacion?.descuentoAFP + resultadoVacacion?.isrRetenido) }}</span></div>
-         <div class="result-total" style="background:#065f46;"><span class="result-total-label">Líquido de Vacaciones</span><span class="result-total-value">{{ fmt(resultadoVacacion?.montoNeto) }}</span></div>
+          <div class="result-total bg-emerald-600 dark:bg-emerald-900/40 text-white dark:text-emerald-100">
+            <span class="result-total-label text-emerald-50">Líquido de Vacaciones</span>
+            <span class="result-total-value text-white">{{ fmt(resultadoVacacion?.montoNeto) }}</span>
+          </div>
        </div>
     </div>
 
@@ -253,20 +256,19 @@
       <div class="max-w-xl">
         <p class="text-[11px] text-slate-500 leading-relaxed flex items-start gap-2">
           <span class="iconify shrink-0 text-amber-500 text-sm" data-icon="lucide:alert-triangle"></span>
-          <span><strong>Nota legal:</strong> Este simulador es informativo y no sustituye asesoría profesional. Los cálculos corresponden a la legislación <span v-text="DATA_APP.CURRENT_YEAR">2025</span>.</span>
+          <span><strong>Nota legal:</strong> Este simulador es informativo y no sustituye asesoría profesional. Los cálculos corresponden a la legislación <span v-text="DATA_2026.CURRENT_YEAR"></span>.</span>
         </p>
       </div>
 
       <div class="flex items-center gap-6 shrink-0">
         <div class="text-right hidden sm:block">
-          <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">v<span v-text="DATA_APP.VERSION">2025.1</span></p>
+          <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">v<span v-text="DATA_2026.VERSION"></span></p>
           <p class="text-[10px] text-slate-500">El Salvador</p>
         </div>
         <div class="h-8 w-px bg-slate-200 dark:bg-white/10 hidden sm:block"></div>
         <div class="flex items-center gap-3">
            <button @click="toggleTheme" class="theme-toggle" :title="isDarkMode ? 'Modo claro' : 'Modo oscuro'">
-             <span class="iconify text-lg" v-if="!isDarkMode" data-icon="lucide:sun"></span>
-             <span class="iconify text-lg" v-else data-icon="lucide:moon"></span>
+             <span class="iconify text-lg" :data-icon="isDarkMode ? 'lucide:moon' : 'lucide:sun'"></span>
            </button>
         </div>
       </div>

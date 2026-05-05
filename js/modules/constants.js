@@ -1,7 +1,25 @@
 const currentYear = new Date().getFullYear();
 const fiscalYear = currentYear - 1;
 
-export const DATA_APP = {
+const SALARIOS_MINIMOS = {
+  COMERCIO_INDUSTRIA_SERVICIOS: {
+    mensual: 408.80,
+    diario: 13.44,
+    label: 'Comercio, Industria y Servicios',
+  },
+  MAQUILA: {
+    mensual: 402.32,
+    diario: 13.227,
+    label: 'Maquila Textil y Confección',
+  },
+  AGROPECUARIO: {
+    mensual: 305.23,
+    diario: 10.035,
+    label: 'Sector Agrícola / Agropecuario',
+  },
+};
+
+const DATA_2026 = {
   // ── Años Dinámicos ──
   CURRENT_YEAR: currentYear,
   FISCAL_YEAR: fiscalYear,
@@ -37,26 +55,10 @@ export const DATA_APP = {
     },
   },
 
-  // ── Salarios Mínimos Vigentes (desde Junio 2025) ──
-  SALARIOS_MINIMOS: {
-    COMERCIO_INDUSTRIA_SERVICIOS: {
-      mensual: 408.80,
-      diario: 13.44,
-      label: 'Comercio, Industria y Servicios',
-    },
-    MAQUILA: {
-      mensual: 402.32,
-      diario: 13.227,
-      label: 'Maquila Textil y Confección',
-    },
-    AGROPECUARIO: {
-      mensual: 305.23,
-      diario: 10.035,
-      label: 'Sector Agrícola / Agropecuario',
-    },
-  },
+  // ── Salarios Mínimos Vigentes ──
+  SALARIOS_MINIMOS,
 
-  // ── Aguinaldo (Decreto Legislativo No. 432) ──
+  // ── Aguinaldo ──
   AGUINALDO: {
     EXENCION_ISR: 1500.00,
     TRAMOS_DIAS: [
@@ -66,26 +68,22 @@ export const DATA_APP = {
     ],
   },
 
-  // ── Indemnización (Art. 58 Código de Trabajo) ──
+  // ── Indemnización ──
   INDEMNIZACION: {
     DIAS_POR_ANIO: 30,
-    get TOPE_SALARIO_MENSUAL() {
-      return DATA_APP.SALARIOS_MINIMOS.COMERCIO_INDUSTRIA_SERVICIOS.mensual * 4;
-    },
+    TOPE_SALARIO_MENSUAL_ABS: SALARIOS_MINIMOS.COMERCIO_INDUSTRIA_SERVICIOS.mensual * 4,
   },
 
-  // ── Vacaciones (Art. 177 Código de Trabajo) ──
+  // ── Vacaciones ──
   VACACIONES: {
     DIAS_REMUNERADOS: 15,
     PRIMA: 0.30,
   },
 
-  // ── Ley de Renuncia Voluntaria (Art. 8) ──
+  // ── Ley de Renuncia Voluntaria ──
   RENUNCIA_VOLUNTARIA: {
     DIAS_POR_ANIO: 15,
-    get TOPE_SALARIO_MENSUAL() {
-      return DATA_APP.SALARIOS_MINIMOS.COMERCIO_INDUSTRIA_SERVICIOS.mensual * 2;
-    },
+    TOPE_SALARIO_MENSUAL_ABS: SALARIOS_MINIMOS.COMERCIO_INDUSTRIA_SERVICIOS.mensual * 2,
   },
 
   // ── Retención por Servicios Profesionales ──
@@ -95,4 +93,5 @@ export const DATA_APP = {
   },
 };
 
-export default DATA_APP;
+export { DATA_2026 };
+export default DATA_2026;

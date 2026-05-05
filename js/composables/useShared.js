@@ -1,4 +1,4 @@
-import { DATA_APP } from '../modules/constants.js';
+import { DATA_2026 } from '../modules/constants.js';
 
 const NOMBRES_MESES = [
   'Enero','Febrero','Marzo','Abril','Mayo','Junio',
@@ -6,8 +6,8 @@ const NOMBRES_MESES = [
 ];
 
 export function useShared() {
-  const currentYear = DATA_APP.CURRENT_YEAR;
-  const fiscalYear = DATA_APP.FISCAL_YEAR;
+  const currentYear = DATA_2026.CURRENT_YEAR;
+  const fiscalYear = DATA_2026.FISCAL_YEAR;
   
   // ── Estado global ──
   const tabActiva = Vue.ref('salario');
@@ -34,7 +34,7 @@ export function useShared() {
     closeMenu,
     // Constants
     NOMBRES_MESES,
-    DATA_APP,
+    DATA_2026,
     currentYear,
     fiscalYear,
     // Formatters — exponer ambos nombres para template y JS externo

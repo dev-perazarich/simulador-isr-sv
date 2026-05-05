@@ -1,10 +1,13 @@
+// js/app-liquidaciones.js
 import { useLiquidacionesTab } from './composables/useLiquidacionesTab.js';
 import { useShared }           from './composables/useShared.js';
 import { useTheme }            from './composables/useTheme.js';
 import PDFService              from './services/PDFService.js';
-import { DATA_APP }           from './modules/constants.js';
+import { DATA_2026 }           from './modules/constants.js';
 
-Vue.createApp({
+const { createApp, onMounted } = Vue;
+
+createApp({
   setup() {
     const shared         = useShared();
     const liqTab         = useLiquidacionesTab();
@@ -15,7 +18,7 @@ Vue.createApp({
       alert("La exportación a PDF para la suite extendida de liquidación estará disponible en la próxima versión.");
     }
 
-    Vue.onMounted(() => {
+    onMounted(() => {
       liqTab.restaurarDatos();
     });
 
@@ -24,7 +27,7 @@ Vue.createApp({
       ...liqTab,
       theme, isDarkMode, toggleTheme,
       generarPDF,
-      DATA_APP,
+      DATA_2026,
     };
   },
 }).mount('#app-liquidaciones');
