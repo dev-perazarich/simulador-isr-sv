@@ -206,7 +206,7 @@
     </div>
 
     <!-- Resultados -->
-    <div v-show="liqForm.modo === 'despido' && resultadoDespido">
+    <div v-if="liqForm.modo === 'despido' && resultadoDespido">
        <!-- Template clásico del despido -->
        <div class="result-panel">
           <div class="result-panel-header bg-blue-50 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300">Despido Injustificado (Art. 58 CT)</div>
@@ -217,7 +217,7 @@
        </div>
     </div>
 
-    <div v-show="liqForm.modo === 'renuncia' && resultadoRenuncia">
+    <div v-if="liqForm.modo === 'renuncia' && resultadoRenuncia">
        <!-- Template Renuncia Voluntaria -->
        <div v-if="!resultadoRenuncia?.elegible" class="bg-red-50 text-red-700 p-4 border border-red-200 rounded-lg text-sm mb-4">
          {{ resultadoRenuncia?.mensaje }}
@@ -231,7 +231,7 @@
        </div>
     </div>
 
-    <div v-show="liqForm.modo === 'aguinaldo' && resultadoAguinaldo">
+    <div v-if="liqForm.modo === 'aguinaldo' && resultadoAguinaldo">
        <!-- Template Aguinaldo -->
        <div class="result-panel">
           <div class="result-panel-header bg-amber-50 dark:bg-amber-900/20 text-amber-800 dark:text-amber-300">Aguinaldo Proporcional</div>
@@ -242,7 +242,7 @@
        </div>
     </div>
 
-    <div v-show="liqForm.modo === 'vacacion' && resultadoVacacion">
+    <div v-if="liqForm.modo === 'vacacion' && resultadoVacacion">
        <!-- Template Vacacion -->
        <div class="result-panel">
           <div class="result-panel-header bg-emerald-50 dark:bg-emerald-900/20 text-emerald-800 dark:text-emerald-300">Vacación Proporcional</div>
@@ -331,7 +331,7 @@
 <script type="module">import '/js/app-liquidaciones.js';</script>
 <script>
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js?v=1.9.3').catch(() => {}));
+    window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js?v=1.10').catch(() => {}));
   }
 </script>
 </body>
