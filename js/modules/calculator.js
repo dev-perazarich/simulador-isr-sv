@@ -142,8 +142,9 @@ export function calcularIndemnizacion(salarioBruto, anios, meses = 0, dias = 0) 
   const montoProporcional = (salarioBase / 360) * diasRestantes;
 
   const montoTotal = montoAniosCompletos + montoProporcional;
-
-
+  const totalAnios = anios + (meses / 12) + (dias / 365);
+  const diasIndemnizacion = totalAnios * 30;
+  const salarioDiario = salarioBase / 30;
   const topeAplicado = salarioBruto > TOPE_SALARIO_MENSUAL;
 
   return {
