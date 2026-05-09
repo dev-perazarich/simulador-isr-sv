@@ -1,6 +1,39 @@
 import { DATA_2026 } from './constants.js';
 
 /**
+ * Calcula la diferencia entre dos fechas en años, meses y días.
+ * Estrategia: Diferencia exacta en días para proporcionalidad.
+ */
+export function calcularDiferenciaFechas(inicio, fin) {
+  const dInicio = new Date(inicio);
+  const dFin = new Date(fin);
+  
+  if (isNaN(dInicio) || isNaN(dFin)) return null;
+  
+  // Total de días absolutos (para proporcionalidad)
+  const diffTime = dFin - dInicio;
+  const totalDias = Math.max(0, Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1); // +1 para incluir el día de inicio
+  
+  // Cálculo de años, meses, días para desglose legible
+  let anios = dFin.getFullYear() - dInicio.getFullYear();
+  let meses = dFin.getMonth() - dInicio.getMonth();
+  let dias = dFin.getDate() - dInicio.getDate();
+
+  if (dias < 0) {
+    meses--;
+    const ultimoDiaMesAnterior = new Date(dFin.getFullYear(), dFin.getMonth(), 0).getDate();
+    dias += ultimoDiaMesAnterior;
+  }
+  if (meses < 0) {
+    anios--;
+    meses += 12;
+  }
+
+  return { anios: Math.max(0, anios), meses: Math.max(0, meses), dias: Math.max(0, dias), totalDias };
+}
+
+
+/**
  * Aplica la tabla de ISR mensual y retorna el impuesto a retener.
  * @param {number} rentaNetaImponible - Salario neto después de deducciones ISSS/AFP
  * @returns {number} Monto de ISR mensual
@@ -97,17 +130,19 @@ export function calcularSalarioNeto(salarioBruto) {
 export function calcularIndemnizacion(salarioBruto, anios, meses = 0, dias = 0) {
   const { DIAS_POR_ANIO, TOPE_SALARIO_MENSUAL } = DATA_2026.INDEMNIZACION;
 
-  // Aplicar tope salarial ($1,635.20)
+  // Aplicar tope salarial ($1,635.20 o 4 salarios mínimos)
   const salarioBase = Math.min(salarioBruto, TOPE_SALARIO_MENSUAL);
-  const salarioDiario = salarioBase / 30;
+  
+  // Fórmula según experto: (Salario mensual * Años completos) + proporcional
+  // Proporcional: (Salario / 360) * Días restantes
+  const montoAniosCompletos = salarioBase * anios;
+  
+  // Días proporcionales (meses a días + días)
+  const diasRestantes = (meses * 30) + dias;
+  const montoProporcional = (salarioBase / 360) * diasRestantes;
 
-  // Convertir todo a fracción de año
-  const totalAnios = anios + (meses / 12) + (dias / 365);
+  const montoTotal = montoAniosCompletos + montoProporcional;
 
-  // Días a indemnizar = 30 días × años laborados
-  const diasIndemnizacion = totalAnios * DIAS_POR_ANIO;
-
-  const montoTotal = diasIndemnizacion * salarioDiario;
 
   const topeAplicado = salarioBruto > TOPE_SALARIO_MENSUAL;
 
@@ -129,104 +164,93 @@ export function calcularIndemnizacion(salarioBruto, anios, meses = 0, dias = 0) 
 /**
  * Calcula el aguinaldo según el Decreto Legislativo No. 432.
  * @param {number} salarioBruto - Salario mensual
- * @param {number} aniosServicio - Años de servicio cumplidos
+ * @param {number} aniosServicio - Años completos
+ * @param {number} diasProporcionales - Días del año en curso (para proporcionalidad)
  * @returns {object} Desglose de aguinaldo
  */
-export function calcularAguinaldo(salarioBruto, aniosServicio) {
+export function calcularAguinaldo(salarioBruto, aniosServicio, diasProporcionales = 0) {
   const { TRAMOS_DIAS, EXENCION_ISR } = DATA_2026.AGUINALDO;
+  const salarioDiario = salarioBruto / 30;
 
-  // Determinar días de aguinaldo
-  let diasAguinaldo = 0;
-  let tramoAplicado = null;
+  // 1. Determinar cuántos días de aguinaldo le corresponden por ley según su antigüedad completa
+  let diasBase = 0;
+  let tramoLabel = "";
 
-  for (const tramo of TRAMOS_DIAS) {
-    if (aniosServicio >= tramo.aniosDesde && aniosServicio < tramo.aniosHasta) {
-      diasAguinaldo = tramo.dias;
-      tramoAplicado = tramo;
-      break;
+  // Si tiene menos de 1 año, la base son 15 días (proporcional)
+  if (aniosServicio < 1) {
+    diasBase = 15;
+    tramoLabel = "Proporcional (< 1 año)";
+  } else {
+    for (const tramo of TRAMOS_DIAS) {
+      if (aniosServicio >= tramo.aniosDesde && aniosServicio < tramo.aniosHasta) {
+        diasBase = tramo.dias;
+        tramoLabel = tramo.label;
+        break;
+      }
     }
   }
 
-  if (aniosServicio < 1) {
-    // Proporcional si < 1 año. Art. 200. "Los que no tuvieren un año..."
-    // Reciben el equivalente a lo que tocaba por 15 días, dividido entre 365 y multiplicado por los días.
-    // Usaremos aniosServicio como fracción decimal para el cálculo exacto proporcional.
-    diasAguinaldo = 15; // Base del primer tramo
-    const salarioDiario = salarioBruto / 30;
-    const montoProporcional = (diasAguinaldo * salarioDiario) * aniosServicio;
-    
-    const exentoISR = Math.min(montoProporcional, EXENCION_ISR);
-    const gravadoISR = Math.max(0, montoProporcional - EXENCION_ISR);
-    const isrSobreExcedente = gravadoISR > 0 ? calcularISRAnual(gravadoISR) : 0;
+  // 2. Cálculo del aguinaldo completo para ese tramo
+  const aguinaldoCompleto = diasBase * salarioDiario;
 
-    return {
-      elegible: true,
-      aniosServicio,
-      tramoLabel: 'Proporcional (< 1 año)',
-      diasAguinaldo: round2(diasAguinaldo * aniosServicio),
-      salarioDiario: round2(salarioDiario),
-      montoAguinaldo: round2(montoProporcional),
-      exentoISR: round2(exentoISR),
-      gravadoISR: round2(gravadoISR),
-      isrSobreExcedente: round2(isrSobreExcedente),
-      montoNeto: round2(montoProporcional - isrSobreExcedente),
-      EXENCION_ISR,
-    };
-  }
+  // 3. Cálculo proporcional (si aplica)
+  // Según experto: (Aguinaldo completo / 365) * días trabajados en el año
+  // Si aniosServicio >= 1, diasProporcionales deberían ser los del año actual.
+  // Si aniosServicio < 1, diasProporcionales es el total de días laborados.
+  const montoAguinaldo = (aguinaldoCompleto / 365) * (diasProporcionales || 365);
 
-  const salarioDiario = salarioBruto / 30;
-  const montoAguinaldo = diasAguinaldo * salarioDiario;
-
-  // ISR sobre aguinaldo: exento hasta $1,500
-  // El excedente se trata como ingreso anual adicional — usar tabla ANUAL
+  // ISR sobre aguinaldo: exento hasta $1,500 (Ley vigente)
   const exentoISR = Math.min(montoAguinaldo, EXENCION_ISR);
   const gravadoISR = Math.max(0, montoAguinaldo - EXENCION_ISR);
-  // Bug fix: usar calcularISRAnual() en lugar de calcularISRMensual()
-  // ya que el aguinaldo es un pago único, no un ingreso mensual recurrente
   const isrSobreExcedente = gravadoISR > 0 ? calcularISRAnual(gravadoISR) : 0;
 
   return {
     elegible: true,
     aniosServicio,
-    tramoLabel: tramoAplicado?.label,
-    diasAguinaldo,
-    salarioDiario:      round2(salarioDiario),
-    montoAguinaldo:     round2(montoAguinaldo),
-    exentoISR:          round2(exentoISR),
-    gravadoISR:         round2(gravadoISR),
-    isrSobreExcedente:  round2(isrSobreExcedente),
-    montoNeto:          round2(montoAguinaldo - isrSobreExcedente),
+    diasProporcionales,
+    tramoLabel,
+    diasAguinaldoBase: diasBase,
+    salarioDiario: round2(salarioDiario),
+    aguinaldoCompleto: round2(aguinaldoCompleto),
+    montoAguinaldo: round2(montoAguinaldo),
+    exentoISR: round2(exentoISR),
+    gravadoISR: round2(gravadoISR),
+    isrSobreExcedente: round2(isrSobreExcedente),
+    montoNeto: round2(montoAguinaldo - isrSobreExcedente),
     EXENCION_ISR,
   };
 }
 
+
 /**
- * Calcula la Vacación Anual (15 días + 30% prima) proporcional o completa.
+ * Calcula la Vacación Anual (15 días + 30% prima) proporcional.
  * @param {number} salarioBruto
- * @param {number} anios - Si anios < 1 procesa vacación proporcional (como fraccion de año)
+ * @param {number} diasProporcionales - Días trabajados en el ciclo actual.
  * @returns {object}
  */
-export function calcularVacacion(salarioBruto, anios = 1) {
+export function calcularVacacion(salarioBruto, diasProporcionales = 365) {
   const { DIAS_REMUNERADOS, PRIMA } = DATA_2026.VACACIONES;
   const salarioDiario = salarioBruto / 30;
   
-  // Si anios > 1, calculamos vacacion de 1 año (completa). 
-  // Si anios < 1 (fracción decimal), calculamos la parte proporcional del año en curso.
-  const periodo = anios >= 1 ? 1 : anios; 
+  // Base: 15 días de salario
+  const montoBaseCompleto = DIAS_REMUNERADOS * salarioDiario;
+  // Prima: 30% sobre esa base
+  const primaCompleta = montoBaseCompleto * PRIMA;
   
-  const diasAOtorgar = DIAS_REMUNERADOS * periodo;
-  const pagoOrdinario = diasAOtorgar * salarioDiario;
-  const primaVacacional = pagoOrdinario * PRIMA;
-  const montoBruto = pagoOrdinario + primaVacacional;
+  // Proporcionalidad: (Monto completo / 365) * días trabajados
+  const montoProporcionalBase = (montoBaseCompleto / 365) * diasProporcionales;
+  const montoProporcionalPrima = (primaCompleta / 365) * diasProporcionales;
   
-  // Las vacaciones cotizan ISSS, AFP y se gravan con renta
+  const montoBruto = montoProporcionalBase + montoProporcionalPrima;
+  
+  // Deducciones (ISSS, AFP, Renta)
   const calculoNeto = calcularSalarioNeto(montoBruto);
 
   return {
     salarioDiario: round2(salarioDiario),
-    diasOtorgados: round2(diasAOtorgar),
-    pagoOrdinario: round2(pagoOrdinario),
-    primaVacacional: round2(primaVacacional),
+    diasTrabajados: diasProporcionales,
+    pagoOrdinarioProporcional: round2(montoProporcionalBase),
+    primaProporcional: round2(montoProporcionalPrima),
     montoBruto: round2(montoBruto),
     descuentoISSS: calculoNeto.descuentoISSS,
     descuentoAFP: calculoNeto.descuentoAFP,
@@ -234,6 +258,7 @@ export function calcularVacacion(salarioBruto, anios = 1) {
     montoNeto: calculoNeto.salarioNeto
   };
 }
+
 
 /**
  * Calcula la Compensación por Renuncia Voluntaria (Ley Reguladora de la Prestación Económica por Renuncia Voluntaria)
@@ -246,36 +271,40 @@ export function calcularRenunciaVoluntaria(salarioBruto, anios, meses = 0, dias 
   const { DIAS_POR_ANIO, TOPE_SALARIO_MENSUAL } = DATA_2026.RENUNCIA_VOLUNTARIA;
 
   // Si no tiene al menos 2 años laborados completos, no aplica por ley (Art. 2)
-  const totalAnios = anios + (meses / 12) + (dias / 365);
-  if (totalAnios < 2) {
+  if (anios < 2) {
     return {
       elegible: false,
       mensaje: "La ley exige un mínimo de 2 años continuos laborados para la prestación por renuncia."
     };
   }
 
-  // Aplicar tope salarial (2 salarios mínimos, no 4 como despido)
+  // Aplicar tope salarial (2 salarios mínimos)
   const salarioBase = Math.min(salarioBruto, TOPE_SALARIO_MENSUAL);
-  const salarioDiario = salarioBase / 30;
-
-  // 15 días por cada año laborado
-  const diasCompensacion = totalAnios * DIAS_POR_ANIO;
   
-  const montoTotal = diasCompensacion * salarioDiario;
+  // 15 días por cada año laborado
+  const montoAniosCompletos = (salarioBase / 2) * anios; // 15 días es medio mes
+  
+  // Proporcional: (SalarioBase / 2 / 365) * días restantes
+  // Nota: Algunos contadores usan 360, otros 365. Usaremos 365 para consistencia con aguinaldos.
+  const diasRestantes = (meses * 30) + dias;
+  const montoProporcional = (salarioBase / 2 / 365) * diasRestantes;
+  
+  const montoTotal = montoAniosCompletos + montoProporcional;
   const topeAplicado = salarioBruto > TOPE_SALARIO_MENSUAL;
 
   return {
     elegible: true,
     salarioBruto: round2(salarioBruto),
     salarioBaseCalculo: round2(salarioBase),
-    salarioDiario: round2(salarioDiario),
     topeAplicado,
     topeSalarial: round2(TOPE_SALARIO_MENSUAL),
-    totalAniosDecimal: round4(totalAnios),
-    diasCompensacion: round2(diasCompensacion),
+    anios,
+    montoAniosCompletos: round2(montoAniosCompletos),
+    montoProporcional: round2(montoProporcional),
     montoTotal: round2(montoTotal),
   };
 }
+
 
 /**
  * Calcula el ingreso si actúas como Servicios Profesionales (Freelancer)

@@ -138,38 +138,67 @@
   </div>
 
   <div class="glass-panel p-7 mb-8">
-    <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-5">Selecciona qué prestación quieres calcular e indica el tiempo laborado. Las lógicas difieren según la modalidad.</p>
+    <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-5">Ingresa tus fechas de servicio y salario para calcular indemnizaciones y prestaciones proporcionales.</p>
 
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-2 mb-6">
+
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-2 mb-6">
       <button v-for="m in [{v:'despido',l:'Despido'},{v:'renuncia',l:'Renuncia'},{v:'aguinaldo',l:'Aguinaldo'},{v:'vacacion',l:'Vacación'}]"
-              :key="m.v" :class="['mode-chip', liqForm.modo===m.v && 'active']"
+              class="btn-tab" :class="{ active: liqForm.modo === m.v }"
               @click="liqForm.modo=m.v">{{ m.l }}</button>
     </div>
 
     <!-- Formulario compartidos -->
-    <div class="mb-4">
-      <label class="field-label">Salario bruto mensual (USD)</label>
+    <div class="mb-5">
+      <label class="field-label font-bold text-slate-800 dark:text-slate-200">Salario bruto mensual (USD)</label>
       <div class="inp-prefix">
         <span class="inp-prefix-symbol">$</span>
-        <input v-model="liqForm.salario" type="number" min="0" step="0.01" class="inp" />
+        <input v-model="liqForm.salario" type="number" min="0" step="0.01" class="inp text-lg font-bold" placeholder="0.00" />
       </div>
     </div>
 
-    <div class="mb-4">
-      <label class="field-label"> Años de servicio — <span class="text-primary font-bold">{{ liqForm.anios || 0 }} años</span></label>
-      <input v-model="liqForm.anios" type="range" min="0" max="40" step="1" class="w-full accent-primary mb-1" />
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+      <div>
+        <label class="field-label">Fecha de Inicio</label>
+        <input v-model="liqForm.fechaInicio" type="date" class="inp" />
+      </div>
+      <div>
+        <label class="field-label">Fecha de Finalización</label>
+        <input v-model="liqForm.fechaFin" type="date" class="inp" />
+      </div>
     </div>
 
-    <div class="grid grid-cols-2 gap-3 mb-5">
+    <!-- Seniority summary -->
+    <div v-if="liqForm.fechaInicio && liqForm.fechaFin" class="bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-800/30 rounded-xl p-4 mb-6 flex flex-wrap gap-6 items-center">
+      <div class="flex-1">
+        <p class="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-1">Tiempo de servicio</p>
+        <p class="text-lg font-bold text-slate-800 dark:text-white">
+          <span v-if="liqForm.anios">{{ liqForm.anios }} años, </span>
+          <span v-if="liqForm.meses">{{ liqForm.meses }} meses y </span>
+          <span>{{ liqForm.dias }} días</span>
+        </p>
+      </div>
+      <button @click="liqForm.manual = !liqForm.manual" class="text-xs font-bold px-3 py-1.5 rounded-lg border transition-colors" :class="liqForm.manual ? 'bg-amber-100 border-amber-200 text-amber-700' : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-500'">
+        {{ liqForm.manual ? '✓ Edición manual' : 'Editar tiempo manualmente' }}
+      </button>
+    </div>
+
+    <!-- Manual adjustment (hidden unless toggled) -->
+    <div v-if="liqForm.manual" class="grid grid-cols-3 gap-3 mb-5 p-4 border border-amber-100 dark:border-amber-900/30 bg-amber-50/30 rounded-xl" data-aos="fade-in">
+      <div>
+        <label class="field-label">Años</label>
+        <input v-model.number="liqForm.anios" type="number" min="0" class="inp" />
+      </div>
       <div>
         <label class="field-label">Meses</label>
-        <select v-model="liqForm.meses" class="inp inp-select"><option v-for="n in 12" :key="n-1" :value="n-1">{{ n-1 }}</option></select>
+        <input v-model.number="liqForm.meses" type="number" min="0" max="11" class="inp" />
       </div>
       <div>
         <label class="field-label">Días</label>
-        <select v-model="liqForm.dias" class="inp inp-select"><option v-for="n in 31" :key="n-1" :value="n-1">{{ n-1 }}</option></select>
+        <input v-model.number="liqForm.dias" type="number" min="0" max="30" class="inp" />
       </div>
     </div>
+
 
     <div class="flex gap-3 mb-6">
       <button class="btn-main flex-1" @click="calcularLiquidaciones">Calcular</button>
@@ -179,11 +208,12 @@
     <!-- Resultados -->
     <div v-show="liqForm.modo === 'despido' && resultadoDespido">
        <!-- Template clásico del despido -->
-        <div class="result-panel">
-          <div class="result-panel-header bg-blue-50 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300">Despido Injustificado (Indemnización)</div>
-         <div class="result-row"><span class="result-row-label">Base de cálculo mensual (tope 4 mín.)</span><span class="result-row-value">{{ fmt(resultadoDespido?.salarioBaseCalculo) }}</span></div>
-         <div class="result-row"><span class="result-row-label">Días correspondientes</span><span class="result-row-value">{{ resultadoDespido?.diasIndemnizacion.toFixed(2) }}</span></div>
-         <div class="result-total"><span class="result-total-label">Subtotal Indemnización</span><span class="result-total-value">{{ fmt(resultadoDespido?.montoTotal) }}</span></div>
+       <div class="result-panel">
+          <div class="result-panel-header bg-blue-50 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300">Despido Injustificado (Art. 58 CT)</div>
+          <div class="result-row"><span class="result-row-label">Base de cálculo (Tope: ${{ fmt(resultadoDespido.topeSalarial) }})</span><span class="result-row-value">{{ fmt(resultadoDespido.salarioBaseCalculo) }}</span></div>
+          <div class="result-row"><span class="result-row-label">Por años completos ({{ resultadoDespido.anios }} años)</span><span class="result-row-value">{{ fmt(resultadoDespido.salarioBaseCalculo * resultadoDespido.anios) }}</span></div>
+          <div class="result-row"><span class="result-row-label">Proporcional ({{ (resultadoDespido.meses * 30) + resultadoDespido.dias }} días)</span><span class="result-row-value">{{ fmt(resultadoDespido.montoTotal - (resultadoDespido.salarioBaseCalculo * resultadoDespido.anios)) }}</span></div>
+          <div class="result-total"><span class="result-total-label">Total Indemnización</span><span class="result-total-value">{{ fmt(resultadoDespido.montoTotal) }}</span></div>
        </div>
     </div>
 
@@ -193,37 +223,39 @@
          {{ resultadoRenuncia?.mensaje }}
        </div>
        <div v-if="resultadoRenuncia?.elegible" class="result-panel">
-          <div class="result-panel-header bg-purple-50 dark:bg-purple-900/20 text-purple-800 dark:text-purple-300">Ley Renuncia Voluntaria (Art. 8)</div>
-         <div class="result-row"><span class="result-row-label">Base (tope 2 mínimos vigentes)</span><span class="result-row-value">{{ fmt(resultadoRenuncia?.salarioBaseCalculo) }}</span></div>
-         <div class="result-row"><span class="result-row-label">Días compensables (15/año)</span><span class="result-row-value">{{ resultadoRenuncia?.diasCompensacion.toFixed(2) }}</span></div>
-         <div class="result-total"><span class="result-total-label">Total Renuncia Voluntaria</span><span class="result-total-value">{{ fmt(resultadoRenuncia?.montoTotal) }}</span></div>
+          <div class="result-panel-header bg-purple-50 dark:bg-purple-900/20 text-purple-800 dark:text-purple-300">Prestación por Renuncia Voluntaria</div>
+          <div class="result-row"><span class="result-row-label">Base de cálculo (Tope: ${{ fmt(resultadoRenuncia.topeSalarial) }})</span><span class="result-row-value">{{ fmt(resultadoRenuncia.salarioBaseCalculo) }}</span></div>
+          <div class="result-row"><span class="result-row-label">Años completos ({{ resultadoRenuncia.anios }} años)</span><span class="result-row-value">{{ fmt(resultadoRenuncia.montoAniosCompletos) }}</span></div>
+          <div class="result-row"><span class="result-row-label">Proporcional tiempo adicional</span><span class="result-row-value">{{ fmt(resultadoRenuncia.montoProporcional) }}</span></div>
+          <div class="result-total"><span class="result-total-label">Total Prestación Art. 8</span><span class="result-total-value">{{ fmt(resultadoRenuncia.montoTotal) }}</span></div>
        </div>
     </div>
 
     <div v-show="liqForm.modo === 'aguinaldo' && resultadoAguinaldo">
        <!-- Template Aguinaldo -->
-        <div class="result-panel">
-          <div class="result-panel-header bg-amber-50 dark:bg-amber-900/20 text-amber-800 dark:text-amber-300">Aguinaldo</div>
-         <div class="result-row"><span class="result-row-label">Días de aguinaldo a pagar</span><span class="result-row-value">{{ resultadoAguinaldo?.diasAguinaldo }}</span></div>
-         <div class="result-row"><span class="result-row-label">Aguinaldo Neto (Sin ISR aplicable/exento)</span><span class="result-row-value">{{ fmt(resultadoAguinaldo?.montoNeto) }}</span></div>
+       <div class="result-panel">
+          <div class="result-panel-header bg-amber-50 dark:bg-amber-900/20 text-amber-800 dark:text-amber-300">Aguinaldo Proporcional</div>
+          <div class="result-row"><span class="result-row-label">Tramo por antigüedad</span><span class="result-row-value">{{ resultadoAguinaldo.tramoLabel }} ({{ resultadoAguinaldo.diasAguinaldoBase }} días)</span></div>
+          <div class="result-row"><span class="result-row-label">Días laborados en el año</span><span class="result-row-value">{{ resultadoAguinaldo.diasProporcionales }} / 365</span></div>
+          <div class="result-row"><span class="result-row-label">Monto Bruto</span><span class="result-row-value">{{ fmt(resultadoAguinaldo.montoAguinaldo) }}</span></div>
+          <div class="result-total"><span class="result-total-label">Aguinaldo Líquido</span><span class="result-total-value">{{ fmt(resultadoAguinaldo.montoNeto) }}</span></div>
        </div>
     </div>
 
     <div v-show="liqForm.modo === 'vacacion' && resultadoVacacion">
        <!-- Template Vacacion -->
-        <div class="result-panel">
-          <div class="result-panel-header bg-emerald-50 dark:bg-emerald-900/20 text-emerald-800 dark:text-emerald-300">Vacación Anual</div>
-         <div class="result-row"><span class="result-row-label">Pago ordinario ({{resultadoVacacion?.diasOtorgados.toFixed(1)}} días)</span><span class="result-row-value">{{ fmt(resultadoVacacion?.pagoOrdinario) }}</span></div>
-         <div class="result-row"><span class="result-row-label">Prima Vacacional (30% ley)</span><span class="result-row-value positive">+ {{ fmt(resultadoVacacion?.primaVacacional) }}</span></div>
-         <div class="result-row"><span class="result-row-label">Descuentos de (ISSS, AFP, ISR)</span><span class="result-row-value negative">- {{ fmt(resultadoVacacion?.descuentoISSS + resultadoVacacion?.descuentoAFP + resultadoVacacion?.isrRetenido) }}</span></div>
+       <div class="result-panel">
+          <div class="result-panel-header bg-emerald-50 dark:bg-emerald-900/20 text-emerald-800 dark:text-emerald-300">Vacación Proporcional</div>
+          <div class="result-row"><span class="result-row-label">Base 15 días (Proporcional)</span><span class="result-row-value">{{ fmt(resultadoVacacion.pagoOrdinarioProporcional) }}</span></div>
+          <div class="result-row"><span class="result-row-label">Prima 30% (Proporcional)</span><span class="result-row-value positive">+ {{ fmt(resultadoVacacion.primaProporcional) }}</span></div>
+          <div class="result-row"><span class="result-row-label">Deducciones de ley</span><span class="result-row-value negative">- {{ fmt(resultadoVacacion.descuentoISSS + resultadoVacacion.descuentoAFP + resultadoVacacion.isrRetenido) }}</span></div>
           <div class="result-total bg-emerald-600 dark:bg-emerald-900/40 text-white dark:text-emerald-100">
-            <span class="result-total-label text-emerald-50">Líquido de Vacaciones</span>
-            <span class="result-total-value text-white">{{ fmt(resultadoVacacion?.montoNeto) }}</span>
+            <span class="result-total-label text-emerald-50">Líquido a Recibir</span>
+            <span class="result-total-value text-white">{{ fmt(resultadoVacacion.montoNeto) }}</span>
           </div>
        </div>
     </div>
 
-  </div>
   </div>
 </main>
 
