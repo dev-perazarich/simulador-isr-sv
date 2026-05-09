@@ -1,5 +1,6 @@
-import { calcularAguinaldo, calcularIndemnizacion, calcularVacacion, calcularRenunciaVoluntaria } from '../modules/calculator.js';
+import { calcularAguinaldo, calcularIndemnizacion, calcularVacacion, calcularRenunciaVoluntaria, calcularDiferenciaFechas } from '../modules/calculator.js';
 import { storage } from '../modules/storage.js';
+
 
 
 export function useLiquidacionesTab() {
@@ -23,7 +24,7 @@ export function useLiquidacionesTab() {
   const resultadoVacacion = Vue.ref(null);
 
   // Computado auxiliar
-  import { calcularAguinaldo, calcularIndemnizacion, calcularVacacion, calcularRenunciaVoluntaria, calcularDiferenciaFechas } from '../modules/calculator.js';
+
 
   // Watcher para calcular tiempo desde fechas
   Vue.watch([() => liqForm.value.fechaInicio, () => liqForm.value.fechaFin], ([inicio, fin]) => {
