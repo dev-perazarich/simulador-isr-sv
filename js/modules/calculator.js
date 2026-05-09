@@ -128,7 +128,8 @@ export function calcularSalarioNeto(salarioBruto) {
  * @returns {object} Desglose de indemnización
  */
 export function calcularIndemnizacion(salarioBruto, anios, meses = 0, dias = 0) {
-  const { DIAS_POR_ANIO, TOPE_SALARIO_MENSUAL } = DATA_2026.INDEMNIZACION;
+  const { DIAS_POR_ANIO, TOPE_SALARIO_MENSUAL_ABS: TOPE_SALARIO_MENSUAL } = DATA_2026.INDEMNIZACION;
+
 
   // Aplicar tope salarial ($1,635.20 o 4 salarios mínimos)
   const salarioBase = Math.min(salarioBruto, TOPE_SALARIO_MENSUAL);
@@ -269,7 +270,8 @@ export function calcularVacacion(salarioBruto, diasProporcionales = 365) {
  * @param {number} dias - Días adicionales (0-30)
  */
 export function calcularRenunciaVoluntaria(salarioBruto, anios, meses = 0, dias = 0) {
-  const { DIAS_POR_ANIO, TOPE_SALARIO_MENSUAL } = DATA_2026.RENUNCIA_VOLUNTARIA;
+  const { DIAS_POR_ANIO, TOPE_SALARIO_MENSUAL_ABS: TOPE_SALARIO_MENSUAL } = DATA_2026.RENUNCIA_VOLUNTARIA;
+
 
   // Si no tiene al menos 2 años laborados completos, no aplica por ley (Art. 2)
   if (anios < 2) {

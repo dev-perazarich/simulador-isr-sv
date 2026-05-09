@@ -89,11 +89,12 @@
 
     <!-- Global Nav (Desktop) -->
     <nav class="hidden md:flex items-center gap-6">
-      <a href="#caracteristicas" @click.prevent="scrollTo('caracteristicas')" class="text-sm font-medium text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">Características</a>
-      <a href="/salario.html" class="text-sm font-medium text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">Suite</a>
-      <a href="/donaciones.html" class="text-sm font-medium text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">Donar</a>
-      <a href="/salario.html" class="btn-main text-sm">
-        Abrir Calculadora →
+      <a href="/" class="text-sm font-medium text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">Inicio</a>
+      <a href="/salario.html" class="text-sm font-medium text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">Calculadoras</a>
+      <a href="/autor.html" class="text-sm font-medium text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">Autor</a>
+      <a href="/donaciones.html" class="btn-secondary text-xs flex items-center gap-2 py-2 px-4 border-rose-200 text-rose-600 hover:bg-rose-50 dark:border-rose-900/30 dark:text-rose-400 dark:hover:bg-rose-900/10">
+        <span class="iconify text-rose-500" data-icon="lucide:heart"></span>
+        Apoyar Proyecto
       </a>
     </nav>
 
@@ -106,6 +107,7 @@
      </div>
   </div>
 </header>
+
 
 <!-- Sidebar Overlay -->
 <div class="sidebar-overlay" :class="{ active: isMenuOpen }" @click="closeMenu"></div>
@@ -502,7 +504,7 @@
 </script>
 <script>
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js?v=1.2.1').catch(() => {}));
+    window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js?v=1.2.4').catch(() => {}));
   }
 </script>
 </body>

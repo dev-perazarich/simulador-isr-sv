@@ -55,16 +55,27 @@
   <div id="app">
     <!-- Navbar -->
     <header class="glass-header sticky top-0 z-50">
-  <div class="max-w-4xl mx-auto px-5 h-16 flex items-center justify-between gap-4">
+  <div class="max-w-[1100px] mx-auto px-5 h-16 flex items-center justify-between gap-4">
     <div class="flex items-center gap-3">
       <button @click="toggleMenu" class="hamburger" aria-label="Menu">
         <span class="iconify text-xl" data-icon="lucide:menu"></span>
       </button>
-      <a href="/" class="flex items-center gap-2 group">
-        <img src="/favicon.svg" alt="RentaSV Logo" class="w-7 h-7 rounded-md group-hover:scale-105 transition-transform">
-        <span class="font-extrabold tracking-tight text-slate-900 dark:text-white">Renta<span class="text-blue-500">SV</span></span>
+      <a href="/" class="flex items-center gap-2.5 shrink-0 group">
+        <img src="/favicon.svg" alt="RentaSV Logo" class="w-8 h-8 rounded-lg transition-transform group-hover:scale-105">
+        <span class="font-extrabold tracking-tight text-lg text-slate-900 dark:text-white">Renta<span class="text-blue-500">SV</span></span>
       </a>
     </div>
+
+    <!-- Global Nav (Desktop) -->
+    <nav class="hidden md:flex items-center gap-6">
+      <a href="/" class="text-sm font-medium text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">Inicio</a>
+      <a href="/salario.html" class="text-sm font-medium text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">Calculadoras</a>
+      <a href="/autor.html" class="text-sm font-medium text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">Autor</a>
+      <a href="/donaciones.html" class="btn-secondary text-xs flex items-center gap-2 py-2 px-4 border-rose-200 text-rose-600 hover:bg-rose-50 dark:border-rose-900/30 dark:text-rose-400 dark:hover:bg-rose-900/10">
+        <span class="iconify text-rose-500" data-icon="lucide:heart"></span>
+        Apoyar Proyecto
+      </a>
+    </nav>
 
     <!-- Theme toggle -->
     <button @click="toggleTheme" class="theme-toggle shrink-0" :title="isDarkMode ? 'Modo claro' : 'Modo oscuro'">
@@ -72,6 +83,7 @@
     </button>
   </div>
 </header>
+
 
 <!-- Sidebar Overlay -->
 <div class="sidebar-overlay" :class="{ active: isMenuOpen }" @click="closeMenu"></div>
