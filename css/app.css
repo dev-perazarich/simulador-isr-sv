@@ -1,11 +1,13 @@
 :root {
+
+  /* --- Color System ----------------------------- */
   --color-bg: #fdfdfd;
   --color-bg-alt: #ffffff;
   --color-bg-muted: #f8fafc;
   --color-border: #e2e8f0;
   --color-border-muted: #cbd5e1;
   --color-text: #0f172a;
-  --color-text-muted: #64748b;
+  --color-text-muted: #334155;
   --color-primary: #1a56db;
   --color-primary-light: #3b82f6;
   --color-accent: #1a56db;
@@ -17,15 +19,37 @@
   --color-card-bg: rgba(255, 255, 255, 0.85);
   --color-card-border: rgba(255, 255, 255, 0.6);
   --color-hover: rgba(26, 86, 219, 0.08);
-  /* RGB variables */
+  
+  /* --- RGB variables ----------------------------- */
   --color-accent-rgb: 26, 86, 219;
   --color-accent-light-rgb: 59, 130, 246;
   --color-text-rgb: 15, 23, 42;
   --color-bg-alt-rgb: 255, 255, 255;
+  
+  /* --- Border Radius System ---------------------- */
+  --radius-xs: 4px;
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-full: 9999px;
+  
+  /* --- Shadow System ----------------------------- */
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.02);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 25px rgba(0, 0, 0, 0.12);
+  --shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.15);
+  
+  /* --- Transitions ------------------------------- */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-smooth: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+  
+  /* --- Blur & Effects ---------------------------- */
   --glass-blur: blur(12px);
 }
-
 [data-theme="dark"] {
   --color-bg: #020617;
   /* Very dark slate */
@@ -616,4 +640,102 @@ body::before {
 .btn-secondary:hover {
   background: var(--color-border);
   color: var(--color-text);
+}
+
+
+
+/* --- Focus Visible (Accessibility) ----------------------------------- */
+*:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* --- Empty States ----------------------------------------------------- */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  text-align: center;
+}
+
+.empty-state-icon {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 16px;
+  opacity: 0.4;
+  color: var(--color-text-muted);
+}
+
+.empty-state-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 8px;
+}
+
+.empty-state-text {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  max-width: 280px;
+  margin-bottom: 20px;
+}
+
+/* --- Skeleton Loading ------------------------------------------------- */
+.skeleton {
+  background: linear-gradient(90deg, var(--color-bg-muted) 25%, var(--color-border) 50%, var(--color-bg-muted) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s ease-in-out infinite;
+  border-radius: var(--radius-md);
+}
+
+@keyframes skeleton-loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.skeleton-text {
+  height: 1rem;
+  margin-bottom: 8px;
+}
+
+.skeleton-text:last-child {
+  width: 80%;
+}
+
+.skeleton-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+}
+
+/* --- Dark Mode Contrast Improvements ---------------------------------- */
+[data-theme="dark"] .result-total-value {
+  color: var(--color-accent-light);
+}
+
+[data-theme="dark"] .positive {
+  color: var(--color-success);
+}
+
+[data-theme="dark"] .negative {
+  color: var(--color-error);
+}
+
+[data-theme="dark"] .tramo-pill {
+  background: rgba(var(--color-accent-rgb), 0.2);
+  color: var(--color-accent-light);
+}
+
+/* --- Improved Mobile Touch Targets ----------------------------------- */
+@media (max-width: 768px) {
+  .dock-btn {
+    min-width: 44px;
+    min-height: 44px;
+  }
+  
+  .sidebar-link {
+    min-height: 44px;
+  }
 }

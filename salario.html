@@ -196,7 +196,16 @@
         <button class="btn-secondary" @click="limpiarSalario">Limpiar</button>
       </div>
 
-      <div v-if="resultadoSalario" class="result-card">
+             <!-- Empty State when no calculation -->
+       <div v-if="!resultadoSalario" class="empty-state">
+         <span class="iconify empty-state-icon" data-icon="lucide:calculator" style="font-size: 48px;"></span>
+         <div class="empty-state-title">Ingresa tu salario bruto</div>
+         <div class="empty-state-text">Obtén el desglose completo de descuentos de ley según los parámetros 2026.</div>
+         <button class="btn-secondary" @click="calcularSalario" :disabled="!salarioInput">
+           Calcular salario neto
+         </button>
+       </div>
+       <div v-if="resultadoSalario" class="result-card">
         <div class="result-panel">
           <div class="result-panel-header">
             <span class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Desglose mensual</span>
@@ -216,9 +225,9 @@
             <span class="result-row-label">Descuento AFP (7.25%, tope $581.21)</span>
             <span class="result-row-value negative">â€” {{ fmt(resultadoSalario.descuentoAFP) }}</span>
           </div>
-          <div class="result-row" style="background:#f0f9ff;">
-            <span class="text-sm text-blue-700 font-medium">Base imponible ISR</span>
-            <span class="font-bold text-blue-700 font-mono text-sm">{{ fmt(resultadoSalario.rentaNetaImponible) }}</span>
+          <div class="result-row" style="background: var(--color-bg-muted);">
+            <span class="text-sm font-medium" style="color: var(--color-accent)">Base imponible ISR</span>
+            <span class="font-bold font-mono text-sm" style="color: var(--color-accent)">{{ fmt(resultadoSalario.rentaNetaImponible) }}</span>
           </div>
           <div class="result-row">
             <span class="result-row-label">ISR retenido</span>
@@ -376,3 +385,8 @@
 </script>
 </body>
 </html>
+
+
+
+
+
