@@ -23,7 +23,7 @@ const DATA_2026 = {
   // ── Años Dinámicos ──
   CURRENT_YEAR: currentYear,
   FISCAL_YEAR: fiscalYear,
-  VERSION: 'v1.9.3',
+  VERSION: 'v1.9.5',
 
   // ── ISR: Tabla de Retención Mensual (Art. 37 reformado) ──
   ISR_TRAMOS_MENSUAL: [
