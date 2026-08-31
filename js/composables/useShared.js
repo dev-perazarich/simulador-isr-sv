@@ -1,46 +1,51 @@
-import { DATA_2026 } from '../modules/constants.js';
+// ============================================================
+// useShared.js — Estado y utilidades comunes a todas las apps
+// ============================================================
 
-const NOMBRES_MESES = [
-  'Enero','Febrero','Marzo','Abril','Mayo','Junio',
-  'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'
+import { DATA_2026 } from '../modules/constants.js';
+import { formatUSD, formatPercent, round2 } from '../modules/calculator.js';
+
+export const NOMBRES_MESES = [
+  'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+  'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre',
+];
+
+export const MESES_CORTOS = [
+  'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
+  'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic',
 ];
 
 export function useShared() {
-  const currentYear = DATA_2026.CURRENT_YEAR;
-  const fiscalYear = DATA_2026.FISCAL_YEAR;
-  
-  // ── Estado global ──
-  const tabActiva = Vue.ref('salario');
-  const mostrarPrivacidad = Vue.ref(false);
-  const isMenuOpen = Vue.ref(false);
+  // Mensaje temporal de confirmación (sustituye a los `alert()`)
+  const toast = Vue.ref(null);
+  let toastTimer = null;
 
-  const toggleMenu = () => isMenuOpen.value = !isMenuOpen.value;
-  const closeMenu = () => isMenuOpen.value = false;
+  function notificar(mensaje, tipo = 'info') {
+    toast.value = { mensaje, tipo };
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { toast.value = null; }, 4000);
+  }
 
-    // ── Helpers de formato (reutilizables) ──
-  // Alias cortos para el template (fmt/pct) + nombres completos para JS
-  const fmt = (num) => `$${(num || 0).toFixed(2)}`;
-  const pct = (num) => `${(num || 0).toFixed(1)}%`;
-  // Alias largos — misma función, por compatibilidad
-  const formatUSD = fmt;
-  const formatPercent = pct;
+  function cerrarToast() {
+    clearTimeout(toastTimer);
+    toast.value = null;
+  }
 
   return {
-    // State
-    tabActiva,
-    mostrarPrivacidad,
-    isMenuOpen,
-    toggleMenu,
-    closeMenu,
-    // Constants
-    NOMBRES_MESES,
     DATA_2026,
-    currentYear,
-    fiscalYear,
-    // Formatters — exponer ambos nombres para template y JS externo
-    fmt,
-    pct,
-    formatUSD,
-    formatPercent,
+    NOMBRES_MESES,
+    MESES_CORTOS,
+    currentYear: DATA_2026.CURRENT_YEAR,
+    fiscalYear: DATA_2026.FISCAL_YEAR,
+    // Formateadores disponibles en las plantillas
+    fmt: formatUSD,
+    pct: formatPercent,
+    round2,
+    // Avisos
+    toast,
+    notificar,
+    cerrarToast,
   };
 }
+
+export default useShared;

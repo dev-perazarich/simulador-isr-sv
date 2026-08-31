@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="es-SV">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Guía de usuario: cómo funcionan el ISR, el ISSS, la AFP y sus prestaciones | RentaSV</title>
+  <meta name="description" content="Explicación sencilla de los descuentos de su salario en El Salvador: ISSS, AFP e ISR por tramos, horas extras, aguinaldo, vacaciones, indemnización y declaración anual, con la base legal de cada uno." />
+  <link rel="canonical" href="https://simulador-isr-sv.vercel.app/guia.html" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta name="author" content="Ricardo Peraza" />
+  <meta name="theme-color" content="#ffffff" />
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="RentaSV" />
+  <meta property="og:locale" content="es_SV" />
+  <meta property="og:title" content="Guía: el ISR y sus prestaciones en El Salvador, explicados en simple" />
+  <meta property="og:description" content="Explicación sencilla de los descuentos de su salario en El Salvador: ISSS, AFP e ISR por tramos, horas extras, aguinaldo, vacaciones, indemnización y declaración anual, con la base legal de cada uno." />
+  <meta property="og:url" content="https://simulador-isr-sv.vercel.app/guia.html" />
+  <meta property="og:image" content="https://simulador-isr-sv.vercel.app/icons/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Guía: el ISR y sus prestaciones en El Salvador, explicados en simple" />
+  <meta name="twitter:description" content="Explicación sencilla de los descuentos de su salario en El Salvador: ISSS, AFP e ISR por tramos, horas extras, aguinaldo, vacaciones, indemnización y declaración anual, con la base legal de cada uno." />
+  <meta name="twitter:image" content="https://simulador-isr-sv.vercel.app/icons/og-image.png" />
+
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <!-- Sistema de diseño: tokens, base y componentes. Se edita a mano. -->
+  <link rel="stylesheet" href="/css/app.css" />
+
+  <!-- Tailwind vendorizado: resuelve en el navegador las clases
+       utilitarias del marcado. Sin CDN externo y sin compilar nada. -->
+  <script src="/vendor/tailwind.js"></script>
+  <script>
+    tailwind.config = {
+      darkMode: ['selector', '[data-theme="dark"]'],
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#eff5ff', 100: '#dbe8fe', 200: '#bfd7fe', 300: '#93bbfd',
+              400: '#6096fa', 500: '#3b76f6', 600: '#2557eb', 700: '#1d43d8',
+              800: '#1e39af', 900: '#1e348a', 950: '#172254',
+            },
+            ink: {
+              50: '#f6f7f9', 100: '#eceef2', 200: '#d5dae3', 300: '#b0b9ca',
+              400: '#8593ac', 500: '#657493', 600: '#505d7a', 700: '#424c63',
+              800: '#394153', 900: '#333947', 950: '#0d1220',
+            },
+          },
+          borderRadius: { card: '0.875rem' },
+          boxShadow: {
+            card: '0 1px 2px 0 rgb(16 24 40 / 0.04), 0 1px 3px 0 rgb(16 24 40 / 0.06)',
+            'card-hover': '0 4px 12px -2px rgb(16 24 40 / 0.08), 0 2px 6px -2px rgb(16 24 40 / 0.05)',
+            pop: '0 12px 32px -8px rgb(16 24 40 / 0.18)',
+          },
+          maxWidth: { content: '80rem', prose: '46rem' },
+          transitionTimingFunction: { soft: 'cubic-bezier(0.16, 1, 0.3, 1)' },
+        },
+      },
+    };
+  </script>
+
+  <!-- El tema claro es el predeterminado: es el que transmite confianza
+       en una herramienta de dinero. El oscuro solo se aplica si la
+       persona lo eligió expresamente. -->
+  <script>
+    (function () {
+      try {
+        if (localStorage.getItem('sv-isr-theme') === 'dark') {
+          document.documentElement.setAttribute('data-theme', 'dark');
+          return;
+        }
+      } catch (e) {}
+      document.documentElement.setAttribute('data-theme', 'light');
+    })();
+  </script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"Cómo entender los descuentos de su salario en El Salvador","description":"Los tres filtros por los que pasa un salario en El Salvador antes de llegar al bolsillo del trabajador.","inLanguage":"es-SV","step":[{"@type":"HowToStep","name":"Descuento del ISSS","text":"Se descuenta el 3% del salario para el seguro social, con un tope de $30.00 mensuales porque la cotización solo se calcula hasta un salario de $1,000.00."},{"@type":"HowToStep","name":"Descuento de la AFP","text":"Se descuenta el 7.25% para la cuenta individual de pensiones, con un tope de $581.21 mensuales."},{"@type":"HowToStep","name":"Retención del ISR","text":"Sobre lo que queda (la renta imponible) se aplica la tabla del Art. 37 de la LISR. Los primeros $550.00 están exentos y el resto tributa por tramos del 10%, 20% y 30%."}]}</script>
+</head>
+<body>
+  <a href="#contenido" class="skip-link">Saltar al contenido</a>
+
+  <div class="app-shell">
+    <div class="sidebar-backdrop hidden" data-sidebar-backdrop hidden></div>
+  <aside class="sidebar" data-sidebar aria-label="Navegación principal">
+    <div class="sidebar-brand">
+      <a href="/" class="flex items-center gap-2.5 ">
+      <svg class="h-8 w-8 shrink-0" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+  <rect width="32" height="32" rx="8" fill="#1d43d8"/>
+  <rect x="8" y="17" width="4" height="8" rx="1.5" fill="#93bbfd"/>
+  <rect x="14" y="12" width="4" height="13" rx="1.5" fill="#dbe8fe"/>
+  <rect x="20" y="7" width="4" height="18" rx="1.5" fill="#ffffff"/>
+</svg>
+      <span class="text-[1.0625rem] font-bold tracking-tight text-ink-950 dark:text-white">Renta<span class="text-brand-600 dark:text-brand-400">SV</span></span>
+    </a>
+      <button type="button" class="icon-btn lg:hidden" data-sidebar-close aria-label="Cerrar menú">
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+    <div class="sidebar-scroll">
+        <div class="pt-3"></div>
+        <nav class="space-y-0.5"><a href="/" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg><span>Portada</span>
+        </a>
+        <a href="/guia.html" class="nav-link" aria-current="page">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/></svg><span>Guía de usuario</span>
+        </a></nav>
+        <p class="sidebar-group">Calculadoras</p>
+        <nav class="space-y-0.5"><a href="/salario.html" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg><span>Salario neto</span>
+        </a>
+        <a href="/liquidaciones.html" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="14" x="2" y="7" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg><span>Prestaciones y liquidación</span>
+        </a>
+        <a href="/isr-anual.html" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v5h5"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Declaración anual F-11</span>
+        </a>
+        <a href="/comparador.html" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg><span>Planilla vs. honorarios</span>
+        </a></nav>
+        <p class="sidebar-group">Proyecto</p>
+        <nav class="space-y-0.5"><a href="/autor.html" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Sobre el autor</span>
+        </a>
+        <a href="/donaciones.html" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg><span>Apoyar el proyecto</span>
+        </a></nav>
+        <p class="sidebar-group">Legal</p>
+        <nav class="space-y-0.5"><a href="/legal/privacidad.html" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V6l8-3 8 3z"/></svg><span>Privacidad</span>
+        </a>
+        <a href="/legal/terminos.html" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v5h5"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Términos de uso</span>
+        </a></nav>
+      <div class="mt-6 rounded-lg border border-ink-200 bg-ink-50 p-3 dark:border-ink-800 dark:bg-ink-950/60">
+        <p class="text-[0.6875rem] font-semibold uppercase tracking-wide text-ink-500 dark:text-ink-400">Parámetros vigentes</p>
+        <p class="mt-1 text-xs leading-relaxed text-ink-600 dark:text-ink-300">
+          Tablas del <strong class="font-semibold text-ink-900 dark:text-white">Art. 37 LISR</strong> reformado por el D.L. 293 (30/04/2025) y salarios mínimos de junio 2025.
+        </p>
+      </div>
+    </div>
+  </aside>
+
+    <div class="app-main">
+      <header class="topbar">
+      <button type="button" class="icon-btn lg:hidden" data-sidebar-open aria-label="Abrir menú" aria-expanded="false">
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/></svg>
+      </button>
+      <div class="flex min-w-0 flex-1 items-center gap-3">
+        <span class="truncate text-sm font-semibold text-ink-900 dark:text-white lg:text-[0.9375rem]">Guía de usuario</span>
+      </div>
+      
+      <button type="button" class="icon-btn" data-theme-toggle aria-label="Cambiar entre tema claro y oscuro">
+        <span class="hidden dark:block"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9"/></svg></span>
+        <span class="block dark:hidden"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg></span>
+      </button>
+    </header>
+
+      <main id="contenido" class="app-content">
+        <header class="mb-8 max-w-prose">
+          <h1 class="text-2xl font-bold sm:text-3xl">Guía de usuario</h1>
+          <p class="mt-3 text-base leading-relaxed text-ink-600 dark:text-ink-300">
+            Aquí se explica, en palabras sencillas, qué hace cada calculadora, cómo funciona en
+            la vida real y en qué ley está amparada. Si alguna vez ha visto su boleta de pago y
+            no ha entendido por qué le descontaron lo que le descontaron, empiece por aquí.
+          </p>
+        </header>
+
+        <div class="grid grid-safe gap-8 lg:grid-cols-[minmax(0,1fr)_16rem]">
+
+          <!-- ══════════════ CONTENIDO ══════════════ -->
+          <div class="min-w-0 space-y-10">
+
+            <!-- 1. La boleta -->
+            <section id="boleta" class="scroll-mt-24">
+              <h2 class="text-xl font-bold">1. Cómo leer su boleta de pago</h2>
+              <p class="mt-3 text-sm leading-relaxed text-ink-600 dark:text-ink-300">
+                Su salario pasa por tres filtros, siempre en este orden. El orden importa:
+                si se altera, el resultado cambia.
+              </p>
+
+              <div class="mt-5 space-y-3">
+                <div class="flex gap-4">
+                  <span class="step-num">1</span>
+                  <div class="min-w-0 flex-1 plain-card">
+                    <h3 class="text-sm font-semibold">Salario bruto</h3>
+                    <p class="mt-1.5 text-sm leading-relaxed text-ink-600 dark:text-ink-300">
+                      Lo que dice su contrato. Todavía no es lo que recibe.
+                    </p>
+                  </div>
+                </div>
+                <div class="flex gap-4">
+                  <span class="step-num">2</span>
+                  <div class="min-w-0 flex-1 plain-card">
+                    <h3 class="text-sm font-semibold">Menos ISSS y AFP</h3>
+                    <p class="mt-1.5 text-sm leading-relaxed text-ink-600 dark:text-ink-300">
+                      3% de salud y 7.25% de pensión. Lo que queda se llama
+                      <strong>renta imponible</strong> o base imponible.
+                    </p>
+                  </div>
+                </div>
+                <div class="flex gap-4">
+                  <span class="step-num">3</span>
+                  <div class="min-w-0 flex-1 plain-card">
+                    <h3 class="text-sm font-semibold">Menos el ISR</h3>
+                    <p class="mt-1.5 text-sm leading-relaxed text-ink-600 dark:text-ink-300">
+                      El impuesto se calcula sobre esa base, nunca sobre el bruto. Lo que sobra
+                      es su <strong>salario neto</strong>.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="alert alert-info mt-5">
+                <svg class="alert-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <circle cx="12" cy="12" r="10" /><path d="M12 16v-4" /><path d="M12 8h.01" />
+                </svg>
+                <p>
+                  <strong>Ejemplo con $1,200.00:</strong> le descuentan $30.00 de ISSS y
+                  $87.00 de AFP. Su base imponible queda en $1,083.00, sobre la que se
+                  retienen $97.55 de ISR. Recibe <strong>$985.45</strong>.
+                </p>
+              </div>
+            </section>
+
+            <!-- 2. ISSS -->
+            <section id="isss" class="scroll-mt-24">
+              <h2 class="text-xl font-bold">2. El ISSS: su salud</h2>
+              <div class="plain-card mt-4">
+                <h3 class="text-sm font-semibold text-ink-900 dark:text-white">Qué es</h3>
+                <p class="mt-1.5 text-sm leading-relaxed text-ink-600 dark:text-ink-300">
+                  Una cotización obligatoria al Instituto Salvadoreño del Seguro Social que le
+                  da acceso a consultas, medicinas, incapacidades y maternidad. Se le descuenta
+                  el <strong>3%</strong> del salario.
+                </p>
+
+                <h3 class="mt-4 text-sm font-semibold text-ink-900 dark:text-white">Cómo funciona en la vida real</h3>
+                <p class="mt-1.5 text-sm leading-relaxed text-ink-600 dark:text-ink-300">
+                  El 3% no se cobra sobre todo su sueldo: solo sobre los primeros
+                  $1,000.00. Por eso el descuento nunca pasa de <strong>$30.00</strong>
+                  al mes, gane $1,000.00 o gane $5,000.
+                </p>
+                <p class="plain-analogy">
+                  Es como una cubeta con capacidad de $30.00: se llena con el 3% de su
+                  sueldo y, una vez llena, ya no le cabe más. Aparte, su patrono deposita
+                  el 7.5% (hasta $75), que no sale de su bolsillo pero sí forma parte de lo que
+                  usted le cuesta a la empresa.
+                </p>
+                <p class="plain-legal">
+                  <span class="badge badge-neutral">Amparo legal</span>
+                  <span>Ley del Seguro Social y su reglamento — régimen de salud</span>
+                </p>
+              </div>
+            </section>
+
+            <!-- 3. AFP -->
+            <section id="afp" class="scroll-mt-24">
+              <h2 class="text-xl font-bold">3. La AFP: su pensión</h2>
+              <div class="plain-card mt-4">
+                <h3 class="text-sm font-semibold text-ink-900 dark:text-white">Qué es</h3>
+                <p class="mt-1.5 text-sm leading-relaxed text-ink-600 dark:text-ink-300">
+                  El <strong>7.25%</strong> que se va a su cuenta individual de ahorro para
+                  pensiones. A diferencia del impuesto, este dinero sigue siendo suyo.
+                </p>
+
+                <h3 class="mt-4 text-sm font-semibold text-ink-900 dark:text-white">Cómo funciona en la vida real</h3>
+                <p class="mt-1.5 text-sm leading-relaxed text-ink-600 dark:text-ink-300">
+                  Se cotiza hasta un ingreso base de $8,016.71, así que el descuento tiene un
+                  tope de <strong>$581.21</strong> mensuales. Su patrono aporta además el
+                  8.75%.
+                </p>
+                <p class="plain-analogy">
+                  Piénselo como una alcancía obligatoria: no es un gasto, es ahorro forzado.
+                  Cuando revise su boleta, sume ISSS + AFP: eso es lo que la ley llama
+                  «descuentos de ley», y es lo único que se resta antes de calcular el impuesto.
+                </p>
+                <p class="plain-legal">
+                  <span class="badge badge-neutral">Amparo legal</span>
+                  <span>Ley del Sistema de Ahorro para Pensiones — reforma D.L. 462/2022</span>
+                </p>
+              </div>
+            </section>
+
+            <!-- 4. ISR -->
+            <section id="isr" class="scroll-mt-24">
+              <h2 class="text-xl font-bold">4. El ISR: el impuesto sobre la renta</h2>
+              <div class="plain-card mt-4">
+                <h3 class="text-sm font-semibold text-ink-900 dark:text-white">Qué es</h3>
+                <p class="mt-1.5 text-sm leading-relaxed text-ink-600 dark:text-ink-300">
+                  Un impuesto que se paga sobre lo que gana. En planilla se cobra por adelantado,
+                  mes a mes, en forma de <strong>retención</strong>: su patrono se lo descuenta y
+                  se lo entrega a Hacienda en su nombre.
+                </p>
+
+                <h3 class="mt-4 text-sm font-semibold text-ink-900 dark:text-white">Cómo funciona en la vida real</h3>
+                <p class="mt-1.5 text-sm leading-relaxed text-ink-600 dark:text-ink-300">
+                  Se calcula por <strong>tramos</strong>. Los primeros $550.00 al mes
+                  —$6,600.00 al año— de renta
+                  imponible no pagan nada. Lo que pasa de ahí paga 10%, luego 20% y luego 30%,
+                  pero cada tasa se aplica solo a la porción que le corresponde.
+                </p>
+                <p class="plain-analogy">
+                  Imagine una escalera con el agua subiendo. El primer escalón (hasta
+                  $550.00) es libre. Solo el agua que sube al segundo escalón paga el 10%,
+                  y solo la que llega al tercero paga el 20%. <strong>El agua de abajo nunca se
+                  vuelve a cobrar.</strong> Por eso es falso que «si le suben el sueldo, va a
+                  ganar menos»: subir de tramo jamás reduce lo que recibe… salvo en un punto muy
+                  específico que explicamos abajo.
+                </p>
+                <p class="plain-legal">
+                  <span class="badge badge-neutral">Amparo legal</span>
+                  <span>Art. 37 de la Ley de Impuesto sobre la Renta, reformado por el D.L. 293 del 30/04/2025</span>
+                </p>
+              </div>
+
+              <div class="card mt-4">
+                <div class="card-header">
+                  <h3 class="card-title">Tabla de retención mensual</h3>
+                  <span class="card-subtitle">Decreto Ejecutivo No. 10 (2025)</span>
+                </div>
+                <div class="card-body">
+                  <div class="table-wrap">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th scope="col">Tramo</th>
+                          <th scope="col" class="text-right">Renta imponible</th>
+                          <th scope="col" class="text-right">Tasa</th>
+                          <th scope="col" class="text-right">Cuota fija</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>I — Exento</td>
+                          <td class="table-numeric">$0.00 – $550.00</td>
+                          <td class="table-numeric">Exento</td>
+                          <td class="table-numeric">$0.00</td>
+                        </tr>
+                        <tr>
+                          <td>II — 10%</td>
+                          <td class="table-numeric">$550.01 – $895.24</td>
+                          <td class="table-numeric">10%</td>
+                          <td class="table-numeric">$17.67</td>
+                        </tr>
+                        <tr>
+                          <td>III — 20%</td>
+                          <td class="table-numeric">$895.25 – $2,038.10</td>
+                          <td class="table-numeric">20%</td>
+                          <td class="table-numeric">$60.00</td>
+                        </tr>
+                        <tr>
+                          <td>IV — 30%</td>
+                          <td class="table-numeric">$2,038.11 en adelante</td>
+                          <td class="table-numeric">30%</td>
+                          <td class="table-numeric">$288.57</td>
+                        </tr></tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <div class="plain-card mt-4">
+                <h3 class="text-sm font-semibold text-ink-900 dark:text-white">
+                  Si le pagan por quincena o por semana
+                </h3>
+                <p class="mt-1.5 text-sm leading-relaxed text-ink-600 dark:text-ink-300">
+                  No se usa la tabla mensual dividida entre dos o entre cuatro: existen tablas
+                  oficiales propias para cada caso, con sus propios tramos y cuotas fijas.
+                </p>
+                <div class="table-wrap mt-3">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">Tramo</th>
+                        <th scope="col" class="text-right">Renta imponible</th>
+                        <th scope="col" class="text-right">Tasa</th>
+                        <th scope="col" class="text-right">Cuota fija</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                          <td>I — Exento</td>
+                          <td class="table-numeric">$0.00 – $275.00</td>
+                          <td class="table-numeric">Exento</td>
+                          <td class="table-numeric">$0.00</td>
+                        </tr>
+                        <tr>
+                          <td>II — 10%</td>
+                          <td class="table-numeric">$275.01 – $447.62</td>
+                          <td class="table-numeric">10%</td>
+                          <td class="table-numeric">$8.83</td>
+                        </tr>
+                        <tr>
+                          <td>III — 20%</td>
+                          <td class="table-numeric">$447.63 – $1,019.05</td>
+                          <td class="table-numeric">20%</td>
+                          <td class="table-numeric">$30.00</td>
+                        </tr>
+                        <tr>
+                          <td>IV — 30%</td>
+                          <td class="table-numeric">$1,019.06 en adelante</td>
+                          <td class="table-numeric">30%</td>
+                          <td class="table-numeric">$144.28</td>
+                        </tr></tbody>
+                  </table>
+                </div>
+                <div class="table-wrap mt-3">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">Tramo</th>
+                        <th scope="col" class="text-right">Renta imponible</th>
+                        <th scope="col" class="text-right">Tasa</th>
+                        <th scope="col" class="text-right">Cuota fija</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                          <td>I — Exento</td>
+                          <td class="table-numeric">$0.00 – $137.50</td>
+                          <td class="table-numeric">Exento</td>
+                          <td class="table-numeric">$0.00</td>
+                        </tr>
+                        <tr>
+                          <td>II — 10%</td>
+                          <td class="table-numeric">$137.51 – $223.81</td>
+                          <td class="table-numeric">10%</td>
+                          <td class="table-numeric">$4.42</td>
+                        </tr>
+                        <tr>
+                          <td>III — 20%</td>
+                          <td class="table-numeric">$223.82 – $509.52</td>
+                          <td class="table-numeric">20%</td>
+                          <td class="table-numeric">$15.00</td>
+                        </tr>
+                        <tr>
+                          <td>IV — 30%</td>
+                          <td class="table-numeric">$509.53 en adelante</td>
+                          <td class="table-numeric">30%</td>
+                          <td class="table-numeric">$72.14</td>
+                        </tr></tbody>
+                  </table>
+                </div>
+                <p class="plain-legal">
+                  <span class="badge badge-neutral">Amparo legal</span>
+                  <span>Decreto Ejecutivo No. 10 (2025), Art. 1 literales b) y c)</span>
+                </p>
+              </div>
+
+              <div class="plain-card mt-4 border-brand-300 bg-brand-50/60 dark:border-brand-900/60 dark:bg-brand-950/20">
+                <h3 class="text-sm font-semibold text-ink-900 dark:text-white">
+                  La deducción de $1,600.00 que casi nadie aplica
+                </h3>
+                <p class="mt-1.5 text-sm leading-relaxed text-ink-600 dark:text-ink-300">
+                  Si es asalariado y su renta anual no pasa de $9,100.00, la ley le
+                  da una deducción fija de <strong>$1,600.00</strong> que no requiere
+                  ningún comprobante.
+                </p>
+                <p class="plain-analogy">
+                  Aquí está el detalle que casi nadie conoce: el propio decreto de las tablas
+                  advierte que <strong>las tablas de retención no incluyen esa deducción</strong>
+                  y que el patrono debe considerarla al retener. En la práctica muchas planillas
+                  no lo hacen, así que a esas personas les retienen de más todo el año y ese
+                  exceso les queda como saldo a favor en abril… si presentan su declaración.
+                  Nuestra calculadora se lo avisa y le dice cuánto es.
+                </p>
+                <p class="plain-legal">
+                  <span class="badge badge-neutral">Amparo legal</span>
+                  <span>Art. 29 numeral 7) inciso primero LISR · Decreto Ejecutivo No. 10, literal e)</span>
+                </p>
+              </div>
+            </section>
+
+            <!-- 5. El salto -->
+            <section id="salto" class="scroll-mt-24">
+              <h2 class="text-xl font-bold">5. El salto de $7.81 (la trampa de la tabla)</h2>
+              <div class="plain-card mt-4 border-amber-300 bg-amber-50/60 dark:border-amber-900/60 dark:bg-amber-950/20">
+                <h3 class="text-sm font-semibold text-ink-900 dark:text-white">Qué pasa</h3>
+                <p class="mt-1.5 text-sm leading-relaxed text-ink-600 dark:text-ink-300">
+                  Con una base imponible de <strong>$895.24</strong> le retienen $52.19. Con
+                  <strong>$895.25</strong> —un centavo más— le retienen $60.00. Ese centavo le
+                  cuesta $7.81.
+                </p>
+
+                <h3 class="mt-4 text-sm font-semibold text-ink-900 dark:text-white">Por qué ocurre</h3>
+                <p class="mt-1.5 text-sm leading-relaxed text-ink-600 dark:text-ink-300">
+                  La reforma de 2025 subió la base exenta de $472 a $550, pero mantuvo las cuotas
+                  fijas de la tabla anterior. Al mover un extremo y no el otro, quedó un escalón
+                  desalineado entre el tramo II y el III.
+                </p>
+                <p class="plain-analogy">
+                  No es un error de esta página: es así en la tabla oficial y así se retiene en
+                  planilla. Lo que sí hacemos es <strong>avisarle</strong> cuando su base queda
+                  cerca de ese borde, para que sepa que un aumento pequeño puede dejarle menos
+                  dinero en la mano.
+                </p>
+                <p class="plain-legal">
+                  <span class="badge badge-neutral">Dónde verlo</span>
+                  <span>Calculadora de salario neto — aviso automático bajo el resultado</span>
+                </p>
+              </div>
+            </section>
+
+            <!-- 6. Horas extras -->
+            <section id="extras" class="scroll-mt-24">
+              <h2 class="text-xl font-bold">6. Horas extras</h2>
+              <div class="plain-card mt-4">
+                <h3 class="text-sm font-semibold text-ink-900 dark:text-white">Qué es</h3>
+                <p class="mt-1.5 text-sm leading-relaxed text-ink-600 dark:text-ink-300">
+                  El trabajo que hace fuera de su jornada ordinaria se paga con un
+                  <strong>recargo</strong>. Cuánto, depende de cuándo lo trabajó.
+                </p>
+
+                <h3 class="mt-4 text-sm font-semibold text-ink-900 dark:text-white">Cómo funciona en la vida real</h3>
+                <p class="mt-1.5 text-sm leading-relaxed text-ink-600 dark:text-ink-300">
+                  Primero se saca el valor de su hora ordinaria: <strong>salario ÷ 30 ÷ 8</strong>.
+                  Después se multiplica según el tipo de jornada.
+                </p>
+                <div class="table-wrap mt-3">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">Cuándo trabajó</th>
+                        <th scope="col" class="text-right">Recargo</th>
+                        <th scope="col" class="text-right">Se paga</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr><td>Extra diurna, día ordinario</td><td class="table-numeric">100%</td><td class="table-numeric">2× la hora</td></tr>
+                      <tr><td>Extra nocturna, día ordinario</td><td class="table-numeric">125%</td><td class="table-numeric">2.25× la hora</td></tr>
+                      <tr><td>Extra diurna en día de descanso</td><td class="table-numeric">300%</td><td class="table-numeric">4× la hora</td></tr>
+                      <tr><td>Extra nocturna en día de descanso</td><td class="table-numeric">375%</td><td class="table-numeric">4.75× la hora</td></tr>
+                      <tr><td>Extra diurna en día de asueto</td><td class="table-numeric">400%</td><td class="table-numeric">5× la hora</td></tr>
+                      <tr><td>Extra nocturna en día de asueto</td><td class="table-numeric">500%</td><td class="table-numeric">6× la hora</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+                <p class="plain-analogy">
+                  Ojo con un detalle que casi nadie toma en cuenta: las horas extras
+                  <strong>se suman a la renta gravada del mes</strong>. Si un mes trabajó muchas
+                  extras, puede que ese mes le retengan más ISR de lo normal. Es correcto, no es
+                  un cobro indebido.
+                </p>
+                <p class="plain-legal">
+                  <span class="badge badge-neutral">Amparo legal</span>
+                  <span>Arts. 168, 169 y 170 del Código de Trabajo</span>
+                </p>
+              </div>
+            </section>
+
+            <!-- 7. Aguinaldo -->
+            <section id="aguinaldo" class="scroll-mt-24">
+              <h2 class="text-xl font-bold">7. Aguinaldo</h2>
+              <div class="plain-card mt-4">
+                <h3 class="text-sm font-semibold text-ink-900 dark:text-white">Qué es</h3>
+                <p class="mt-1.5 text-sm leading-relaxed text-ink-600 dark:text-ink-300">
+                  Una prima anual obligatoria que se paga <strong>del 12 al 20 de diciembre</strong>.
+                  La cantidad depende de su antigüedad.
+                </p>
+
+                <h3 class="mt-4 text-sm font-semibold text-ink-900 dark:text-white">Cómo funciona en la vida real</h3>
+                <ul class="mt-1.5 space-y-1.5 text-sm leading-relaxed text-ink-600 dark:text-ink-300">
+                  <li>• De 1 a 3 años de servicio: <strong>15 días</strong> de salario</li>
+                  <li>• De 3 a 10 años: <strong>19 días</strong></li>
+                  <li>• De 10 años en adelante: <strong>21 días</strong></li>
+                  <li>• Con menos de 1 año: la parte proporcional al tiempo trabajado</li>
+                </ul>
+                <p class="mt-3 text-sm leading-relaxed text-ink-600 dark:text-ink-300">
+                  El período que se cuenta va del <strong>12 de diciembre al 11 de
+                  diciembre</strong> del año siguiente, no del 1 de enero al 31 de diciembre.
+                </p>
+                <p class="plain-analogy">
+                  Sobre impuestos: el aguinaldo está <strong>exento hasta
+                  $1,500.00</strong>. Si el suyo es menor, no paga ni un centavo de
+                  ISR. Si es mayor, solo el excedente se suma a su renta del mes y genera
+                  retención. Tampoco se le descuenta ISSS ni AFP.
+                </p>
+                <p class="plain-legal">
+                  <span class="badge badge-neutral">Amparo legal</span>
+                  <span>Arts. 196 a 202 del Código de Trabajo · exención de ISR por D.L. 596</span>
+                </p>
+              </div>
+            </section>
+
+            <!-- 8. Vacaciones -->
+            <section id="vacaciones" class="scroll-mt-24">
+              <h2 class="text-xl font-bold">8. Vacaciones</h2>
+              <div class="plain-card mt-4">
+                <h3 class="text-sm font-semibold text-ink-900 dark:text-white">Qué es</h3>
+                <p class="mt-1.5 text-sm leading-relaxed text-ink-600 dark:text-ink-300">
+                  Después de un año continuo de trabajo tiene derecho a <strong>15 días</strong>
+                  de descanso pagado, más una <strong>prima del 30%</strong> sobre esos 15 días.
+                </p>
+
+                <h3 class="mt-4 text-sm font-semibold text-ink-900 dark:text-white">Cómo funciona en la vida real</h3>
+                <p class="mt-1.5 text-sm leading-relaxed text-ink-600 dark:text-ink-300">
+                  Si su salario diario es $30, sus vacaciones son 15 × $30 = $450, más el 30%
+                  ($135) = <strong>$585</strong>.
+                </p>
+                <p class="plain-analogy">
+                  La prima del 30% existe justamente para que le alcance para descansar de
+                  verdad: no es un bono discrecional del patrono, es un derecho. Si sale de la
+                  empresa antes de cumplir el año, le corresponde la parte proporcional al
+                  tiempo trabajado.
+                </p>
+                <p class="plain-legal">
+                  <span class="badge badge-neutral">Amparo legal</span>
+                  <span>Art. 177 del Código de Trabajo</span>
+                </p>
+              </div>
+            </section>
+
+            <!-- 9. Indemnización -->
+            <section id="indemnizacion" class="scroll-mt-24">
+              <h2 class="text-xl font-bold">9. Indemnización por despido</h2>
+              <div class="plain-card mt-4">
+                <h3 class="text-sm font-semibold text-ink-900 dark:text-white">Qué es</h3>
+                <p class="mt-1.5 text-sm leading-relaxed text-ink-600 dark:text-ink-300">
+                  Si lo despiden <strong>sin causa justificada</strong>, le corresponden 30 días
+                  de salario básico por cada año trabajado, y la parte proporcional por las
+                  fracciones de año. Nunca menos de 15 días.
+                </p>
+
+                <h3 class="mt-4 text-sm font-semibold text-ink-900 dark:text-white">Cómo funciona en la vida real</h3>
+                <p class="mt-1.5 text-sm leading-relaxed text-ink-600 dark:text-ink-300">
+                  Hay un tope que sorprende a mucha gente: para este cálculo, el salario diario
+                  <strong>no puede exceder cuatro salarios mínimos diarios</strong>, es decir
+                  $53.76 al día. Si usted gana más, la indemnización se calcula
+                  igualmente sobre ese tope.
+                </p>
+                <p class="plain-analogy">
+                  Dos avisos importantes. Primero: ese tope aplica <strong>solo</strong> a la
+                  indemnización; su aguinaldo y sus vacaciones proporcionales se calculan con su
+                  salario real, sin tope. Segundo: la indemnización está <strong>exenta de
+                  ISR</strong> y no se le descuenta ISSS ni AFP, así que le llega completa. Si
+                  en su finiquito le descontaron impuesto de la indemnización, revíselo.
+                </p>
+                <p class="plain-legal">
+                  <span class="badge badge-neutral">Amparo legal</span>
+                  <span>Art. 58 del Código de Trabajo · exención por el Art. 4 de la LISR</span>
+                </p>
+              </div>
+            </section>
+
+            <!-- 10. Renuncia -->
+            <section id="renuncia" class="scroll-mt-24">
+              <h2 class="text-xl font-bold">10. Renuncia voluntaria</h2>
+              <div class="plain-card mt-4">
+                <h3 class="text-sm font-semibold text-ink-900 dark:text-white">Qué es</h3>
+                <p class="mt-1.5 text-sm leading-relaxed text-ink-600 dark:text-ink-300">
+                  Si usted renuncia por su cuenta, también le corresponde una prestación
+                  económica: <strong>15 días de salario básico por año</strong> trabajado.
+                </p>
+
+                <h3 class="mt-4 text-sm font-semibold text-ink-900 dark:text-white">Cómo funciona en la vida real</h3>
+                <p class="mt-1.5 text-sm leading-relaxed text-ink-600 dark:text-ink-300">
+                  Hay dos condiciones. Necesita al menos <strong>dos años continuos</strong> en
+                  la empresa, y el salario diario de cálculo se topa en <strong>dos salarios
+                  mínimos diarios</strong> ($26.88 al día).
+                </p>
+                <p class="plain-analogy">
+                  En corto: renunciar paga la mitad de días que un despido injustificado, y con
+                  la mitad del tope. Por eso conviene tener claro qué figura le están aplicando
+                  antes de firmar cualquier papel.
+                </p>
+                <p class="plain-legal">
+                  <span class="badge badge-neutral">Amparo legal</span>
+                  <span>Ley Reguladora de la Prestación Económica por Renuncia Voluntaria (D.L. 592/2013)</span>
+                </p>
+              </div>
+            </section>
+
+            <!-- 11. Declaración anual -->
+            <section id="declaracion" class="scroll-mt-24">
+              <h2 class="text-xl font-bold">11. La declaración anual (F-11)</h2>
+              <div class="plain-card mt-4">
+                <h3 class="text-sm font-semibold text-ink-900 dark:text-white">Qué es</h3>
+                <p class="mt-1.5 text-sm leading-relaxed text-ink-600 dark:text-ink-300">
+                  El ajuste de cuentas anual con Hacienda. Durante el año le retuvieron impuesto
+                  mes a mes; en abril se calcula cuánto le tocaba realmente pagar por todo el año
+                  y se compara con lo retenido.
+                </p>
+
+                <h3 class="mt-4 text-sm font-semibold text-ink-900 dark:text-white">Cómo funciona en la vida real</h3>
+                <p class="mt-1.5 text-sm leading-relaxed text-ink-600 dark:text-ink-300">
+                  Si le retuvieron de más, tiene <strong>saldo a favor</strong> y puede pedir la
+                  devolución. Si le retuvieron de menos, debe completar la diferencia.
+                </p>
+                <p class="plain-analogy">
+                  Aquí está el dato que más dinero deja sobre la mesa: si es asalariado y su
+                  renta anual no pasa de $9,100.00, tiene derecho a una
+                  <strong>deducción fija de $1,600.00</strong> sin necesidad de
+                  presentar ni un solo comprobante. Mucha gente no la aplica y termina pagando
+                  de más, o dejando de reclamar lo que le devolverían.
+                </p>
+                <p class="mt-3 text-sm leading-relaxed text-ink-600 dark:text-ink-300">
+                  Si prefiere deducir gastos reales, puede usar gastos médicos y colegiaturas,
+                  con un tope de $800 cada uno, pero es <strong>excluyente</strong>: o la
+                  deducción fija, o los gastos documentados. La calculadora le aplica
+                  automáticamente la opción que más le convenga.
+                </p>
+                <p class="plain-legal">
+                  <span class="badge badge-neutral">Amparo legal</span>
+                  <span>Arts. 29 y 33 de la Ley de Impuesto sobre la Renta</span>
+                </p>
+              </div>
+
+              <div class="plain-card mt-4">
+                <h3 class="text-sm font-semibold text-ink-900 dark:text-white">El recálculo de junio y diciembre</h3>
+                <p class="mt-1.5 text-sm leading-relaxed text-ink-600 dark:text-ink-300">
+                  Dos veces al año su patrono está obligado a revisar si le ha retenido de más o
+                  de menos, y a ajustar la diferencia en la planilla del cierre del semestre.
+                  Por eso a veces en junio o diciembre el descuento sale distinto: no
+                  necesariamente es un error.
+                </p>
+                <p class="plain-legal">
+                  <span class="badge badge-neutral">Amparo legal</span>
+                  <span>Art. 38 de la LISR y Reglamento de Retención del ISR</span>
+                </p>
+              </div>
+            </section>
+
+            <!-- 12. Cómo usar cada calculadora -->
+            <section id="calculadoras" class="scroll-mt-24">
+              <h2 class="text-xl font-bold">12. Cómo usar cada calculadora</h2>
+
+              <div class="mt-4 space-y-4">
+                <div class="card">
+                  <div class="card-header">
+                    <h3 class="card-title">Salario neto</h3>
+                    <a href="/salario.html" class="btn btn-secondary btn-sm">Abrir</a>
+                  </div>
+                  <div class="card-body text-sm leading-relaxed text-ink-600 dark:text-ink-300">
+                    <p>
+                      <strong>Para qué sirve:</strong> saber cuánto le van a depositar realmente,
+                      revisar si su boleta cuadra, o evaluar una oferta de trabajo.
+                    </p>
+                    <p class="mt-2">
+                      <strong>Qué necesita:</strong> su salario bruto mensual. Si tuvo horas
+                      extras, ábralas y anote cuántas de cada tipo. Si su empresa le descuenta
+                      préstamos o seguros, póngalos en «otros descuentos».
+                    </p>
+                    <p class="mt-2">
+                      <strong>Qué le muestra además:</strong> el reparto de su salario en
+                      gráfico, su tasa efectiva de impuesto y cuánto le cuesta su plaza al
+                      empleador (útil al negociar).
+                    </p>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-header">
+                    <h3 class="card-title">Prestaciones y liquidación</h3>
+                    <a href="/liquidaciones.html" class="btn btn-secondary btn-sm">Abrir</a>
+                  </div>
+                  <div class="card-body text-sm leading-relaxed text-ink-600 dark:text-ink-300">
+                    <p>
+                      <strong>Para qué sirve:</strong> saber cuánto le toca al salir de un
+                      trabajo, o cuánto aguinaldo y vacación le corresponden este año.
+                    </p>
+                    <p class="mt-2">
+                      <strong>Qué necesita:</strong> su salario y sus fechas de ingreso y salida.
+                      Si no recuerda las fechas exactas, cambie a «tiempo exacto» y escriba años,
+                      meses y días.
+                    </p>
+                    <p class="mt-2">
+                      <strong>Consejo:</strong> empiece por «liquidación completa». Le suma
+                      indemnización, aguinaldo y vacación proporcional en un solo total, que es
+                      lo que debería aparecer en su finiquito.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-header">
+                    <h3 class="card-title">Declaración anual F-11</h3>
+                    <a href="/isr-anual.html" class="btn btn-secondary btn-sm">Abrir</a>
+                  </div>
+                  <div class="card-body text-sm leading-relaxed text-ink-600 dark:text-ink-300">
+                    <p>
+                      <strong>Para qué sirve:</strong> anticipar, antes de abril, si le van a
+                      devolver dinero o si le tocará pagar.
+                    </p>
+                    <p class="mt-2">
+                      <strong>Qué necesita:</strong> lo que ganó cada mes. Si fue el mismo
+                      salario todo el año, use «aplicar a los 12» y listo. Desactive los meses en
+                      que no trabajó.
+                    </p>
+                    <p class="mt-2">
+                      <strong>No olvide:</strong> anotar el aguinaldo que recibió y dejar activa
+                      la deducción fija si califica. Ahí es donde suele aparecer el saldo a
+                      favor.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-header">
+                    <h3 class="card-title">Planilla vs. honorarios</h3>
+                    <a href="/comparador.html" class="btn btn-secondary btn-sm">Abrir</a>
+                  </div>
+                  <div class="card-body text-sm leading-relaxed text-ink-600 dark:text-ink-300">
+                    <p>
+                      <strong>Para qué sirve:</strong> decidir cuando le ofrecen el mismo monto
+                      «en planilla» o «por servicios profesionales».
+                    </p>
+                    <p class="mt-2">
+                      <strong>Lo que revela:</strong> por honorarios le retienen solo el 10% y
+                      recibe más cada mes, pero pierde aguinaldo, vacación, indemnización y los
+                      aportes patronales de salud y pensión. La herramienta pone esas
+                      prestaciones en dólares para que la comparación sea justa.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- 13. Glosario -->
+            <section id="glosario" class="scroll-mt-24">
+              <h2 class="text-xl font-bold">13. Glosario</h2>
+              <div class="card mt-4">
+                <div class="card-body">
+                  <dl class="space-y-4 text-sm">
+                    <div>
+                      <dt class="font-semibold text-ink-900 dark:text-white">Salario bruto</dt>
+                      <dd class="mt-0.5 text-ink-600 dark:text-ink-300">Lo que dice su contrato, antes de cualquier descuento.</dd>
+                    </div>
+                    <div>
+                      <dt class="font-semibold text-ink-900 dark:text-white">Renta o base imponible</dt>
+                      <dd class="mt-0.5 text-ink-600 dark:text-ink-300">El salario bruto menos ISSS y AFP. Es sobre esto que se calcula el ISR.</dd>
+                    </div>
+                    <div>
+                      <dt class="font-semibold text-ink-900 dark:text-white">Retención</dt>
+                      <dd class="mt-0.5 text-ink-600 dark:text-ink-300">El impuesto que su patrono descuenta y entrega a Hacienda por usted, mes a mes.</dd>
+                    </div>
+                    <div>
+                      <dt class="font-semibold text-ink-900 dark:text-white">Cuota fija</dt>
+                      <dd class="mt-0.5 text-ink-600 dark:text-ink-300">Monto base de cada tramo, al que se suma el porcentaje sobre el excedente.</dd>
+                    </div>
+                    <div>
+                      <dt class="font-semibold text-ink-900 dark:text-white">Sobre el exceso de</dt>
+                      <dd class="mt-0.5 text-ink-600 dark:text-ink-300">El punto desde el cual se empieza a contar el porcentaje de ese tramo.</dd>
+                    </div>
+                    <div>
+                      <dt class="font-semibold text-ink-900 dark:text-white">Tasa efectiva</dt>
+                      <dd class="mt-0.5 text-ink-600 dark:text-ink-300">El porcentaje real que termina pagando sobre el total, siempre menor que la tasa de su tramo.</dd>
+                    </div>
+                    <div>
+                      <dt class="font-semibold text-ink-900 dark:text-white">Saldo a favor</dt>
+                      <dd class="mt-0.5 text-ink-600 dark:text-ink-300">Cuando le retuvieron más impuesto del que le correspondía y puede pedir la devolución.</dd>
+                    </div>
+                    <div>
+                      <dt class="font-semibold text-ink-900 dark:text-white">Finiquito</dt>
+                      <dd class="mt-0.5 text-ink-600 dark:text-ink-300">El documento y el pago final al terminar la relación laboral.</dd>
+                    </div>
+                  </dl>
+                </div>
+              </div>
+            </section>
+
+            <div class="alert alert-warning">
+              <svg class="alert-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" />
+                <path d="M12 9v4" /><path d="M12 17h.01" />
+              </svg>
+              <p>
+                Esta guía explica la norma general. Su caso puede tener particularidades
+                (contratos especiales, convenios colectivos, incapacidades). Ante una decisión
+                importante, consulte a un contador o al Ministerio de Trabajo.
+              </p>
+            </div>
+          </div>
+
+          <!-- ══════════════ ÍNDICE ══════════════ -->
+          <aside class="order-first lg:order-last">
+            <nav class="card lg:sticky lg:top-[calc(var(--topbar-h)+1.5rem)]" aria-label="Contenido de la guía">
+              <div class="card-header"><h2 class="card-title">Contenido</h2></div>
+              <div class="card-body">
+                <ol class="space-y-1.5 text-sm">
+                  <li><a href="#boleta" class="link">1. Leer su boleta</a></li>
+                  <li><a href="#isss" class="link">2. El ISSS</a></li>
+                  <li><a href="#afp" class="link">3. La AFP</a></li>
+                  <li><a href="#isr" class="link">4. El ISR</a></li>
+                  <li><a href="#salto" class="link">5. El salto de $7.81</a></li>
+                  <li><a href="#extras" class="link">6. Horas extras</a></li>
+                  <li><a href="#aguinaldo" class="link">7. Aguinaldo</a></li>
+                  <li><a href="#vacaciones" class="link">8. Vacaciones</a></li>
+                  <li><a href="#indemnizacion" class="link">9. Indemnización</a></li>
+                  <li><a href="#renuncia" class="link">10. Renuncia voluntaria</a></li>
+                  <li><a href="#declaracion" class="link">11. Declaración anual</a></li>
+                  <li><a href="#calculadoras" class="link">12. Usar las calculadoras</a></li>
+                  <li><a href="#glosario" class="link">13. Glosario</a></li>
+                </ol>
+              </div>
+            </nav>
+          </aside>
+        </div>
+      </main>
+
+      <footer class="border-t border-ink-200 bg-white dark:border-ink-800 dark:bg-ink-900">
+      <div class="mx-auto w-full max-w-content px-4 py-10 sm:px-6">
+        <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          <div class="lg:col-span-2">
+            <a href="/" class="flex items-center gap-2.5 mb-3">
+      <svg class="h-8 w-8 shrink-0" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+  <rect width="32" height="32" rx="8" fill="#1d43d8"/>
+  <rect x="8" y="17" width="4" height="8" rx="1.5" fill="#93bbfd"/>
+  <rect x="14" y="12" width="4" height="13" rx="1.5" fill="#dbe8fe"/>
+  <rect x="20" y="7" width="4" height="18" rx="1.5" fill="#ffffff"/>
+</svg>
+      <span class="text-[1.0625rem] font-bold tracking-tight text-ink-950 dark:text-white">Renta<span class="text-brand-600 dark:text-brand-400">SV</span></span>
+    </a>
+            <p class="max-w-sm text-sm leading-relaxed text-ink-500 dark:text-ink-400">
+              Herramienta gratuita y sin servidores para que cualquier persona en El Salvador
+              calcule su salario, sus prestaciones y su renta con las tablas oficiales vigentes.
+            </p>
+            <a href="/guia.html" class="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-brand-600 hover:underline dark:text-brand-400">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/></svg> Leer la guía de usuario
+            </a>
+          </div>
+          <div>
+            <p class="mb-3 text-[0.6875rem] font-semibold uppercase tracking-wide text-ink-500 dark:text-ink-400">Calculadoras</p>
+            <ul class="space-y-2 text-sm">
+              <li><a href="/salario.html" class="text-ink-600 hover:text-brand-600 dark:text-ink-300 dark:hover:text-brand-400">Salario neto</a></li>
+              <li><a href="/liquidaciones.html" class="text-ink-600 hover:text-brand-600 dark:text-ink-300 dark:hover:text-brand-400">Prestaciones y liquidación</a></li>
+              <li><a href="/isr-anual.html" class="text-ink-600 hover:text-brand-600 dark:text-ink-300 dark:hover:text-brand-400">Declaración anual F-11</a></li>
+              <li><a href="/comparador.html" class="text-ink-600 hover:text-brand-600 dark:text-ink-300 dark:hover:text-brand-400">Planilla vs. honorarios</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="mb-3 text-[0.6875rem] font-semibold uppercase tracking-wide text-ink-500 dark:text-ink-400">Base legal</p>
+            <ul class="space-y-2 text-sm">
+              <li><a href="https://www.asamblea.gob.sv/node/13558" target="_blank" rel="noopener" class="text-ink-600 hover:text-brand-600 dark:text-ink-300 dark:hover:text-brand-400">Art. 37 LISR (D.L. 293)</a></li>
+              <li><a href="https://www.asamblea.gob.sv/node/13399" target="_blank" rel="noopener" class="text-ink-600 hover:text-brand-600 dark:text-ink-300 dark:hover:text-brand-400">Aguinaldo exento (D.L. 596)</a></li>
+              <li><a href="https://webapps.ilo.org/public/spanish/region/ampro/mdtsanjose/papers/cod_elsa.htm" target="_blank" rel="noopener" class="text-ink-600 hover:text-brand-600 dark:text-ink-300 dark:hover:text-brand-400">Código de Trabajo</a></li>
+              <li><a href="/legal/privacidad.html" class="text-ink-600 hover:text-brand-600 dark:text-ink-300 dark:hover:text-brand-400">Privacidad</a></li>
+              <li><a href="/legal/terminos.html" class="text-ink-600 hover:text-brand-600 dark:text-ink-300 dark:hover:text-brand-400">Términos de uso</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="mt-8 flex flex-col gap-4 border-t border-ink-200 pt-6 dark:border-ink-800 sm:flex-row sm:items-center sm:justify-between">
+          <p class="flex items-start gap-2 text-xs leading-relaxed text-ink-500 dark:text-ink-400">
+            <svg class="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+            <span><strong class="font-semibold text-ink-700 dark:text-ink-200">Aviso:</strong> simulador informativo. No sustituye asesoría profesional ni el dictamen del Ministerio de Hacienda.</span>
+          </p>
+          <div class="flex shrink-0 items-center gap-4 text-xs text-ink-500 dark:text-ink-400">
+            <span>© 2026 RentaSV</span>
+            <a href="https://github.com/dev-perazarich/simulador-isr-sv" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 hover:text-brand-600 dark:hover:text-brand-400">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg> Código abierto
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
+    </div>
+
+    <nav class="dock" aria-label="Accesos rápidos">
+      <a href="/guia.html" class="dock-item" aria-current="page">
+        <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/></svg><span>Guía</span>
+      </a>
+      <a href="/salario.html" class="dock-item">
+        <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg><span>Salario</span>
+      </a>
+      <a href="/liquidaciones.html" class="dock-item">
+        <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="14" x="2" y="7" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg><span>Prestaciones</span>
+      </a>
+      <a href="/isr-anual.html" class="dock-item">
+        <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v5h5"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>F-11</span>
+      </a>
+      <a href="/comparador.html" class="dock-item">
+        <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg><span>Comparar</span>
+      </a>
+    </nav>
+  </div>
+
+  <script src="/js/shell.js" defer></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      addEventListener('load', function () {
+        navigator.serviceWorker.register('/sw.js').catch(function () {});
+      });
+    }
+  </script>
+</body>
+</html>

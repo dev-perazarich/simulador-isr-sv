@@ -1,39 +1,58 @@
 {
-  "name": "Simulador ISR El Salvador 2026",
+  "name": "RentaSV — Calculadora de ISR y salario neto de El Salvador",
   "short_name": "RentaSV",
-  "description": "Calcula tu salario neto, aguinaldo, indemnización y simula tu declaración de renta 2025-2026. 100% gratuito y privado.",
+  "description": "Calcula tu salario neto, prestaciones laborales y declaración de renta con las tablas oficiales de El Salvador. Gratuito, privado y sin conexión.",
+  "id": "/",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#0a1628",
-  "theme_color": "#0a1628",
-  "orientation": "portrait-primary",
+  "background_color": "#ffffff",
+  "theme_color": "#1d43d8",
+  "orientation": "any",
   "lang": "es-SV",
+  "dir": "ltr",
+  "categories": ["finance", "productivity", "utilities"],
   "icons": [
     {
-      "src": "/favicon.svg",
+      "src": "/icons/icon-192.png",
       "sizes": "192x192",
-      "type": "image/svg+xml"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
-      "src": "/favicon.svg",
+      "src": "/icons/icon-512.png",
       "sizes": "512x512",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ],
-  "categories": ["finance", "utilities"],
   "shortcuts": [
     {
-      "name": "Calcular Salario",
+      "name": "Calcular salario neto",
       "short_name": "Salario",
-      "description": "Calcular salario neto mensual",
-      "url": "/?tab=salario"
+      "description": "Convertir salario bruto a neto con ISSS, AFP e ISR",
+      "url": "/salario.html",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
     },
     {
-      "name": "Simular ISR Anual",
+      "name": "Prestaciones y liquidación",
+      "short_name": "Prestaciones",
+      "description": "Indemnización, aguinaldo y vacación",
+      "url": "/liquidaciones.html",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Declaración anual F-11",
       "short_name": "F-11",
-      "description": "Simular declaración de renta anual",
-      "url": "/?tab=declaracion"
+      "description": "Simular la declaración de renta del año",
+      "url": "/isr-anual.html",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
     }
   ]
 }

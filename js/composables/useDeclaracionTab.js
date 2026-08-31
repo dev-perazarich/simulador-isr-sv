@@ -1,119 +1,198 @@
 // ============================================================
-// useDeclaracionTab.js — Composable para TAB 3: Declaración Anual ISR
+// useDeclaracionTab.js — Declaración anual (F-11) y recálculos
 // ============================================================
 
-import {
-  simularDeclaracionAnual,
-} from '../modules/calculator.js';
+import { simularDeclaracionAnual, calcularRecalculo } from '../modules/calculator.js';
+import { DATA_2026 } from '../modules/constants.js';
 import { storage, KEYS } from '../modules/storage.js';
-
-const NOMBRES_MESES = [
-  'Enero','Febrero','Marzo','Abril','Mayo','Junio',
-  'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'
-];
+import { NOMBRES_MESES } from './useShared.js';
 
 export function useDeclaracionTab() {
-  
-  // ── Estado ──
-  const mesesDeclaracion = Vue.ref(
+  // ── Estado ────────────────────────────────────────────────
+  const meses = Vue.ref(
     NOMBRES_MESES.map((nombre, i) => ({
       nombre,
       index: i,
       activo: true,
       salarioBruto: '',
+      ingresosServicios: '',
       retencionServicios: '',
     }))
   );
 
+  const salarioRapido = Vue.ref('');
+  const aguinaldoRecibido = Vue.ref('');
   const otrosIngresos = Vue.ref('');
-  const gastosDeducibles = Vue.ref('');
-  const resultadoAnual = Vue.ref(null);
-  const mostrandoMeses = Vue.ref(false);
-  // Ref reactiva para el campo "Relleno rápido" — reemplaza document.getElementById()
-  const salarioRapidoInput = Vue.ref('');
+  const gastosMedicos = Vue.ref('');
+  const colegiaturas = Vue.ref('');
+  const usarDeduccionFija = Vue.ref(true);
+  const mostrarServicios = Vue.ref(false);
 
-  // ── Métodos ──
-  function simularAnual() {
-    const mesesData = mesesDeclaracion.value.map(m => ({
+  const resultado = Vue.ref(null);
+  const recalculos = Vue.ref(null);
+  const errores = Vue.ref([]);
+
+  // ── Derivados ─────────────────────────────────────────────
+  const mesesActivos = Vue.computed(() => meses.value.filter((m) => m.activo).length);
+
+  const hayDatos = Vue.computed(() =>
+    meses.value.some((m) => m.activo && parseFloat(m.salarioBruto) > 0) ||
+    parseFloat(otrosIngresos.value) > 0
+  );
+
+  const topeGastos = DATA_2026.DEDUCCIONES_ANUALES.GASTOS_MEDICOS.tope;
+  const deduccionFijaInfo = DATA_2026.DEDUCCIONES_ANUALES.DEDUCCION_FIJA;
+
+  function payload() {
+    return meses.value.map((m) => ({
       activo: m.activo,
       salarioBruto: parseFloat(m.salarioBruto) || 0,
+      ingresosServicios: parseFloat(m.ingresosServicios) || 0,
       retencionServicios: parseFloat(m.retencionServicios) || 0,
     }));
-    
-    resultadoAnual.value = simularDeclaracionAnual(
-      mesesData,
-      parseFloat(otrosIngresos.value) || 0,
-      parseFloat(gastosDeducibles.value) || 0,
-    );
-    
-    storage.set(KEYS.DECLARACION, {
-      meses: mesesData,
-      resultado: resultadoAnual.value,
-    });
   }
 
-  function limpiarAnual() {
-    mesesDeclaracion.value.forEach(m => {
+  // ── Acciones ──────────────────────────────────────────────
+  function validar() {
+    const problemas = [];
+    if (!hayDatos.value) problemas.push('Ingrese al menos un mes con salario, o algún otro ingreso.');
+    if (mesesActivos.value === 0) problemas.push('Debe dejar activo al menos un mes.');
+    errores.value = problemas;
+    return problemas.length === 0;
+  }
+
+  function simular({ silencioso = false } = {}) {
+    if (!validar()) {
+      if (!silencioso) resultado.value = null;
+      return false;
+    }
+    const datos = payload();
+
+    resultado.value = simularDeclaracionAnual(datos, {
+      otrosIngresos: parseFloat(otrosIngresos.value) || 0,
+      aguinaldoRecibido: parseFloat(aguinaldoRecibido.value) || 0,
+      gastosMedicos: parseFloat(gastosMedicos.value) || 0,
+      colegiaturas: parseFloat(colegiaturas.value) || 0,
+      usarDeduccionFija: usarDeduccionFija.value,
+    });
+
+    recalculos.value = DATA_2026.RECALCULO.PERIODOS.map((p) => calcularRecalculo(p.key, datos));
+
+    storage.set(KEYS.DECLARACION, {
+      meses: meses.value.map((m) => ({
+        activo: m.activo,
+        salarioBruto: m.salarioBruto,
+        ingresosServicios: m.ingresosServicios,
+        retencionServicios: m.retencionServicios,
+      })),
+      aguinaldoRecibido: aguinaldoRecibido.value,
+      otrosIngresos: otrosIngresos.value,
+      gastosMedicos: gastosMedicos.value,
+      colegiaturas: colegiaturas.value,
+      usarDeduccionFija: usarDeduccionFija.value,
+    });
+    return true;
+  }
+
+  function limpiar() {
+    meses.value.forEach((m) => {
       m.activo = true;
       m.salarioBruto = '';
+      m.ingresosServicios = '';
       m.retencionServicios = '';
     });
+    salarioRapido.value = '';
+    aguinaldoRecibido.value = '';
     otrosIngresos.value = '';
-    gastosDeducibles.value = '';
-    resultadoAnual.value = null;
+    gastosMedicos.value = '';
+    colegiaturas.value = '';
+    usarDeduccionFija.value = true;
+    resultado.value = null;
+    recalculos.value = null;
+    errores.value = [];
     storage.remove(KEYS.DECLARACION);
   }
 
-  function toggleMes(index) {
-    mesesDeclaracion.value[index].activo = !mesesDeclaracion.value[index].activo;
+  function toggleMes(i) {
+    meses.value[i].activo = !meses.value[i].activo;
+    resultado.value = null;
   }
 
-  function llenarSalarioUniforme(salario) {
-    mesesDeclaracion.value.forEach(m => {
-      if (m.activo) m.salarioBruto = salario;
-    });
-  }
-
-  // ── Sincronizar con Tab 1 (Salario) ──
-  function usarSalarioCalculado(resultadoSalarioTab) {
-    if (resultadoSalarioTab) {
-      const bruto = resultadoSalarioTab.salarioBruto.toString();
-      llenarSalarioUniforme(bruto);
-      return true; // Indica que se debe cambiar a tab 'declaracion'
+  /** Rellena todos los meses activos con el mismo salario. */
+  function llenarTodos() {
+    const valor = parseFloat(salarioRapido.value);
+    if (!isFinite(valor) || valor <= 0) {
+      errores.value = ['Escriba un salario válido para rellenar los 12 meses.'];
+      return false;
     }
-    return false;
+    meses.value.forEach((m) => {
+      if (m.activo) m.salarioBruto = String(valor);
+    });
+    errores.value = [];
+    resultado.value = null;
+    return true;
   }
 
-  // ── Restaurar datos de sesión ──
+  /** Toma el salario guardado en la calculadora de salario neto. */
+  function importarDeSalario() {
+    const guardado = storage.get(KEYS.SALARIO);
+    const bruto = guardado ? parseFloat(guardado.bruto) : NaN;
+    if (!isFinite(bruto) || bruto <= 0) return false;
+    salarioRapido.value = String(bruto);
+    return llenarTodos();
+  }
+
   function restaurarDatos() {
     const saved = storage.get(KEYS.DECLARACION);
-    if (saved) {
-      const { meses, resultado } = saved;
-      mesesDeclaracion.value.forEach((m, i) => {
-        if (meses[i]) {
-          m.activo = meses[i].activo;
-          m.salarioBruto = meses[i].salarioBruto || '';
-          m.retencionServicios = meses[i].retencionServicios || '';
-        }
+    if (!saved) return;
+    if (Array.isArray(saved.meses)) {
+      meses.value.forEach((m, i) => {
+        const s = saved.meses[i];
+        if (!s) return;
+        m.activo = s.activo !== false;
+        m.salarioBruto = s.salarioBruto ?? '';
+        m.ingresosServicios = s.ingresosServicios ?? '';
+        m.retencionServicios = s.retencionServicios ?? '';
       });
-      resultadoAnual.value = resultado;
+      mostrarServicios.value = saved.meses.some(
+        (m) => parseFloat(m.ingresosServicios) > 0 || parseFloat(m.retencionServicios) > 0
+      );
+    }
+    aguinaldoRecibido.value = saved.aguinaldoRecibido ?? '';
+    otrosIngresos.value = saved.otrosIngresos ?? '';
+    gastosMedicos.value = saved.gastosMedicos ?? '';
+    colegiaturas.value = saved.colegiaturas ?? '';
+    usarDeduccionFija.value = saved.usarDeduccionFija !== false;
+    if (hayDatos.value) {
+      simular({ silencioso: true });
+      errores.value = [];
     }
   }
 
   return {
-    // State
-    mesesDeclaracion,
+    // Estado
+    meses,
+    salarioRapido,
+    aguinaldoRecibido,
     otrosIngresos,
-    gastosDeducibles,
-    resultadoAnual,
-    mostrandoMeses,
-    salarioRapidoInput, // ref para el campo de relleno rápido
-    // Methods
-    simularAnual,
-    limpiarAnual,
+    gastosMedicos,
+    colegiaturas,
+    usarDeduccionFija,
+    mostrarServicios,
+    resultado,
+    recalculos,
+    errores,
+    // Derivados
+    mesesActivos,
+    hayDatos,
+    topeGastos,
+    deduccionFijaInfo,
+    // Acciones
+    simular,
+    limpiar,
     toggleMes,
-    llenarSalarioUniforme,
-    usarSalarioCalculado,
+    llenarTodos,
+    importarDeSalario,
     restaurarDatos,
   };
 }

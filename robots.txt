@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://simulador-isr-sv.vercel.app/sitemap.xml

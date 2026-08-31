@@ -1,35 +1,37 @@
-// js/app-salario.js
-import { useSalarioTab }       from './composables/useSalarioTab.js';
-import { useShared }           from './composables/useShared.js';
-import { useTheme }            from './composables/useTheme.js';
-import PDFService              from './services/PDFService.js';
-import { DATA_2026 }           from './modules/constants.js';
+// js/app-salario.js — Calculadora de salario neto
+import { useSalarioTab } from './composables/useSalarioTab.js';
+import { useShared } from './composables/useShared.js';
+import PDFService from './services/PDFService.js';
+import { DATA_2026 } from './modules/constants.js';
 
-const { createApp, onMounted } = Vue;
+const { createApp, ref, onMounted } = Vue;
 
 createApp({
   setup() {
-    const shared         = useShared();
-    const salarioTab     = useSalarioTab();
-    const { theme, isDarkMode, toggleTheme } = useTheme();
-    const pdfService     = new PDFService();
+    const shared = useShared();
+    const salario = useSalarioTab();
+    const pdf = new PDFService();
+    const generandoPDF = ref(false);
 
-    function generarPDF() {
-      if (salarioTab.resultadoSalario.value) {
-        pdfService.generarPDFSalario(salarioTab.resultadoSalario.value);
+    async function descargarPDF() {
+      if (!salario.resultado.value || generandoPDF.value) return;
+      generandoPDF.value = true;
+      try {
+        await pdf.generarPDFSalario(
+          salario.resultado.value,
+          salario.resultadoExtras.value,
+          salario.costoPatronal.value
+        );
+        shared.notificar('PDF descargado.', 'success');
+      } catch (e) {
+        shared.notificar(e.message || 'No se pudo generar el PDF.', 'danger');
+      } finally {
+        generandoPDF.value = false;
       }
     }
 
-    onMounted(() => {
-      salarioTab.restaurarDatos();
-    });
+    onMounted(salario.restaurarDatos);
 
-    return {
-      ...shared,
-      ...salarioTab,
-      theme, isDarkMode, toggleTheme,
-      generarPDF,
-      DATA_2026,
-    };
+    return { ...shared, ...salario, DATA_2026, generandoPDF, descargarPDF };
   },
 }).mount('#app-salario');

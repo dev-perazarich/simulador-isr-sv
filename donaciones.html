@@ -2,192 +2,408 @@
 <html lang="es-SV">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#0a1628" />
-  <meta name="description" content="Apoya el desarrollo de RentaSV mediante donaciones." />
-  <title>RentaSV — Simulador ISR El Salvador 2025-2026</title>
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Apoyar RentaSV — mantén la herramienta gratuita y actualizada</title>
+  <meta name="description" content="RentaSV es y seguirá siendo gratuito. Las donaciones cubren el mantenimiento y la actualización de los parámetros según los decretos vigentes." />
+  <link rel="canonical" href="https://simulador-isr-sv.vercel.app/donaciones.html" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta name="author" content="Ricardo Peraza" />
+  <meta name="theme-color" content="#ffffff" />
 
-  <!-- Fuentes -->
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="RentaSV" />
+  <meta property="og:locale" content="es_SV" />
+  <meta property="og:title" content="Apoyar RentaSV — mantén la herramienta gratuita y actualizada" />
+  <meta property="og:description" content="RentaSV es y seguirá siendo gratuito. Las donaciones cubren el mantenimiento y la actualización de los parámetros según los decretos vigentes." />
+  <meta property="og:url" content="https://simulador-isr-sv.vercel.app/donaciones.html" />
+  <meta property="og:image" content="https://simulador-isr-sv.vercel.app/icons/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Apoyar RentaSV — mantén la herramienta gratuita y actualizada" />
+  <meta name="twitter:description" content="RentaSV es y seguirá siendo gratuito. Las donaciones cubren el mantenimiento y la actualización de los parámetros según los decretos vigentes." />
+  <meta name="twitter:image" content="https://simulador-isr-sv.vercel.app/icons/og-image.png" />
+
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
 
-  <!-- Tailwind CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Sistema de diseño: tokens, base y componentes. Se edita a mano. -->
+  <link rel="stylesheet" href="/css/app.css" />
+
+  <!-- Tailwind vendorizado: resuelve en el navegador las clases
+       utilitarias del marcado. Sin CDN externo y sin compilar nada. -->
+  <script src="/vendor/tailwind.js"></script>
   <script>
     tailwind.config = {
       darkMode: ['selector', '[data-theme="dark"]'],
       theme: {
         extend: {
           fontFamily: {
-            sans: ['Outfit', 'sans-serif'],
-            mono: ['"JetBrains Mono"', 'monospace'],
+            sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
           },
           colors: {
-            ink: { DEFAULT: '#0a1628', 2: '#1e2d45', 3: '#334155' },
-            primary: { DEFAULT: '#1a56db', dark: '#1e40af', light: '#eff6ff', mid: '#3b82f6' },
+            brand: {
+              50: '#eff5ff', 100: '#dbe8fe', 200: '#bfd7fe', 300: '#93bbfd',
+              400: '#6096fa', 500: '#3b76f6', 600: '#2557eb', 700: '#1d43d8',
+              800: '#1e39af', 900: '#1e348a', 950: '#172254',
+            },
+            ink: {
+              50: '#f6f7f9', 100: '#eceef2', 200: '#d5dae3', 300: '#b0b9ca',
+              400: '#8593ac', 500: '#657493', 600: '#505d7a', 700: '#424c63',
+              800: '#394153', 900: '#333947', 950: '#0d1220',
+            },
           },
+          borderRadius: { card: '0.875rem' },
+          boxShadow: {
+            card: '0 1px 2px 0 rgb(16 24 40 / 0.04), 0 1px 3px 0 rgb(16 24 40 / 0.06)',
+            'card-hover': '0 4px 12px -2px rgb(16 24 40 / 0.08), 0 2px 6px -2px rgb(16 24 40 / 0.05)',
+            pop: '0 12px 32px -8px rgb(16 24 40 / 0.18)',
+          },
+          maxWidth: { content: '80rem', prose: '46rem' },
+          transitionTimingFunction: { soft: 'cubic-bezier(0.16, 1, 0.3, 1)' },
         },
       },
     };
   </script>
 
-  <!-- Theme check -->
+  <!-- El tema claro es el predeterminado: es el que transmite confianza
+       en una herramienta de dinero. El oscuro solo se aplica si la
+       persona lo eligió expresamente. -->
   <script>
-    const THEME_KEY = 'sv-isr-theme';
-    let savedTheme = null;
-    try { savedTheme = localStorage.getItem(THEME_KEY); } catch (e) {}
-    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    if ((savedTheme || systemTheme) === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+    (function () {
+      try {
+        if (localStorage.getItem('sv-isr-theme') === 'dark') {
+          document.documentElement.setAttribute('data-theme', 'dark');
+          return;
+        }
+      } catch (e) {}
+      document.documentElement.setAttribute('data-theme', 'light');
+    })();
   </script>
-
-  <link rel="stylesheet" href="/css/app.css" />
-
-  <!-- Vue 3 -->
-  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
-  <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 </head>
-<body class="font-sans antialiased bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen">
+<body>
+  <a href="#contenido" class="skip-link">Saltar al contenido</a>
 
-  <div id="app">
-    <!-- Navbar -->
-    <header class="glass-header sticky top-0 z-50">
-  <div class="max-w-[1100px] mx-auto px-5 h-16 flex items-center justify-between gap-4">
-    <div class="flex items-center gap-3">
-      <button @click="toggleMenu" class="hamburger" aria-label="Menu">
-        <span class="iconify text-xl" data-icon="lucide:menu"></span>
+  <div class="app-shell">
+    <div class="sidebar-backdrop hidden" data-sidebar-backdrop hidden></div>
+  <aside class="sidebar" data-sidebar aria-label="Navegación principal">
+    <div class="sidebar-brand">
+      <a href="/" class="flex items-center gap-2.5 ">
+      <svg class="h-8 w-8 shrink-0" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+  <rect width="32" height="32" rx="8" fill="#1d43d8"/>
+  <rect x="8" y="17" width="4" height="8" rx="1.5" fill="#93bbfd"/>
+  <rect x="14" y="12" width="4" height="13" rx="1.5" fill="#dbe8fe"/>
+  <rect x="20" y="7" width="4" height="18" rx="1.5" fill="#ffffff"/>
+</svg>
+      <span class="text-[1.0625rem] font-bold tracking-tight text-ink-950 dark:text-white">Renta<span class="text-brand-600 dark:text-brand-400">SV</span></span>
+    </a>
+      <button type="button" class="icon-btn lg:hidden" data-sidebar-close aria-label="Cerrar menú">
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
       </button>
-      <a href="/" class="flex items-center gap-2.5 shrink-0 group">
-        <img src="/favicon.svg" alt="RentaSV Logo" class="w-8 h-8 rounded-lg transition-transform group-hover:scale-105">
-        <span class="font-extrabold tracking-tight text-lg text-slate-900 dark:text-white">Renta<span class="text-blue-500">SV</span></span>
-      </a>
     </div>
-
-    <!-- Global Nav (Desktop) -->
-    <nav class="hidden md:flex items-center gap-6">
-      <a href="/" class="text-sm font-medium text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">Inicio</a>
-      <a href="/salario.html" class="text-sm font-medium text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">Calculadoras</a>
-      <a href="/autor.html" class="text-sm font-medium text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">Autor</a>
-      <a href="/donaciones.html" class="btn-secondary text-xs flex items-center gap-2 py-2 px-4 border-rose-200 text-rose-600 hover:bg-rose-50 dark:border-rose-900/30 dark:text-rose-400 dark:hover:bg-rose-900/10">
-        <span class="iconify text-rose-500" data-icon="lucide:heart"></span>
-        Apoyar Proyecto
-      </a>
-    </nav>
-
-    <!-- Theme toggle -->
-    <button @click="toggleTheme" class="theme-toggle shrink-0" :title="isDarkMode ? 'Modo claro' : 'Modo oscuro'">
-      <span class="iconify text-lg" :data-icon="isDarkMode ? 'lucide:moon' : 'lucide:sun'"></span>
-    </button>
-  </div>
-</header>
-
-
-<!-- Sidebar Overlay -->
-<div class="sidebar-overlay" :class="{ active: isMenuOpen }" @click="closeMenu"></div>
-
-<!-- Sidebar -->
-<aside class="sidebar" :class="{ active: isMenuOpen }">
-  <div class="sidebar-header">
-    <span class="font-bold text-lg">Menú Principal</span>
-    <button @click="closeMenu" class="p-2 text-slate-400 hover:text-slate-900 dark:hover:text-white">
-      <span class="iconify text-xl" data-icon="lucide:x"></span>
-    </button>
-  </div>
-  <nav class="sidebar-nav">
-    <a href="/" class="sidebar-link">
-      <span class="iconify" data-icon="lucide:home"></span> Inicio
-    </a>
-    <a href="/salario.html" class="sidebar-link">
-      <span class="iconify" data-icon="lucide:circle-dollar-sign"></span> Salario Neto
-    </a>
-    <a href="/liquidaciones.html" class="sidebar-link">
-      <span class="iconify" data-icon="lucide:briefcase"></span> Indemnización
-    </a>
-    <a href="/isr-anual.html" class="sidebar-link">
-      <span class="iconify" data-icon="lucide:calculator"></span> Declaración F-11
-    </a>
-    <a href="/comparador.html" class="sidebar-link">
-      <span class="iconify" data-icon="lucide:scale"></span> Planilla vs Honorarios
-    </a>
-    <div class="h-px bg-slate-100 dark:bg-slate-800 my-4"></div>
-    <a href="/autor.html" class="sidebar-link">
-      <span class="iconify" data-icon="lucide:user"></span> Sobre el Autor
-    </a>
-    <a href="/donaciones.html" class="sidebar-link active text-blue-600 dark:text-blue-400">
-      <span class="iconify" data-icon="lucide:heart"></span> Apoyar Proyecto
-    </a>
-  </nav>
-</aside>
-
-    <!-- Main Content -->
-    <main class="max-w-2xl mx-auto px-5 py-12">
-      <div class="text-center mb-10" data-aos="fade-up">
-        <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 dark:bg-blue-900/30 text-blue-600 rounded-full mb-6">
-          <span class="iconify text-3xl" data-icon="lucide:heart"></span>
-        </div>
-        <h1 class="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight mb-4">
-          Apoya a RentaSV
-        </h1>
-        <p class="text-lg text-slate-600 dark:text-slate-400">
-          Si esta plataforma gratuita te ha sido de utilidad y te ha ahorrado dinero, puedes ayudarme como desarrollador a mantenerla en línea. Tu aporte es fundamental.
+    <div class="sidebar-scroll">
+        <div class="pt-3"></div>
+        <nav class="space-y-0.5"><a href="/" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg><span>Portada</span>
+        </a>
+        <a href="/guia.html" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/></svg><span>Guía de usuario</span>
+        </a></nav>
+        <p class="sidebar-group">Calculadoras</p>
+        <nav class="space-y-0.5"><a href="/salario.html" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg><span>Salario neto</span>
+        </a>
+        <a href="/liquidaciones.html" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="14" x="2" y="7" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg><span>Prestaciones y liquidación</span>
+        </a>
+        <a href="/isr-anual.html" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v5h5"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Declaración anual F-11</span>
+        </a>
+        <a href="/comparador.html" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg><span>Planilla vs. honorarios</span>
+        </a></nav>
+        <p class="sidebar-group">Proyecto</p>
+        <nav class="space-y-0.5"><a href="/autor.html" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Sobre el autor</span>
+        </a>
+        <a href="/donaciones.html" class="nav-link" aria-current="page">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg><span>Apoyar el proyecto</span>
+        </a></nav>
+        <p class="sidebar-group">Legal</p>
+        <nav class="space-y-0.5"><a href="/legal/privacidad.html" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V6l8-3 8 3z"/></svg><span>Privacidad</span>
+        </a>
+        <a href="/legal/terminos.html" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v5h5"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Términos de uso</span>
+        </a></nav>
+      <div class="mt-6 rounded-lg border border-ink-200 bg-ink-50 p-3 dark:border-ink-800 dark:bg-ink-950/60">
+        <p class="text-[0.6875rem] font-semibold uppercase tracking-wide text-ink-500 dark:text-ink-400">Parámetros vigentes</p>
+        <p class="mt-1 text-xs leading-relaxed text-ink-600 dark:text-ink-300">
+          Tablas del <strong class="font-semibold text-ink-900 dark:text-white">Art. 37 LISR</strong> reformado por el D.L. 293 (30/04/2025) y salarios mínimos de junio 2025.
         </p>
       </div>
+    </div>
+  </aside>
 
-      <!-- Donaciones Bancarias -->
-      <div class="glass-panel p-8 mb-8" data-aos="fade-up" data-aos-delay="100">
-        <div class="flex flex-col md:flex-row items-center gap-8">
-          <div class="w-full md:w-1/2 flex justify-center">
-            <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
-              <!-- Código QR Real -->
-              <img src="/icons/qr-banco-agricola.jpeg" alt="QR Banco Agrícola Ricardo Peraza" class="w-48 h-48 block rounded-lg shadow-inner object-contain" />
-            </div>
+    <div class="app-main">
+      <header class="topbar">
+      <button type="button" class="icon-btn lg:hidden" data-sidebar-open aria-label="Abrir menú" aria-expanded="false">
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/></svg>
+      </button>
+      <div class="flex min-w-0 flex-1 items-center gap-3">
+        <span class="truncate text-sm font-semibold text-ink-900 dark:text-white lg:text-[0.9375rem]">Apoyar el proyecto</span>
+      </div>
+      <a href="/guia.html" class="btn btn-secondary btn-sm hidden sm:inline-flex">
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg> Guía de usuario
+      </a>
+      <a href="/guia.html" class="icon-btn sm:hidden" aria-label="Guía de usuario">
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+      </a>
+      <button type="button" class="icon-btn" data-theme-toggle aria-label="Cambiar entre tema claro y oscuro">
+        <span class="hidden dark:block"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9"/></svg></span>
+        <span class="block dark:hidden"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg></span>
+      </button>
+    </header>
+
+      <main id="contenido" class="app-content">
+        <header class="mb-8 max-w-prose">
+          <h1 class="text-2xl font-bold sm:text-3xl">Apoyar el proyecto</h1>
+          <p class="mt-2 text-sm leading-relaxed text-ink-500 dark:text-ink-400">
+            RentaSV es gratuito y lo seguirá siendo. Si le ahorró tiempo o dinero, su aporte
+            ayuda a mantenerlo en línea y actualizado cada vez que cambia un decreto.
+          </p>
+        </header>
+
+        <div class="grid grid-safe gap-5 lg:grid-cols-[minmax(0,1fr)_22rem]">
+
+          <div class="space-y-5">
+            <!-- Transferencia -->
+            <section class="card">
+              <div class="card-header">
+                <h2 class="card-title">Transferencia bancaria</h2>
+                <span class="badge badge-neutral">Banco Agrícola</span>
+              </div>
+              <div class="card-body">
+                <div class="flex flex-col items-center gap-6 sm:flex-row sm:items-start">
+                  <div class="shrink-0 rounded-lg border border-ink-200 bg-white p-3 dark:border-ink-700">
+                    <img src="/icons/qr-banco-agricola.jpeg"
+                         alt="Código QR para transferencia por Banco Agrícola"
+                         width="180" height="180" loading="lazy" decoding="async"
+                         class="h-44 w-44 object-contain" />
+                  </div>
+                  <div class="min-w-0 flex-1">
+                    <p class="text-sm leading-relaxed text-ink-600 dark:text-ink-300">
+                      Escanee el código desde la aplicación de Banco Agrícola para hacer una
+                      transferencia directa.
+                    </p>
+                    <dl class="mt-4 space-y-3">
+                      <div class="flex items-center justify-between gap-4 border-b border-ink-100 pb-2 dark:border-ink-800">
+                        <dt class="text-sm text-ink-500 dark:text-ink-400">Banco</dt>
+                        <dd class="text-sm font-semibold">Banco Agrícola de El Salvador</dd>
+                      </div>
+                      <div class="flex items-center justify-between gap-4 border-b border-ink-100 pb-2 dark:border-ink-800">
+                        <dt class="text-sm text-ink-500 dark:text-ink-400">A nombre de</dt>
+                        <dd class="text-sm font-semibold">Ricardo Peraza</dd>
+                      </div>
+                      <div class="flex items-center justify-between gap-4">
+                        <dt class="text-sm text-ink-500 dark:text-ink-400">Tipo de cuenta</dt>
+                        <dd class="text-sm font-semibold">Cuenta corriente</dd>
+                      </div>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- A qué se destina -->
+            <section class="card">
+              <div class="card-header"><h2 class="card-title">A qué se destina su aporte</h2></div>
+              <div class="card-body">
+                <ul class="space-y-4">
+                  <li class="flex gap-3">
+                    <span class="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-brand-50 text-brand-600 dark:bg-brand-950/60 dark:text-brand-400">
+                      <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                           stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M12 6v6l4 2" /><circle cx="12" cy="12" r="10" />
+                      </svg>
+                    </span>
+                    <div>
+                      <p class="text-sm font-semibold">Seguimiento de reformas</p>
+                      <p class="mt-0.5 text-sm leading-relaxed text-ink-500 dark:text-ink-400">
+                        Revisar los decretos de la Asamblea Legislativa y actualizar las tablas
+                        cuando cambian, con sus pruebas correspondientes.
+                      </p>
+                    </div>
+                  </li>
+                  <li class="flex gap-3">
+                    <span class="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400">
+                      <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                           stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M20 6 9 17l-5-5" />
+                      </svg>
+                    </span>
+                    <div>
+                      <p class="text-sm font-semibold">Hosting y dominio</p>
+                      <p class="mt-0.5 text-sm leading-relaxed text-ink-500 dark:text-ink-400">
+                        Mantener el sitio disponible, rápido y sin publicidad para todo el país.
+                      </p>
+                    </div>
+                  </li>
+                  <li class="flex gap-3">
+                    <span class="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-amber-50 text-amber-600 dark:bg-amber-950/60 dark:text-amber-400">
+                      <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                           stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M12 20h9" /><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
+                      </svg>
+                    </span>
+                    <div>
+                      <p class="text-sm font-semibold">Nuevas calculadoras</p>
+                      <p class="mt-0.5 text-sm leading-relaxed text-ink-500 dark:text-ink-400">
+                        Ampliar la cobertura a más trámites y prestaciones que la gente
+                        necesita calcular.
+                      </p>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </section>
           </div>
-          <div class="w-full md:w-1/2 text-center md:text-left">
-            <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">Transferencia Bancaria</h3>
-            <p class="text-slate-600 dark:text-slate-400 mb-6 text-sm">Escanea el código QR desde tu app de <strong>Banco Agrícola</strong> para hacer una transferencia directa a mi cuenta corriente.</p>
-            
-            <div class="space-y-4">
-              <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700">
-                <p class="text-xs text-slate-500 uppercase tracking-widest font-semibold mb-1">Banco</p>
-                <p class="font-medium text-slate-900 dark:text-white">Banco Agrícola de El Salvador</p>
+
+          <!-- Lateral -->
+          <aside class="space-y-5 self-start">
+            <section class="card">
+              <div class="card-body">
+                <h2 class="text-base font-semibold">Otras formas de ayudar</h2>
+                <p class="mt-2 text-sm leading-relaxed text-ink-500 dark:text-ink-400">
+                  Donar no es la única manera, ni la más importante.
+                </p>
+                <ul class="mt-4 space-y-3 text-sm">
+                  <li class="flex gap-2.5">
+                    <span class="text-brand-500">→</span>
+                    <span class="text-ink-600 dark:text-ink-300">
+                      Compartir la herramienta con quien la necesite
+                    </span>
+                  </li>
+                  <li class="flex gap-2.5">
+                    <span class="text-brand-500">→</span>
+                    <span class="text-ink-600 dark:text-ink-300">
+                      Reportar un cálculo que no cuadre, con el detalle del caso
+                    </span>
+                  </li>
+                  <li class="flex gap-2.5">
+                    <span class="text-brand-500">→</span>
+                    <span class="text-ink-600 dark:text-ink-300">
+                      Contribuir al código o a la documentación en GitHub
+                    </span>
+                  </li>
+                </ul>
+                <a href="https://github.com/dev-perazarich/simulador-isr-sv/issues" target="_blank"
+                   rel="noopener" class="btn btn-secondary btn-block mt-4">
+                  Reportar un problema
+                </a>
               </div>
-              <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700">
-                <p class="text-xs text-slate-500 uppercase tracking-widest font-semibold mb-1">A nombre de</p>
-                <p class="font-medium text-slate-900 dark:text-white">Ricardo Peraza</p>
-              </div>
+            </section>
+
+            <div class="alert alert-neutral">
+              <span class="text-xs leading-relaxed">
+                Las donaciones son voluntarias y no dan acceso a funciones adicionales:
+                todas las calculadoras son y seguirán siendo gratuitas para cualquier persona.
+              </span>
             </div>
+          </aside>
+        </div>
+      </main>
+
+      <footer class="border-t border-ink-200 bg-white dark:border-ink-800 dark:bg-ink-900">
+      <div class="mx-auto w-full max-w-content px-4 py-10 sm:px-6">
+        <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          <div class="lg:col-span-2">
+            <a href="/" class="flex items-center gap-2.5 mb-3">
+      <svg class="h-8 w-8 shrink-0" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+  <rect width="32" height="32" rx="8" fill="#1d43d8"/>
+  <rect x="8" y="17" width="4" height="8" rx="1.5" fill="#93bbfd"/>
+  <rect x="14" y="12" width="4" height="13" rx="1.5" fill="#dbe8fe"/>
+  <rect x="20" y="7" width="4" height="18" rx="1.5" fill="#ffffff"/>
+</svg>
+      <span class="text-[1.0625rem] font-bold tracking-tight text-ink-950 dark:text-white">Renta<span class="text-brand-600 dark:text-brand-400">SV</span></span>
+    </a>
+            <p class="max-w-sm text-sm leading-relaxed text-ink-500 dark:text-ink-400">
+              Herramienta gratuita y sin servidores para que cualquier persona en El Salvador
+              calcule su salario, sus prestaciones y su renta con las tablas oficiales vigentes.
+            </p>
+            <a href="/guia.html" class="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-brand-600 hover:underline dark:text-brand-400">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/></svg> Leer la guía de usuario
+            </a>
+          </div>
+          <div>
+            <p class="mb-3 text-[0.6875rem] font-semibold uppercase tracking-wide text-ink-500 dark:text-ink-400">Calculadoras</p>
+            <ul class="space-y-2 text-sm">
+              <li><a href="/salario.html" class="text-ink-600 hover:text-brand-600 dark:text-ink-300 dark:hover:text-brand-400">Salario neto</a></li>
+              <li><a href="/liquidaciones.html" class="text-ink-600 hover:text-brand-600 dark:text-ink-300 dark:hover:text-brand-400">Prestaciones y liquidación</a></li>
+              <li><a href="/isr-anual.html" class="text-ink-600 hover:text-brand-600 dark:text-ink-300 dark:hover:text-brand-400">Declaración anual F-11</a></li>
+              <li><a href="/comparador.html" class="text-ink-600 hover:text-brand-600 dark:text-ink-300 dark:hover:text-brand-400">Planilla vs. honorarios</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="mb-3 text-[0.6875rem] font-semibold uppercase tracking-wide text-ink-500 dark:text-ink-400">Base legal</p>
+            <ul class="space-y-2 text-sm">
+              <li><a href="https://www.asamblea.gob.sv/node/13558" target="_blank" rel="noopener" class="text-ink-600 hover:text-brand-600 dark:text-ink-300 dark:hover:text-brand-400">Art. 37 LISR (D.L. 293)</a></li>
+              <li><a href="https://www.asamblea.gob.sv/node/13399" target="_blank" rel="noopener" class="text-ink-600 hover:text-brand-600 dark:text-ink-300 dark:hover:text-brand-400">Aguinaldo exento (D.L. 596)</a></li>
+              <li><a href="https://webapps.ilo.org/public/spanish/region/ampro/mdtsanjose/papers/cod_elsa.htm" target="_blank" rel="noopener" class="text-ink-600 hover:text-brand-600 dark:text-ink-300 dark:hover:text-brand-400">Código de Trabajo</a></li>
+              <li><a href="/legal/privacidad.html" class="text-ink-600 hover:text-brand-600 dark:text-ink-300 dark:hover:text-brand-400">Privacidad</a></li>
+              <li><a href="/legal/terminos.html" class="text-ink-600 hover:text-brand-600 dark:text-ink-300 dark:hover:text-brand-400">Términos de uso</a></li>
+            </ul>
           </div>
         </div>
-      </div>
-    </main>
 
-    <!-- Footer -->
-    <footer class="bg-white dark:bg-[#0a1628] border-t border-slate-200 dark:border-white/[0.06] pt-12 pb-8">
-      <div class="max-w-4xl mx-auto px-5">
-        <div class="flex flex-col md:flex-row justify-between items-center gap-6">
-          <div class="text-center md:text-left">
-            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Versión <span v-text="DATA_2026.VERSION"></span></p>
-            <p class="text-[10px] text-slate-500">Hecho en El Salvador</p>
-          </div>
-          <div class="flex items-center gap-4">
-             <button @click="toggleTheme" class="theme-toggle" :title="isDarkMode ? 'Modo claro' : 'Modo oscuro'">
-               <span class="iconify text-lg" :data-icon="isDarkMode ? 'lucide:moon' : 'lucide:sun'"></span>
-             </button>
+        <div class="mt-8 flex flex-col gap-4 border-t border-ink-200 pt-6 dark:border-ink-800 sm:flex-row sm:items-center sm:justify-between">
+          <p class="flex items-start gap-2 text-xs leading-relaxed text-ink-500 dark:text-ink-400">
+            <svg class="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+            <span><strong class="font-semibold text-ink-700 dark:text-ink-200">Aviso:</strong> simulador informativo. No sustituye asesoría profesional ni el dictamen del Ministerio de Hacienda.</span>
+          </p>
+          <div class="flex shrink-0 items-center gap-4 text-xs text-ink-500 dark:text-ink-400">
+            <span>© 2026 RentaSV</span>
+            <a href="https://github.com/dev-perazarich/simulador-isr-sv" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 hover:text-brand-600 dark:hover:text-brand-400">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg> Código abierto
+            </a>
           </div>
         </div>
       </div>
     </footer>
+    </div>
+
+    <nav class="dock" aria-label="Accesos rápidos">
+      <a href="/guia.html" class="dock-item">
+        <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/></svg><span>Guía</span>
+      </a>
+      <a href="/salario.html" class="dock-item">
+        <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg><span>Salario</span>
+      </a>
+      <a href="/liquidaciones.html" class="dock-item">
+        <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="14" x="2" y="7" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg><span>Prestaciones</span>
+      </a>
+      <a href="/isr-anual.html" class="dock-item">
+        <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v5h5"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>F-11</span>
+      </a>
+      <a href="/comparador.html" class="dock-item">
+        <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg><span>Comparar</span>
+      </a>
+    </nav>
   </div>
 
-  <script type="module">
-    import '/js/main.js';
-  </script>
+  <script src="/js/shell.js" defer></script>
   <script>
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js?v=1.10').catch(() => {}));
+      addEventListener('load', function () {
+        navigator.serviceWorker.register('/sw.js').catch(function () {});
+      });
     }
   </script>
 </body>

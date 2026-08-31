@@ -1,142 +1,241 @@
-import { calcularAguinaldo, calcularIndemnizacion, calcularVacacion, calcularRenunciaVoluntaria, calcularDiferenciaFechas } from '../modules/calculator.js';
-import { storage } from '../modules/storage.js';
+// ============================================================
+// useLiquidacionesTab.js — Prestaciones y liquidación laboral
+// ============================================================
 
+import {
+  calcularDiferenciaFechas,
+  calcularIndemnizacion,
+  calcularRenunciaVoluntaria,
+  calcularAguinaldo,
+  calcularVacacion,
+  calcularLiquidacionCompleta,
+  formatFechaLocal,
+  parseFechaLocal,
+  tiempoADias,
+} from '../modules/calculator.js';
+import { DATA_2026 } from '../modules/constants.js';
+import { storage, KEYS } from '../modules/storage.js';
 
+export const MODOS = [
+  { key: 'completa',  label: 'Liquidación completa', desc: 'Indemnización + aguinaldo + vacación' },
+  { key: 'despido',   label: 'Indemnización',        desc: 'Despido sin causa justificada (Art. 58 CT)' },
+  { key: 'renuncia',  label: 'Renuncia voluntaria',  desc: 'Prestación del D.L. 592/2013' },
+  { key: 'aguinaldo', label: 'Aguinaldo',            desc: 'Arts. 196-202 CT' },
+  { key: 'vacacion',  label: 'Vacación',             desc: '15 días + 30% de prima (Art. 177 CT)' },
+];
 
 export function useLiquidacionesTab() {
-  // Estado del formulario
-  const liqForm = Vue.ref({
-    modo: 'despido', // 'despido', 'renuncia', 'aguinaldo', 'vacacion'
-    salario: null,
+  const hoy = formatFechaLocal(new Date());
+
+  // ── Estado ────────────────────────────────────────────────
+  const form = Vue.ref({
+    modo: 'completa',
+    salario: '',
     fechaInicio: '',
-    fechaFin: new Date().toISOString().split('T')[0],
-    anios: 0,
-    meses: 0,
-    dias: 0,
+    fechaFin: hoy,
     manual: false,
+    anios: '',
+    meses: '',
+    dias: '',
   });
 
+  const resultado = Vue.ref(null);
+  const errores = Vue.ref([]);
 
-  // Resultados
-  const resultadoDespido = Vue.ref(null);
-  const resultadoRenuncia = Vue.ref(null);
-  const resultadoAguinaldo = Vue.ref(null);
-  const resultadoVacacion = Vue.ref(null);
-
-  // Computado auxiliar
-
-
-  // Watcher para calcular tiempo desde fechas
-  Vue.watch([() => liqForm.value.fechaInicio, () => liqForm.value.fechaFin], ([inicio, fin]) => {
-    if (!liqForm.value.manual && inicio && fin) {
-      const diff = calcularDiferenciaFechas(inicio, fin);
-      if (diff) {
-        liqForm.value.anios = diff.anios;
-        liqForm.value.meses = diff.meses;
-        liqForm.value.dias = diff.dias;
-      }
+  // ── Antigüedad calculada a partir de las fechas ───────────
+  const antiguedad = Vue.computed(() => {
+    if (form.value.manual) {
+      const totalDias = tiempoADias(form.value.anios, form.value.meses, form.value.dias);
+      return {
+        anios: parseInt(form.value.anios, 10) || 0,
+        meses: parseInt(form.value.meses, 10) || 0,
+        dias: parseInt(form.value.dias, 10) || 0,
+        totalDias,
+        aniosDecimal: totalDias / 365,
+      };
     }
+    if (!form.value.fechaInicio || !form.value.fechaFin) return null;
+    return calcularDiferenciaFechas(form.value.fechaInicio, form.value.fechaFin);
   });
 
+  const modoActual = Vue.computed(() => MODOS.find((m) => m.key === form.value.modo));
 
-  function calcularLiquidaciones() {
-    const sal = parseFloat(liqForm.value.salario);
-    if (!sal || sal <= 0) {
-      alert('Ingresa un salario bruto válido.');
-      return;
+  /** Días del período de aguinaldo (12 dic → 11 dic) ya trabajados. */
+  function diasPeriodoAguinaldo() {
+    const ant = antiguedad.value;
+    if (form.value.manual || !form.value.fechaInicio) {
+      return Math.min(365, ant ? ant.totalDias : 0);
     }
+    const cfg = DATA_2026.AGUINALDO;
+    const inicio = parseFechaLocal(form.value.fechaInicio);
+    const fin = parseFechaLocal(form.value.fechaFin);
+    if (!inicio || !fin) return 0;
 
-    // Años, meses, días para indemnización/renuncia (tiempo total)
-    const d = parseInt(liqForm.value.dias, 10) || 0;
-    const m = parseInt(liqForm.value.meses, 10) || 0;
-    const a = parseInt(liqForm.value.anios, 10) || 0;
-    
-    // --- Lógica de períodos para proporcionalidad ---
-    let diasAguinaldo = 0;
-    let diasVacacion = 0;
+    const finPeriodo = new Date(fin.getFullYear(), cfg.PERIODO_FIN.mes - 1, cfg.PERIODO_FIN.dia);
+    const anioInicioPeriodo = fin > finPeriodo ? fin.getFullYear() : fin.getFullYear() - 1;
+    let base = new Date(anioInicioPeriodo, cfg.PERIODO_INICIO.mes - 1, cfg.PERIODO_INICIO.dia);
+    if (inicio > base) base = inicio;
+    if (fin < base) return 0;
+    return Math.min(365, calcularDiferenciaFechas(base, fin).totalDias);
+  }
 
-    if (liqForm.value.fechaInicio && liqForm.value.fechaFin) {
-      const fIni = new Date(liqForm.value.fechaInicio);
-      const fFin = new Date(liqForm.value.fechaFin);
-      
-      // 1. Aguinaldo: Días en el año calendario actual (desde 1 de Enero o fIni)
-      const inicioAnioActual = new Date(fFin.getFullYear(), 0, 1);
-      const baseAguinaldo = fIni > inicioAnioActual ? fIni : inicioAnioActual;
-      const diffAguinaldo = calcularDiferenciaFechas(baseAguinaldo, fFin);
-      diasAguinaldo = diffAguinaldo ? diffAguinaldo.totalDias : 0;
+  /** Días transcurridos del ciclo anual de vacación en curso. */
+  function diasCicloVacacion() {
+    const ant = antiguedad.value;
+    if (form.value.manual || !form.value.fechaInicio) {
+      return Math.min(365, ant ? ant.totalDias : 0);
+    }
+    const inicio = parseFechaLocal(form.value.fechaInicio);
+    const fin = parseFechaLocal(form.value.fechaFin);
+    if (!inicio || !fin) return 0;
 
-      // 2. Vacación: Días desde el último aniversario
-      let ultimoAniversario = new Date(fIni);
-      ultimoAniversario.setFullYear(fFin.getFullYear());
-      if (ultimoAniversario > fFin) {
-        ultimoAniversario.setFullYear(fFin.getFullYear() - 1);
-      }
-      const diffVacacion = calcularDiferenciaFechas(ultimoAniversario, fFin);
-      diasVacacion = diffVacacion ? diffVacacion.totalDias : 0;
+    let aniversario = new Date(fin.getFullYear(), inicio.getMonth(), inicio.getDate());
+    if (aniversario > fin) aniversario = new Date(fin.getFullYear() - 1, inicio.getMonth(), inicio.getDate());
+    if (aniversario < inicio) aniversario = inicio;
+    return Math.min(365, calcularDiferenciaFechas(aniversario, fin).totalDias);
+  }
+
+  // ── Validación ────────────────────────────────────────────
+  function validar() {
+    const problemas = [];
+    const sal = parseFloat(form.value.salario);
+
+    if (!form.value.salario) problemas.push('Ingrese su salario bruto mensual.');
+    else if (!isFinite(sal) || sal <= 0) problemas.push('El salario debe ser mayor que cero.');
+
+    if (form.value.manual) {
+      const total = tiempoADias(form.value.anios, form.value.meses, form.value.dias);
+      if (total <= 0) problemas.push('Indique cuánto tiempo lleva laborando.');
+      const meses = parseInt(form.value.meses, 10) || 0;
+      const dias = parseInt(form.value.dias, 10) || 0;
+      if (meses > 11) problemas.push('Los meses deben ir de 0 a 11.');
+      if (dias > 30) problemas.push('Los días deben ir de 0 a 30.');
     } else {
-      // Si es manual, estimamos 30 días por mes
-      diasAguinaldo = (m * 30) + d;
-      diasVacacion = (m * 30) + d;
+      if (!form.value.fechaInicio) problemas.push('Indique la fecha de ingreso.');
+      if (!form.value.fechaFin) problemas.push('Indique la fecha de salida.');
+      if (form.value.fechaInicio && form.value.fechaFin) {
+        const ini = parseFechaLocal(form.value.fechaInicio);
+        const fin = parseFechaLocal(form.value.fechaFin);
+        if (ini && fin && ini > fin) problemas.push('La fecha de ingreso no puede ser posterior a la de salida.');
+      }
     }
 
-    // Calcular según el modo
-    if (liqForm.value.modo === 'despido') {
-      resultadoDespido.value = calcularIndemnizacion(sal, a, m, d);
-    } else if (liqForm.value.modo === 'renuncia') {
-      resultadoRenuncia.value = calcularRenunciaVoluntaria(sal, a, m, d);
-    } else if (liqForm.value.modo === 'aguinaldo') {
-      resultadoAguinaldo.value = calcularAguinaldo(sal, a, diasAguinaldo);
-    } else if (liqForm.value.modo === 'vacacion') {
-      resultadoVacacion.value = calcularVacacion(sal, diasVacacion);
-    }
-
-
-
-    storage.set('liquidaciones', liqForm.value);
+    errores.value = problemas;
+    return problemas.length === 0;
   }
 
-  function limpiarLiquidaciones() {
-    liqForm.value = { 
-      modo: liqForm.value.modo, 
-      salario: null, 
-      fechaInicio: '', 
-      fechaFin: new Date().toISOString().split('T')[0],
-      anios: 0, 
-      meses: 0, 
-      dias: 0,
-      manual: false
+  // ── Cálculo ───────────────────────────────────────────────
+  function calcular({ silencioso = false } = {}) {
+    if (!validar()) {
+      if (!silencioso) resultado.value = null;
+      return false;
+    }
+
+    const sal = parseFloat(form.value.salario);
+    const ant = antiguedad.value;
+    const opts = { totalDias: ant.totalDias };
+
+    switch (form.value.modo) {
+      case 'completa':
+        resultado.value = form.value.manual
+          ? construirCompletaManual(sal, ant)
+          : calcularLiquidacionCompleta({
+              salarioBruto: sal,
+              fechaInicio: form.value.fechaInicio,
+              fechaFin: form.value.fechaFin,
+              modo: 'despido',
+            });
+        break;
+      case 'despido':
+        resultado.value = calcularIndemnizacion(sal, ant.anios, ant.meses, ant.dias, opts);
+        break;
+      case 'renuncia':
+        resultado.value = calcularRenunciaVoluntaria(sal, ant.anios, ant.meses, ant.dias, opts);
+        break;
+      case 'aguinaldo':
+        resultado.value = calcularAguinaldo(sal, ant.aniosDecimal, diasPeriodoAguinaldo());
+        break;
+      case 'vacacion':
+        resultado.value = calcularVacacion(sal, diasCicloVacacion(), { cotiza: true });
+        break;
+    }
+
+    storage.set(KEYS.LIQUIDACION, { ...form.value });
+    return true;
+  }
+
+  /** En modo manual se arma la liquidación completa pieza por pieza. */
+  function construirCompletaManual(sal, ant) {
+    const principal = calcularIndemnizacion(sal, ant.anios, ant.meses, ant.dias, {
+      totalDias: ant.totalDias,
+    });
+    const diasProporcion = Math.min(365, (ant.meses * 30) + ant.dias || ant.totalDias);
+    const aguinaldo = calcularAguinaldo(sal, ant.aniosDecimal, diasProporcion);
+    const vacacion = calcularVacacion(sal, diasProporcion, { cotiza: false });
+    return {
+      modo: 'despido',
+      periodo: ant,
+      principal,
+      aguinaldo,
+      vacacion,
+      diasAguinaldo: diasProporcion,
+      diasVacacion: diasProporcion,
+      granTotal:
+        Math.round((principal.montoNeto + aguinaldo.montoNeto + vacacion.montoNeto) * 100) / 100,
     };
-    resultadoDespido.value = null;
-    resultadoRenuncia.value = null;
-    resultadoAguinaldo.value = null;
-    resultadoVacacion.value = null;
   }
 
+  function limpiar() {
+    form.value = {
+      modo: form.value.modo,
+      salario: '',
+      fechaInicio: '',
+      fechaFin: hoy,
+      manual: false,
+      anios: '',
+      meses: '',
+      dias: '',
+    };
+    resultado.value = null;
+    errores.value = [];
+    storage.remove(KEYS.LIQUIDACION);
+  }
+
+  function cambiarModo(modo) {
+    form.value.modo = modo;
+    resultado.value = null;
+    errores.value = [];
+  }
 
   function restaurarDatos() {
-    const saved = storage.get('liquidaciones');
-    if (saved) {
-      liqForm.value = { ...liqForm.value, ...saved };
-      if (saved.salario) calcularLiquidaciones();
+    const saved = storage.get(KEYS.LIQUIDACION);
+    if (!saved) return;
+    form.value = { ...form.value, ...saved };
+    // Silencioso: al volver a la página nunca mostramos errores de validación.
+    if (parseFloat(form.value.salario) > 0) {
+      errores.value = [];
+      calcular({ silencioso: true });
+      errores.value = [];
     }
   }
 
-  // Automáticamente borrar resultados si el usuario cambia montos (para no tener data vieja)
-  Vue.watch(() => liqForm.value.salario, () => {
-    resultadoDespido.value = null;
-    resultadoRenuncia.value = null;
-    resultadoAguinaldo.value = null;
-    resultadoVacacion.value = null;
-  });
+  // Si cambian los datos de entrada, el resultado anterior deja de ser válido.
+  Vue.watch(
+    () => [form.value.salario, form.value.fechaInicio, form.value.fechaFin, form.value.manual,
+           form.value.anios, form.value.meses, form.value.dias],
+    () => { resultado.value = null; }
+  );
 
   return {
-    liqForm,
-    resultadoDespido,
-    resultadoRenuncia,
-    resultadoAguinaldo,
-    resultadoVacacion,
-    calcularLiquidaciones,
-    limpiarLiquidaciones,
+    MODOS,
+    form,
+    resultado,
+    errores,
+    antiguedad,
+    modoActual,
+    calcular,
+    limpiar,
+    cambiarModo,
     restaurarDatos,
   };
 }

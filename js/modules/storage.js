@@ -1,26 +1,41 @@
 // ============================================================
-// storage.js — Helpers para sessionStorage (Zero-Server)
-// Los datos NUNCA salen del dispositivo del usuario.
+// storage.js — Persistencia temporal en sessionStorage
+// ------------------------------------------------------------
+// Arquitectura sin servidores: los datos nunca salen del
+// dispositivo y se borran solos al cerrar la pestaña.
 // ============================================================
 
 const PREFIX = 'sv_isr_';
 
+/** sessionStorage no existe en modo privado de algunos navegadores. */
+function disponible() {
+  try {
+    const k = '__probe__';
+    sessionStorage.setItem(k, '1');
+    sessionStorage.removeItem(k);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+const OK = typeof sessionStorage !== 'undefined' && disponible();
+
 export const storage = {
-  /**
-   * Guarda un valor en sessionStorage (se borra al cerrar la pestaña).
-   */
+  disponible: OK,
+
   set(key, value) {
+    if (!OK) return false;
     try {
       sessionStorage.setItem(PREFIX + key, JSON.stringify(value));
+      return true;
     } catch (e) {
-      console.warn('[storage] Error al guardar:', e);
+      return false;
     }
   },
 
-  /**
-   * Lee un valor del sessionStorage.
-   */
   get(key, defaultValue = null) {
+    if (!OK) return defaultValue;
     try {
       const raw = sessionStorage.getItem(PREFIX + key);
       return raw !== null ? JSON.parse(raw) : defaultValue;
@@ -29,45 +44,29 @@ export const storage = {
     }
   },
 
-  /**
-   * Elimina un valor específico.
-   */
   remove(key) {
-    sessionStorage.removeItem(PREFIX + key);
+    if (!OK) return;
+    try {
+      sessionStorage.removeItem(PREFIX + key);
+    } catch (e) {}
   },
 
-  /**
-   * Limpia todos los datos de la app.
-   */
+  /** Borra todo lo que la app haya guardado. */
   clear() {
-    Object.keys(sessionStorage)
-      .filter(k => k.startsWith(PREFIX))
-      .forEach(k => sessionStorage.removeItem(k));
-  },
-
-  /**
-   * Retorna todos los datos de la app como objeto.
-   */
-  getAll() {
-    const result = {};
-    Object.keys(sessionStorage)
-      .filter(k => k.startsWith(PREFIX))
-      .forEach(k => {
-        try {
-          result[k.replace(PREFIX, '')] = JSON.parse(sessionStorage.getItem(k));
-        } catch {}
-      });
-    return result;
+    if (!OK) return;
+    try {
+      Object.keys(sessionStorage)
+        .filter((k) => k.startsWith(PREFIX))
+        .forEach((k) => sessionStorage.removeItem(k));
+    } catch (e) {}
   },
 };
 
-// Claves predefinidas para cada módulo
 export const KEYS = {
-  SALARIO:      'salario',
-  INDEMNIZACION:'indemnizacion',
-  AGUINALDO:    'aguinaldo',
-  DECLARACION:  'declaracion',
-  CONFIGURACION:'config',
+  SALARIO: 'salario',
+  LIQUIDACION: 'liquidacion',
+  DECLARACION: 'declaracion',
+  COMPARADOR: 'comparador',
 };
 
 export default storage;

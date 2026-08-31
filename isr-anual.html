@@ -2,336 +2,677 @@
 <html lang="es-SV">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#0a1628" />
-  <meta name="description" content="Simulador Declaración de ISR Anual F-11 en El Salvador 2026." />
-  <title>RentaSV — Simulador ISR El Salvador 2025-2026</title>
-  <link rel="manifest" href="/manifest.json" />
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Simulador de declaración de renta F-11 El Salvador 2026 | RentaSV</title>
+  <meta name="description" content="Calculadora gratuita y privada para El Salvador: anticipa tu declaración anual de renta mes a mes, aplica la deducción fija de $1,600 y descubre si te queda saldo a favor antes de abril." />
+  <link rel="canonical" href="https://simulador-isr-sv.vercel.app/isr-anual.html" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta name="author" content="Ricardo Peraza" />
+  <meta name="theme-color" content="#ffffff" />
 
-  <!-- Fuentes -->
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="RentaSV" />
+  <meta property="og:locale" content="es_SV" />
+  <meta property="og:title" content="Simulador de declaración de renta F-11 El Salvador 2026 | RentaSV" />
+  <meta property="og:description" content="Calculadora gratuita y privada para El Salvador: anticipa tu declaración anual de renta mes a mes, aplica la deducción fija de $1,600 y descubre si te queda saldo a favor antes de abril." />
+  <meta property="og:url" content="https://simulador-isr-sv.vercel.app/isr-anual.html" />
+  <meta property="og:image" content="https://simulador-isr-sv.vercel.app/icons/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Simulador de declaración de renta F-11 El Salvador 2026 | RentaSV" />
+  <meta name="twitter:description" content="Calculadora gratuita y privada para El Salvador: anticipa tu declaración anual de renta mes a mes, aplica la deducción fija de $1,600 y descubre si te queda saldo a favor antes de abril." />
+  <meta name="twitter:image" content="https://simulador-isr-sv.vercel.app/icons/og-image.png" />
+
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
 
-  <!-- Tailwind CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = { darkMode: ['selector', '[data-theme="dark"]'], theme: { extend: { fontFamily: { sans: ['Outfit', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'], }, colors: { ink: { DEFAULT: '#0a1628', 2: '#1e2d45', 3: '#334155' }, primary: { DEFAULT: '#1a56db', dark: '#1e40af', light: '#eff6ff', mid: '#3b82f6' }, }, }, }, };
-  </script>
-
-  <!-- Theme detection - runs before body renders to prevent flash -->
-  <script>
-    // Check for saved theme preference or use system preference
-    const THEME_KEY = 'sv-isr-theme';
-    let savedTheme = null;
-    try {
-      savedTheme = localStorage.getItem(THEME_KEY);
-    } catch (e) {
-      console.warn('localStorage not available');
-    }
-    
-    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    const themeToApply = savedTheme || systemTheme;
-    
-    // Apply theme immediately to prevent flash
-    if (themeToApply === 'dark') {
-      document.documentElement.setAttribute('data-theme', 'dark');
-    }
-  </script>
-
+  <!-- Sistema de diseño: tokens, base y componentes. Se edita a mano. -->
   <link rel="stylesheet" href="/css/app.css" />
-  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
-  <!-- AOS para animaciones sutiles -->
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+  <!-- Tailwind vendorizado: resuelve en el navegador las clases
+       utilitarias del marcado. Sin CDN externo y sin compilar nada. -->
+  <script src="/vendor/tailwind.js"></script>
+  <script>
+    tailwind.config = {
+      darkMode: ['selector', '[data-theme="dark"]'],
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#eff5ff', 100: '#dbe8fe', 200: '#bfd7fe', 300: '#93bbfd',
+              400: '#6096fa', 500: '#3b76f6', 600: '#2557eb', 700: '#1d43d8',
+              800: '#1e39af', 900: '#1e348a', 950: '#172254',
+            },
+            ink: {
+              50: '#f6f7f9', 100: '#eceef2', 200: '#d5dae3', 300: '#b0b9ca',
+              400: '#8593ac', 500: '#657493', 600: '#505d7a', 700: '#424c63',
+              800: '#394153', 900: '#333947', 950: '#0d1220',
+            },
+          },
+          borderRadius: { card: '0.875rem' },
+          boxShadow: {
+            card: '0 1px 2px 0 rgb(16 24 40 / 0.04), 0 1px 3px 0 rgb(16 24 40 / 0.06)',
+            'card-hover': '0 4px 12px -2px rgb(16 24 40 / 0.08), 0 2px 6px -2px rgb(16 24 40 / 0.05)',
+            pop: '0 12px 32px -8px rgb(16 24 40 / 0.18)',
+          },
+          maxWidth: { content: '80rem', prose: '46rem' },
+          transitionTimingFunction: { soft: 'cubic-bezier(0.16, 1, 0.3, 1)' },
+        },
+      },
+    };
+  </script>
+
+  <!-- El tema claro es el predeterminado: es el que transmite confianza
+       en una herramienta de dinero. El oscuro solo se aplica si la
+       persona lo eligió expresamente. -->
+  <script>
+    (function () {
+      try {
+        if (localStorage.getItem('sv-isr-theme') === 'dark') {
+          document.documentElement.setAttribute('data-theme', 'dark');
+          return;
+        }
+      } catch (e) {}
+      document.documentElement.setAttribute('data-theme', 'light');
+    })();
+  </script>
 </head>
-<body class="font-sans antialiased bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen">
+<body>
+  <a href="#contenido" class="skip-link">Saltar al contenido</a>
 
-<div id="app-isranual">
-
-<!-- Navbar -->
-<header class="glass-header sticky top-0 z-50">
-  <div class="max-w-[1100px] mx-auto px-5 h-16 flex items-center justify-between gap-4">
-    <div class="flex items-center gap-3">
-      <button @click="toggleMenu" class="hamburger" aria-label="Menu">
-        <span class="iconify text-xl" data-icon="lucide:menu"></span>
+  <div class="app-shell">
+    <div class="sidebar-backdrop hidden" data-sidebar-backdrop hidden></div>
+  <aside class="sidebar" data-sidebar aria-label="Navegación principal">
+    <div class="sidebar-brand">
+      <a href="/" class="flex items-center gap-2.5 ">
+      <svg class="h-8 w-8 shrink-0" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+  <rect width="32" height="32" rx="8" fill="#1d43d8"/>
+  <rect x="8" y="17" width="4" height="8" rx="1.5" fill="#93bbfd"/>
+  <rect x="14" y="12" width="4" height="13" rx="1.5" fill="#dbe8fe"/>
+  <rect x="20" y="7" width="4" height="18" rx="1.5" fill="#ffffff"/>
+</svg>
+      <span class="text-[1.0625rem] font-bold tracking-tight text-ink-950 dark:text-white">Renta<span class="text-brand-600 dark:text-brand-400">SV</span></span>
+    </a>
+      <button type="button" class="icon-btn lg:hidden" data-sidebar-close aria-label="Cerrar menú">
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
       </button>
-      <a href="/" class="flex items-center gap-2.5 shrink-0 group">
-        <img src="/favicon.svg" alt="RentaSV Logo" class="w-8 h-8 rounded-lg transition-transform group-hover:scale-105">
-        <span class="font-extrabold tracking-tight text-lg text-slate-900 dark:text-white">Renta<span class="text-blue-500">SV</span></span>
-      </a>
     </div>
-
-    <!-- Global Nav (Desktop) -->
-    <nav class="hidden md:flex items-center gap-6">
-      <a href="/" class="text-sm font-medium text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">Inicio</a>
-      <a href="/salario.html" class="text-sm font-medium text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">Calculadoras</a>
-      <a href="/autor.html" class="text-sm font-medium text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">Autor</a>
-      <a href="/donaciones.html" class="btn-secondary text-xs flex items-center gap-2 py-2 px-4 border-rose-200 text-rose-600 hover:bg-rose-50 dark:border-rose-900/30 dark:text-rose-400 dark:hover:bg-rose-900/10">
-        <span class="iconify text-rose-500" data-icon="lucide:heart"></span>
-        Apoyar Proyecto
-      </a>
-    </nav>
-
-    <!-- Theme toggle -->
-    <button @click="toggleTheme" class="theme-toggle shrink-0" :title="isDarkMode ? 'Modo claro' : 'Modo oscuro'">
-      <span class="iconify text-lg" :data-icon="isDarkMode ? 'lucide:moon' : 'lucide:sun'"></span>
-    </button>
-  </div>
-</header>
-
-
-<!-- Sidebar Overlay -->
-<div class="sidebar-overlay" :class="{ active: isMenuOpen }" @click="closeMenu"></div>
-
-<!-- Sidebar -->
-<aside class="sidebar" :class="{ active: isMenuOpen }">
-  <div class="sidebar-header">
-    <span class="font-bold text-lg">Menú Principal</span>
-    <button @click="closeMenu" class="p-2 text-slate-400 hover:text-slate-900 dark:hover:text-white">
-      <span class="iconify text-xl" data-icon="lucide:x"></span>
-    </button>
-  </div>
-  <nav class="sidebar-nav">
-    <a href="/" class="sidebar-link">
-      <span class="iconify" data-icon="lucide:home"></span> Inicio
-    </a>
-    <a href="/salario.html" class="sidebar-link">
-      <span class="iconify" data-icon="lucide:circle-dollar-sign"></span> Salario Neto
-    </a>
-    <a href="/liquidaciones.html" class="sidebar-link">
-      <span class="iconify" data-icon="lucide:briefcase"></span> Indemnización
-    </a>
-    <a href="/isr-anual.html" class="sidebar-link active">
-      <span class="iconify" data-icon="lucide:calculator"></span> Declaración F-11
-    </a>
-    <a href="/comparador.html" class="sidebar-link">
-      <span class="iconify" data-icon="lucide:scale"></span> Planilla vs Honorarios
-    </a>
-    <div class="h-px bg-slate-100 dark:bg-slate-800 my-4"></div>
-    <a href="/autor.html" class="sidebar-link">
-      <span class="iconify" data-icon="lucide:user"></span> Sobre el Autor
-    </a>
-    <a href="/donaciones.html" class="sidebar-link text-blue-600 dark:text-blue-400">
-      <span class="iconify" data-icon="lucide:heart"></span> Apoyar Proyecto
-    </a>
-  </nav>
-</aside>
-
-<main class="max-w-2xl mx-auto px-5 py-8">
-
-  <!-- Encabezado sutil -->
-  <div class="mb-8 text-center" data-aos="fade-down">
-    <h1 class="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white mb-2 tracking-tight">ISR Anual <span v-text="DATA_2026.FISCAL_YEAR"></span> 🇸🇻</h1>
-    <p class="text-slate-500 font-medium">Simulador de declaración F-11 (Ejercicio fiscal anterior)</p>
-  </div>
-
-  <!-- Tab nav (Responsive Scrollable) -->
-  <div class="desktop-tabs-container mb-10">
-    <div class="desktop-tabs">
-      <a href="/salario.html" class="tab-btn">
-        <span class="iconify" data-icon="lucide:circle-dollar-sign"></span> <span>Salario</span>
-      </a>
-      <a href="/liquidaciones.html" class="tab-btn">
-        <span class="iconify" data-icon="lucide:briefcase"></span> <span>Indemnización</span>
-      </a>
-      <a href="/isr-anual.html" class="tab-btn active">
-        <span class="iconify" data-icon="lucide:calculator"></span> <span>F-11</span>
-      </a>
-      <a href="/comparador.html" class="tab-btn">
-        <span class="iconify" data-icon="lucide:scale"></span> <span>VS</span>
-      </a>
-      <a href="/autor.html" class="tab-btn">
-        <span class="iconify" data-icon="lucide:user"></span> <span>Autor</span>
-      </a>
-    </div>
-  </div>
-
-  <div class="glass-panel mb-8">
-      <div class="p-7">
-      <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-5">Ingresa salarios mes a mes y retenciones por servicios profesionales para generar tu cálculo general anual.</p>
-
-      <!-- Relleno rápido -->
-      <div class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-4 mb-5">
-        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Relleno rápido — mismo salario todos los meses</p>
-        <div class="flex gap-2">
-          <div class="inp-prefix flex-1">
-            <span class="inp-prefix-symbol">$</span>
-            <input id="salarioRapido" v-model="salarioRapidoInput" type="number" min="0" step="0.01" placeholder="Salario uniforme" class="inp" style="padding:10px 10px 10px 28px;" />
-          </div>
-          <button class="btn-secondary" style="padding: 10px 16px;" @click="llenarSalarioUniforme(salarioRapidoInput)">Aplicar a todos</button>
-        </div>
-      </div>
-
-      <!-- Toggle meses -->
-      <button @click="mostrandoMeses=!mostrandoMeses"
-              class="btn-toggle-meses w-full flex items-center justify-between bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-3 cursor-pointer font-semibold text-sm text-slate-600 dark:text-slate-300 mb-3 transition-all hover:border-slate-300 dark:hover:border-slate-500">
-        <span>Detalle mensual interactivo ({{ mesesDeclaracion.filter(m=>m.activo).length }}/12 activos)</span>
-        <svg :style="{ transform: mostrandoMeses?'rotate(180deg)':'rotate(0)', transition:'transform .2s' }" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-      </button>
-
-      <!-- Tabla de meses -->
-      <div v-if="mostrandoMeses" class="flex flex-col gap-1.5 mb-4 p-4 border border-slate-200 dark:border-slate-700 rounded-xl bg-slate-50 dark:bg-slate-900/50">
-        <div class="grid grid-cols-[44px_1fr_1fr] gap-1.5 px-0.5 mb-1">
-          <div></div>
-          <p class="text-xs text-slate-400 font-medium">Salario bruto</p>
-          <p class="text-xs text-slate-400 font-medium">Ret. servicios (10%)</p>
-        </div>
-        <div v-for="mes in mesesDeclaracion" :key="mes.index" class="grid grid-cols-[44px_1fr_1fr] gap-1.5 items-center">
-          <button @click="toggleMes(mes.index)" :class="['mes-chip', mes.activo?'on':'off']">{{ mes.nombre.slice(0,3) }}</button>
-          <div class="inp-prefix">
-            <span class="inp-prefix-symbol" style="font-size:.82rem;">$</span>
-            <input v-model="mes.salarioBruto" type="number" min="0" step="0.01"
-                   :disabled="!mes.activo" :placeholder="mes.activo?'Salario':'—'"
-                   class="inp" style="padding:8px 8px 8px 26px; font-size:.85rem;"
-                   :style="{ opacity: mes.activo?1:0.4 }" />
-          </div>
-          <div class="inp-prefix">
-            <span class="inp-prefix-symbol" style="font-size:.82rem;">$</span>
-            <input v-model="mes.retencionServicios" type="number" min="0" step="0.01"
-                   :disabled="!mes.activo" placeholder="0.00"
-                   class="inp" style="padding:8px 8px 8px 26px; font-size:.85rem;"
-                   :style="{ opacity: mes.activo?1:0.4 }" />
-          </div>
-        </div>
-      </div>
-
-      <!-- Otros ingresos y deducciones -->
-      <div class="grid grid-cols-2 gap-3 mb-6">
-        <div>
-          <label class="field-label">Otros ingresos anuales</label>
-          <div class="inp-prefix">
-            <span class="inp-prefix-symbol">$</span>
-            <input v-model="otrosIngresos" type="number" min="0" step="0.01" placeholder="0.00" class="inp" />
-          </div>
-        </div>
-        <div>
-          <label class="field-label">Gastos deducibles</label>
-          <div class="inp-prefix">
-            <span class="inp-prefix-symbol">$</span>
-            <input v-model="gastosDeducibles" type="number" min="0" step="0.01" placeholder="0.00" class="inp" />
-          </div>
-        </div>
-      </div>
-
-      <div class="flex gap-3 mb-6">
-        <button class="btn-main flex-1" @click="simularAnual">Simular declaración</button>
-        <button class="btn-secondary" @click="limpiarAnual">Limpiar</button>
-      </div>
-
-      <!-- Resultado anual -->
-      <div v-if="resultadoAnual" class="result-card">
-        <!-- Saldo -->
-        <div :class="resultadoAnual.tipoSaldo==='A_FAVOR' ? 'saldo-favor' : 'saldo-pagar'" class="mb-4">
-          <p class="text-sm font-semibold mb-2" :class="resultadoAnual.tipoSaldo==='A_FAVOR' ? 'text-emerald-700' : 'text-red-600'">
-            {{ resultadoAnual.tipoSaldo==='A_FAVOR' ? '✓ El Estado debe devolverte' : '⚠ Deberás pagar en abril ' + (DATA_2026.CURRENT_YEAR) }}
-          </p>
-          <div class="saldo-num" :class="resultadoAnual.tipoSaldo==='A_FAVOR' ? 'text-emerald-700' : 'text-red-600'">
-            {{ fmt(resultadoAnual.saldo) }}
-          </div>
-          <p class="text-sm mt-2" :class="resultadoAnual.tipoSaldo==='A_FAVOR' ? 'text-emerald-600' : 'text-red-500'">
-            Tasa efectiva ISR: {{ pct(resultadoAnual.tasaEfectiva) }}
-          </p>
-        </div>
-
-        <!-- Desglose -->
-        <div class="result-panel">
-          <div class="result-panel-header"><span class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Desglose anual</span></div>
-          <div class="result-row"><span class="result-row-label">Total salarios brutos</span><span class="result-row-value">{{ fmt(resultadoAnual.totalSalariosBruto) }}</span></div>
-          <div class="result-row"><span class="result-row-label">Deducción ISSS anual</span><span class="result-row-value negative">— {{ fmt(resultadoAnual.deduccionISSSAnual) }}</span></div>
-          <div class="result-row"><span class="result-row-label">Deducción AFP anual</span><span class="result-row-value negative">— {{ fmt(resultadoAnual.deduccionAFPAnual) }}</span></div>
-          <div v-if="resultadoAnual.gastosDeducibles>0" class="result-row"><span class="result-row-label">Gastos deducibles</span><span class="result-row-value negative">— {{ fmt(resultadoAnual.gastosDeducibles) }}</span></div>
-          <div class="result-row bg-blue-50 dark:bg-blue-900/20"><span class="text-sm text-blue-700 dark:text-blue-300 font-medium">Renta neta anual base</span><span class="font-bold text-blue-700 dark:text-blue-300 font-mono text-sm">{{ fmt(resultadoAnual.rentaNetaAnual) }}</span></div>
-          <div class="result-row"><span class="result-row-label">ISR determinado por ley</span><span class="result-row-value">{{ fmt(resultadoAnual.isrDeterminado) }}</span></div>
-          <div class="result-row"><span class="result-row-label">Retenciones pagadas mes a mes</span><span class="result-row-value negative">— {{ fmt(resultadoAnual.totalRetencionesAsalariado) }}</span></div>
-          <div v-if="resultadoAnual.totalRetencionesServicios>0" class="result-row"><span class="result-row-label">Retenciones por honorarios (10%)</span><span class="result-row-value negative">— {{ fmt(resultadoAnual.totalRetencionesServicios) }}</span></div>
-        </div>
-
-        <button @click="generarPDF" class="btn-secondary w-full mt-3 text-center text-sm">
-          Exportar borrador F-11 en PDF
-        </button>
-      </div>
-
-    </div>
-  </div>
-</main>
-
-</main>
-
-<footer class="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 py-10 mt-8">
-  <div class="max-w-2xl mx-auto px-5">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-      <div>
-        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Base legal</p>
-        <div class="flex flex-col gap-2">
-          <a href="https://www.asamblea.gob.sv/sites/default/files/documents/decretos/D3E7B2C1-396C-4B44-B1F3-2B056D4C617F.pdf#page=35" target="_blank" class="text-xs text-slate-500 hover:text-blue-500 transition-colors flex items-center gap-2">
-            <span class="iconify" data-icon="lucide:external-link"></span> Art. 37 ISR reformado (Tabla Anual)
-          </a>
-          <a href="https://www.hacienda.gob.sv/cat/f-11-declaracion-del-impuesto-sobre-la-renta/" target="_blank" class="text-xs text-slate-500 hover:text-blue-500 transition-colors flex items-center gap-2">
-            <span class="iconify" data-icon="lucide:external-link"></span> Formulario F-11 Hacienda
-          </a>
-        </div>
-      </div>
-      <div class="flex flex-col items-start md:items-end">
-        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Apoyo</p>
-        <a href="/donaciones.html" class="btn-coffee text-sm">
-          <span class="iconify" data-icon="lucide:heart"></span> Apoyar proyecto
+    <div class="sidebar-scroll">
+        <div class="pt-3"></div>
+        <nav class="space-y-0.5"><a href="/" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg><span>Portada</span>
         </a>
-      </div>
-    </div>
-    <!-- Bottom Area -->
-    <div class="border-t border-slate-100 dark:border-white/5 pt-8 mt-8 flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left">
-      <div class="max-w-xl">
-        <p class="text-[11px] text-slate-500 leading-relaxed flex items-start gap-2">
-          <span class="iconify shrink-0 text-amber-500 text-sm" data-icon="lucide:alert-triangle"></span>
-          <span><strong>Nota legal:</strong> Este simulador es informativo y no sustituye asesoría profesional. Los cálculos corresponden a la declaración de <span v-text="DATA_2026.FISCAL_YEAR"></span>.</span>
+        <a href="/guia.html" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/></svg><span>Guía de usuario</span>
+        </a></nav>
+        <p class="sidebar-group">Calculadoras</p>
+        <nav class="space-y-0.5"><a href="/salario.html" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg><span>Salario neto</span>
+        </a>
+        <a href="/liquidaciones.html" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="14" x="2" y="7" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg><span>Prestaciones y liquidación</span>
+        </a>
+        <a href="/isr-anual.html" class="nav-link" aria-current="page">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v5h5"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Declaración anual F-11</span>
+        </a>
+        <a href="/comparador.html" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg><span>Planilla vs. honorarios</span>
+        </a></nav>
+        <p class="sidebar-group">Proyecto</p>
+        <nav class="space-y-0.5"><a href="/autor.html" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Sobre el autor</span>
+        </a>
+        <a href="/donaciones.html" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg><span>Apoyar el proyecto</span>
+        </a></nav>
+        <p class="sidebar-group">Legal</p>
+        <nav class="space-y-0.5"><a href="/legal/privacidad.html" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V6l8-3 8 3z"/></svg><span>Privacidad</span>
+        </a>
+        <a href="/legal/terminos.html" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v5h5"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Términos de uso</span>
+        </a></nav>
+      <div class="mt-6 rounded-lg border border-ink-200 bg-ink-50 p-3 dark:border-ink-800 dark:bg-ink-950/60">
+        <p class="text-[0.6875rem] font-semibold uppercase tracking-wide text-ink-500 dark:text-ink-400">Parámetros vigentes</p>
+        <p class="mt-1 text-xs leading-relaxed text-ink-600 dark:text-ink-300">
+          Tablas del <strong class="font-semibold text-ink-900 dark:text-white">Art. 37 LISR</strong> reformado por el D.L. 293 (30/04/2025) y salarios mínimos de junio 2025.
         </p>
       </div>
+    </div>
+  </aside>
 
-      <div class="flex items-center gap-6 shrink-0">
-        <div class="text-right hidden sm:block">
-          <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">v<span v-text="DATA_2026.VERSION"></span></p>
-          <p class="text-[10px] text-slate-500">El Salvador</p>
+    <div class="app-main">
+      <header class="topbar">
+      <button type="button" class="icon-btn lg:hidden" data-sidebar-open aria-label="Abrir menú" aria-expanded="false">
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/></svg>
+      </button>
+      <div class="flex min-w-0 flex-1 items-center gap-3">
+        <span class="truncate text-sm font-semibold text-ink-900 dark:text-white lg:text-[0.9375rem]">Declaración anual F-11</span>
+      </div>
+      <a href="/guia.html" class="btn btn-secondary btn-sm hidden sm:inline-flex">
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg> Guía de usuario
+      </a>
+      <a href="/guia.html" class="icon-btn sm:hidden" aria-label="Guía de usuario">
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+      </a>
+      <button type="button" class="icon-btn" data-theme-toggle aria-label="Cambiar entre tema claro y oscuro">
+        <span class="hidden dark:block"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9"/></svg></span>
+        <span class="block dark:hidden"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg></span>
+      </button>
+    </header>
+
+      <main id="contenido" class="app-content">
+        <div id="app-isranual" v-cloak>
+
+          <header class="mb-6">
+            <h1 class="text-2xl font-bold sm:text-3xl">Simulador de declaración anual (F-11)</h1>
+            <p class="mt-2 max-w-prose text-sm leading-relaxed text-ink-500 dark:text-ink-400">
+              Anticipe su declaración de renta antes de abril. Ingrese lo que ganó mes a mes
+              y descubra si le queda saldo a favor o si le tocará pagar.
+            </p>
+          </header>
+
+          <div class="grid grid-safe gap-5 lg:grid-cols-[minmax(0,1fr)_22rem]">
+
+            <!-- ══════════════ ENTRADA ══════════════ -->
+            <div class="space-y-5">
+
+              <!-- Relleno rápido -->
+              <section class="card">
+                <div class="card-header">
+                  <h2 class="card-title">Ingresos del año {{ DATA_2026.FISCAL_YEAR }}</h2>
+                  <span class="card-subtitle">{{ mesesActivos }} de 12 meses activos</span>
+                </div>
+                <div class="card-body space-y-4">
+                  <div class="flex flex-col gap-2 sm:flex-row sm:items-end">
+                    <div class="min-w-0 flex-1">
+                      <label class="form-label" for="rapido">Rellenar todos los meses con el mismo salario</label>
+                      <div class="input-money">
+                        <span class="input-money-symbol">$</span>
+                        <input id="rapido" class="form-input" type="number" inputmode="decimal"
+                               min="0" step="0.01" placeholder="1,200.00" v-model="salarioRapido"
+                               @keydown.enter="llenarTodos" />
+                      </div>
+                    </div>
+                    <button class="btn btn-secondary shrink-0" type="button" @click="llenarTodos">
+                      Aplicar a los 12
+                    </button>
+                  </div>
+
+                  <div class="flex flex-wrap items-center gap-2">
+                    <button class="btn btn-ghost btn-sm" type="button" @click="usarSalarioGuardado">
+                      Usar mi salario calculado
+                    </button>
+                    <label class="ml-auto flex cursor-pointer items-center gap-2 text-sm text-ink-600 dark:text-ink-300">
+                      <input type="checkbox" v-model="mostrarServicios"
+                             class="h-4 w-4 rounded border-ink-300 text-brand-600 focus:ring-brand-500 dark:border-ink-600 dark:bg-ink-900" />
+                      Tengo servicios profesionales
+                    </label>
+                  </div>
+
+                  <!-- Tabla de meses -->
+                  <div class="table-wrap">
+                    <table class="table" :class="mostrarServicios ? 'min-w-[42rem]' : 'min-w-[26rem]'">
+                      <thead>
+                        <tr>
+                          <th scope="col">Mes</th>
+                          <th scope="col" class="text-right">Salario bruto</th>
+                          <th v-if="mostrarServicios" scope="col" class="text-right">Ingreso por servicios</th>
+                          <th v-if="mostrarServicios" scope="col" class="text-right">Retención 10%</th>
+                          <th scope="col" class="text-center">Activo</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr v-for="(m, i) in meses" :key="m.index" :class="{ 'opacity-45': !m.activo }">
+                          <td class="font-medium text-ink-900 dark:text-white">{{ m.nombre }}</td>
+                          <td>
+                            <input class="form-input h-9 min-h-0 py-1 text-right font-mono text-sm"
+                                   type="number" inputmode="decimal" min="0" step="0.01"
+                                   placeholder="0.00" v-model="m.salarioBruto" :disabled="!m.activo"
+                                   :aria-label="'Salario bruto de ' + m.nombre" />
+                          </td>
+                          <td v-if="mostrarServicios">
+                            <input class="form-input h-9 min-h-0 py-1 text-right font-mono text-sm"
+                                   type="number" inputmode="decimal" min="0" step="0.01"
+                                   placeholder="0.00" v-model="m.ingresosServicios" :disabled="!m.activo"
+                                   :aria-label="'Ingreso por servicios de ' + m.nombre" />
+                          </td>
+                          <td v-if="mostrarServicios">
+                            <input class="form-input h-9 min-h-0 py-1 text-right font-mono text-sm"
+                                   type="number" inputmode="decimal" min="0" step="0.01"
+                                   placeholder="0.00" v-model="m.retencionServicios" :disabled="!m.activo"
+                                   :aria-label="'Retención por servicios de ' + m.nombre" />
+                          </td>
+                          <td class="text-center">
+                            <input type="checkbox" :checked="m.activo" @change="toggleMes(i)"
+                                   class="h-4 w-4 rounded border-ink-300 text-brand-600 focus:ring-brand-500 dark:border-ink-600 dark:bg-ink-900"
+                                   :aria-label="'Incluir ' + m.nombre + ' en el cálculo'" />
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </section>
+
+              <!-- Otros conceptos -->
+              <section class="card">
+                <div class="card-header"><h2 class="card-title">Otros conceptos</h2></div>
+                <div class="card-body grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <label class="form-label" for="aguinaldo">Aguinaldo recibido</label>
+                    <div class="input-money">
+                      <span class="input-money-symbol">$</span>
+                      <input id="aguinaldo" class="form-input" type="number" inputmode="decimal"
+                             min="0" step="0.01" placeholder="0.00" v-model="aguinaldoRecibido" />
+                    </div>
+                    <p class="form-hint">Exento hasta {{ fmt(DATA_2026.AGUINALDO.EXENCION_ISR) }}.</p>
+                  </div>
+                  <div>
+                    <label class="form-label" for="otros">Otros ingresos gravados</label>
+                    <div class="input-money">
+                      <span class="input-money-symbol">$</span>
+                      <input id="otros" class="form-input" type="number" inputmode="decimal"
+                             min="0" step="0.01" placeholder="0.00" v-model="otrosIngresos" />
+                    </div>
+                    <p class="form-hint">Alquileres, intereses u otras rentas del año.</p>
+                  </div>
+                </div>
+              </section>
+
+              <!-- Deducciones -->
+              <section class="card">
+                <div class="card-header">
+                  <h2 class="card-title">Deducciones personales</h2>
+                  <span class="card-subtitle">Arts. 29 y 33 LISR</span>
+                </div>
+                <div class="card-body space-y-3">
+                  <label class="form-check">
+                    <input type="checkbox" v-model="usarDeduccionFija" />
+                    <span class="min-w-0">
+                      <span class="block text-sm font-medium text-ink-900 dark:text-white">
+                        Usar la deducción fija de {{ fmt(deduccionFijaInfo.monto) }}
+                      </span>
+                      <span class="mt-0.5 block text-xs leading-relaxed text-ink-500 dark:text-ink-400">
+                        Disponible para personas asalariadas con renta anual de hasta
+                        {{ fmt(deduccionFijaInfo.rentaMaxima) }}. No requiere comprobantes, pero
+                        es excluyente de los gastos médicos y colegiaturas.
+                      </span>
+                    </span>
+                  </label>
+
+                  <div class="grid gap-4 sm:grid-cols-2" :class="{ 'opacity-50': usarDeduccionFija }">
+                    <div>
+                      <label class="form-label" for="medicos">Gastos médicos</label>
+                      <div class="input-money">
+                        <span class="input-money-symbol">$</span>
+                        <input id="medicos" class="form-input" type="number" inputmode="decimal"
+                               min="0" step="0.01" placeholder="0.00" v-model="gastosMedicos"
+                               :disabled="usarDeduccionFija" />
+                      </div>
+                      <p class="form-hint">Tope legal: {{ fmt(topeGastos) }}.</p>
+                    </div>
+                    <div>
+                      <label class="form-label" for="colegiatura">Colegiaturas</label>
+                      <div class="input-money">
+                        <span class="input-money-symbol">$</span>
+                        <input id="colegiatura" class="form-input" type="number" inputmode="decimal"
+                               min="0" step="0.01" placeholder="0.00" v-model="colegiaturas"
+                               :disabled="usarDeduccionFija" />
+                      </div>
+                      <p class="form-hint">Tope legal: {{ fmt(topeGastos) }}.</p>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <div v-if="errores.length" class="alert alert-danger" role="alert">
+                <svg class="alert-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <circle cx="12" cy="12" r="10" /><path d="M12 8v4" /><path d="M12 16h.01" />
+                </svg>
+                <ul class="space-y-1">
+                  <li v-for="e in errores" :key="e">{{ e }}</li>
+                </ul>
+              </div>
+
+              <div class="flex flex-col gap-2 sm:flex-row">
+                <button class="btn btn-primary flex-1" type="button" @click="simular()">
+                  Simular mi declaración
+                </button>
+                <button class="btn btn-secondary" type="button" @click="limpiar">Limpiar todo</button>
+              </div>
+            </div>
+
+            <!-- ══════════════ RESULTADO ══════════════ -->
+            <div class="space-y-5 self-start lg:sticky lg:top-[calc(var(--topbar-h)+1.5rem)]">
+
+              <div v-if="!resultado" class="card">
+                <div class="card-body">
+                  <div class="empty-state">
+                    <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                         stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z" />
+                      <path d="M14 2v5h5" /><path d="M16 13H8" /><path d="M16 17H8" />
+                    </svg>
+                    <p class="text-base font-semibold text-ink-900 dark:text-white">Aún sin resultado</p>
+                    <p class="mt-1 text-sm text-ink-500 dark:text-ink-400">
+                      Complete sus ingresos y pulse «Simular».
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <template v-else>
+                <!-- Saldo -->
+                <section class="card animate-in overflow-hidden">
+                  <div class="p-5 text-center"
+                       :class="resultado.tipoSaldo === 'A_FAVOR'
+                         ? 'bg-emerald-50 dark:bg-emerald-950/40'
+                         : 'bg-rose-50 dark:bg-rose-950/40'">
+                    <p class="text-xs font-semibold uppercase tracking-wide"
+                       :class="resultado.tipoSaldo === 'A_FAVOR'
+                         ? 'text-emerald-700 dark:text-emerald-300'
+                         : 'text-rose-700 dark:text-rose-300'">
+                      {{ resultado.tipoSaldo === 'A_FAVOR' ? 'Saldo a su favor' : 'Impuesto a pagar' }}
+                    </p>
+                    <p class="kpi-value mt-2"
+                       :class="resultado.tipoSaldo === 'A_FAVOR'
+                         ? 'text-emerald-700 dark:text-emerald-300'
+                         : 'text-rose-700 dark:text-rose-300'">
+                      {{ fmt(resultado.saldo) }}
+                    </p>
+                    <p class="mt-2 text-xs leading-relaxed"
+                       :class="resultado.tipoSaldo === 'A_FAVOR'
+                         ? 'text-emerald-700/80 dark:text-emerald-300/80'
+                         : 'text-rose-700/80 dark:text-rose-300/80'">
+                      {{ resultado.tipoSaldo === 'A_FAVOR'
+                          ? 'Retuvieron más de lo que le corresponde: puede solicitar la devolución.'
+                          : 'Deberá completar este monto al presentar su declaración.' }}
+                    </p>
+                  </div>
+                </section>
+
+                <!-- Detalle tipo F-11 -->
+                <section class="card">
+                  <div class="card-header"><h2 class="card-title">Detalle del cálculo</h2></div>
+                  <div>
+                    <div class="result-row result-row-emphasis">
+                      <span class="result-label font-medium text-ink-900 dark:text-white">Ingresos</span>
+                      <span class="result-value"></span>
+                    </div>
+                    <div class="result-row">
+                      <span class="result-label">Salarios brutos</span>
+                      <span class="result-value">{{ fmt(resultado.totalSalariosBruto) }}</span>
+                    </div>
+                    <div v-if="resultado.totalIngresosServicios > 0" class="result-row">
+                      <span class="result-label">Servicios profesionales</span>
+                      <span class="result-value">{{ fmt(resultado.totalIngresosServicios) }}</span>
+                    </div>
+                    <div v-if="resultado.otrosIngresos > 0" class="result-row">
+                      <span class="result-label">Otros ingresos</span>
+                      <span class="result-value">{{ fmt(resultado.otrosIngresos) }}</span>
+                    </div>
+                    <div v-if="resultado.aguinaldoRecibido > 0" class="result-row">
+                      <span class="result-label">
+                        Aguinaldo gravado
+                        <span class="block text-xs text-ink-400">
+                          {{ fmt(resultado.aguinaldoExento) }} quedaron exentos
+                        </span>
+                      </span>
+                      <span class="result-value">{{ fmt(resultado.aguinaldoGravado) }}</span>
+                    </div>
+                    <div class="result-row">
+                      <span class="result-label font-medium">Renta obtenida</span>
+                      <span class="result-value">{{ fmt(resultado.totalIngresosGravados) }}</span>
+                    </div>
+
+                    <div class="result-row result-row-emphasis">
+                      <span class="result-label font-medium text-ink-900 dark:text-white">Deducciones</span>
+                      <span class="result-value"></span>
+                    </div>
+                    <div class="result-row">
+                      <span class="result-label">Cotización ISSS</span>
+                      <span class="result-value result-value-neg">− {{ fmt(resultado.deduccionISSSAnual) }}</span>
+                    </div>
+                    <div class="result-row">
+                      <span class="result-label">Cotización AFP</span>
+                      <span class="result-value result-value-neg">− {{ fmt(resultado.deduccionAFPAnual) }}</span>
+                    </div>
+                    <div v-if="resultado.usaDeduccionFija" class="result-row">
+                      <span class="result-label">Deducción fija</span>
+                      <span class="result-value result-value-neg">− {{ fmt(resultado.deduccionFija) }}</span>
+                    </div>
+                    <template v-else>
+                      <div v-if="resultado.gastosMedicos > 0" class="result-row">
+                        <span class="result-label">Gastos médicos</span>
+                        <span class="result-value result-value-neg">− {{ fmt(resultado.gastosMedicos) }}</span>
+                      </div>
+                      <div v-if="resultado.colegiaturas > 0" class="result-row">
+                        <span class="result-label">Colegiaturas</span>
+                        <span class="result-value result-value-neg">− {{ fmt(resultado.colegiaturas) }}</span>
+                      </div>
+                    </template>
+
+                    <div class="result-row result-row-emphasis">
+                      <span class="result-label font-medium text-ink-900 dark:text-white">Renta neta imponible</span>
+                      <span class="result-value">{{ fmt(resultado.rentaNetaAnual) }}</span>
+                    </div>
+                    <div class="result-row">
+                      <span class="result-label">Impuesto determinado</span>
+                      <span class="result-value">{{ fmt(resultado.isrDeterminado) }}</span>
+                    </div>
+                    <div class="result-row">
+                      <span class="result-label">Retenido en planilla</span>
+                      <span class="result-value">{{ fmt(resultado.totalRetencionesAsalariado) }}</span>
+                    </div>
+                    <div v-if="resultado.totalRetencionesServicios > 0" class="result-row">
+                      <span class="result-label">Retenido por servicios</span>
+                      <span class="result-value">{{ fmt(resultado.totalRetencionesServicios) }}</span>
+                    </div>
+                    <div class="result-total">
+                      <span class="result-total-label">
+                        {{ resultado.tipoSaldo === 'A_FAVOR' ? 'A favor' : 'A pagar' }}
+                      </span>
+                      <span class="result-total-value">{{ fmt(resultado.saldo) }}</span>
+                    </div>
+                  </div>
+                </section>
+
+                <!-- Aviso de deducción fija disponible -->
+                <div v-if="resultado.califacaDeduccionFija && !resultado.usaDeduccionFija"
+                     class="alert alert-info">
+                  <svg class="alert-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="10" /><path d="M12 16v-4" /><path d="M12 8h.01" />
+                  </svg>
+                  <p>
+                    Calificas para la deducción fija de {{ fmt(deduccionFijaInfo.monto) }} y te
+                    conviene más que los gastos documentados que ingresaste. Actívala arriba.
+                  </p>
+                </div>
+
+                <!-- Recálculos obligatorios -->
+                <section v-if="recalculos" class="card">
+                  <div class="card-header">
+                    <h2 class="card-title">Recálculo de junio y diciembre</h2>
+                    <span class="card-subtitle">Obligación del patrono</span>
+                  </div>
+                  <div class="card-body space-y-3">
+                    <p class="text-xs leading-relaxed text-ink-500 dark:text-ink-400">
+                      Dos veces al año el patrono debe comparar lo retenido contra lo que
+                      realmente corresponde y ajustar la diferencia en la última planilla
+                      del semestre.
+                    </p>
+                    <div v-for="r in recalculos" :key="r.periodo"
+                         class="rounded-lg border border-ink-200 p-3 dark:border-ink-800">
+                      <div class="flex items-start justify-between gap-2">
+                        <span class="min-w-0">
+                          <span class="block text-sm font-medium text-ink-900 dark:text-white">{{ r.periodoLabel }}</span>
+                          <span class="block text-xs text-ink-500 dark:text-ink-400">{{ r.periodoDetalle }}</span>
+                        </span>
+                        <span class="badge"
+                              :class="r.tipoAjuste === 'RETENER_MAS' ? 'badge-warning'
+                                    : r.tipoAjuste === 'DEVOLVER' ? 'badge-success' : 'badge-neutral'">
+                          {{ r.tipoAjuste === 'RETENER_MAS' ? 'Retener más'
+                           : r.tipoAjuste === 'DEVOLVER' ? 'Devolver' : 'Sin ajuste' }}
+                        </span>
+                      </div>
+                      <div class="mt-2 grid grid-cols-2 gap-2 text-xs">
+                        <div>
+                          <span class="block text-ink-500 dark:text-ink-400">Retenido</span>
+                          <span class="font-mono font-semibold text-ink-900 dark:text-white">{{ fmt(r.retenidoPeriodo) }}</span>
+                        </div>
+                        <div>
+                          <span class="block text-ink-500 dark:text-ink-400">Corresponde</span>
+                          <span class="font-mono font-semibold text-ink-900 dark:text-white">{{ fmt(r.isrCorrespondiente) }}</span>
+                        </div>
+                      </div>
+                      <p v-if="r.aplicaDeduccionFija" class="mt-2 text-xs text-ink-500 dark:text-ink-400">
+                        Incluye la deducción fija de {{ fmt(r.deduccionFija) }} que corresponde al período.
+                      </p>
+                      <p v-if="r.tipoAjuste !== 'SIN_AJUSTE'" class="mt-2 font-mono text-sm font-semibold"
+                         :class="r.tipoAjuste === 'RETENER_MAS' ? 'text-amber-600 dark:text-amber-400' : 'text-emerald-600 dark:text-emerald-400'">
+                        Diferencia: {{ fmt(r.diferencia) }}
+                      </p>
+                    </div>
+                    <p class="text-xs leading-relaxed text-ink-500 dark:text-ink-400">
+                      Tablas del Decreto Ejecutivo No. 10 (2025), Art. 1 literal f). El segundo
+                      recálculo acumula todo el año, no solo el segundo semestre.
+                    </p>
+                  </div>
+                </section>
+
+                <button class="btn btn-secondary btn-block" type="button"
+                        @click="descargarPDF" :disabled="generandoPDF">
+                  <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <path d="m7 10 5 5 5-5" /><path d="M12 15V3" />
+                  </svg>
+                  {{ generandoPDF ? 'Generando…' : 'Descargar borrador en PDF' }}
+                </button>
+
+                <div class="alert alert-neutral text-xs">
+                  <span>
+                    Tasa efectiva sobre la renta obtenida:
+                    <strong class="font-mono">{{ pct(resultado.tasaEfectiva) }}</strong>.
+                    Este borrador es una simulación y no sustituye el formulario oficial del
+                    Ministerio de Hacienda.
+                  </span>
+                </div>
+              </template>
+            </div>
+          </div>
+
+          <div v-if="toast" role="status" aria-live="polite"
+               class="fixed inset-x-4 bottom-[calc(var(--dock-h)+1rem)] z-50 mx-auto max-w-sm lg:inset-x-auto lg:bottom-6 lg:right-6 lg:mx-0">
+            <div class="alert shadow-pop" :class="'alert-' + toast.tipo">
+              <span class="min-w-0 flex-1">{{ toast.mensaje }}</span>
+              <button type="button" class="shrink-0 opacity-60 hover:opacity-100"
+                      @click="cerrarToast" aria-label="Cerrar aviso">✕</button>
+            </div>
+          </div>
         </div>
-        <div class="h-8 w-px bg-slate-200 dark:bg-white/10 hidden sm:block"></div>
-        <div class="flex items-center gap-3">
-           <button @click="toggleTheme" class="theme-toggle" :title="isDarkMode ? 'Modo claro' : 'Modo oscuro'">
-             <span class="iconify text-lg" :data-icon="isDarkMode ? 'lucide:moon' : 'lucide:sun'"></span>
-           </button>
+      </main>
+
+      <footer class="border-t border-ink-200 bg-white dark:border-ink-800 dark:bg-ink-900">
+      <div class="mx-auto w-full max-w-content px-4 py-10 sm:px-6">
+        <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          <div class="lg:col-span-2">
+            <a href="/" class="flex items-center gap-2.5 mb-3">
+      <svg class="h-8 w-8 shrink-0" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+  <rect width="32" height="32" rx="8" fill="#1d43d8"/>
+  <rect x="8" y="17" width="4" height="8" rx="1.5" fill="#93bbfd"/>
+  <rect x="14" y="12" width="4" height="13" rx="1.5" fill="#dbe8fe"/>
+  <rect x="20" y="7" width="4" height="18" rx="1.5" fill="#ffffff"/>
+</svg>
+      <span class="text-[1.0625rem] font-bold tracking-tight text-ink-950 dark:text-white">Renta<span class="text-brand-600 dark:text-brand-400">SV</span></span>
+    </a>
+            <p class="max-w-sm text-sm leading-relaxed text-ink-500 dark:text-ink-400">
+              Herramienta gratuita y sin servidores para que cualquier persona en El Salvador
+              calcule su salario, sus prestaciones y su renta con las tablas oficiales vigentes.
+            </p>
+            <a href="/guia.html" class="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-brand-600 hover:underline dark:text-brand-400">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/></svg> Leer la guía de usuario
+            </a>
+          </div>
+          <div>
+            <p class="mb-3 text-[0.6875rem] font-semibold uppercase tracking-wide text-ink-500 dark:text-ink-400">Calculadoras</p>
+            <ul class="space-y-2 text-sm">
+              <li><a href="/salario.html" class="text-ink-600 hover:text-brand-600 dark:text-ink-300 dark:hover:text-brand-400">Salario neto</a></li>
+              <li><a href="/liquidaciones.html" class="text-ink-600 hover:text-brand-600 dark:text-ink-300 dark:hover:text-brand-400">Prestaciones y liquidación</a></li>
+              <li><a href="/isr-anual.html" class="text-ink-600 hover:text-brand-600 dark:text-ink-300 dark:hover:text-brand-400">Declaración anual F-11</a></li>
+              <li><a href="/comparador.html" class="text-ink-600 hover:text-brand-600 dark:text-ink-300 dark:hover:text-brand-400">Planilla vs. honorarios</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="mb-3 text-[0.6875rem] font-semibold uppercase tracking-wide text-ink-500 dark:text-ink-400">Base legal</p>
+            <ul class="space-y-2 text-sm">
+              <li><a href="https://www.asamblea.gob.sv/node/13558" target="_blank" rel="noopener" class="text-ink-600 hover:text-brand-600 dark:text-ink-300 dark:hover:text-brand-400">Art. 37 LISR (D.L. 293)</a></li>
+              <li><a href="https://www.asamblea.gob.sv/node/13399" target="_blank" rel="noopener" class="text-ink-600 hover:text-brand-600 dark:text-ink-300 dark:hover:text-brand-400">Aguinaldo exento (D.L. 596)</a></li>
+              <li><a href="https://webapps.ilo.org/public/spanish/region/ampro/mdtsanjose/papers/cod_elsa.htm" target="_blank" rel="noopener" class="text-ink-600 hover:text-brand-600 dark:text-ink-300 dark:hover:text-brand-400">Código de Trabajo</a></li>
+              <li><a href="/legal/privacidad.html" class="text-ink-600 hover:text-brand-600 dark:text-ink-300 dark:hover:text-brand-400">Privacidad</a></li>
+              <li><a href="/legal/terminos.html" class="text-ink-600 hover:text-brand-600 dark:text-ink-300 dark:hover:text-brand-400">Términos de uso</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="mt-8 flex flex-col gap-4 border-t border-ink-200 pt-6 dark:border-ink-800 sm:flex-row sm:items-center sm:justify-between">
+          <p class="flex items-start gap-2 text-xs leading-relaxed text-ink-500 dark:text-ink-400">
+            <svg class="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+            <span><strong class="font-semibold text-ink-700 dark:text-ink-200">Aviso:</strong> simulador informativo. No sustituye asesoría profesional ni el dictamen del Ministerio de Hacienda.</span>
+          </p>
+          <div class="flex shrink-0 items-center gap-4 text-xs text-ink-500 dark:text-ink-400">
+            <span>© 2026 RentaSV</span>
+            <a href="https://github.com/dev-perazarich/simulador-isr-sv" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 hover:text-brand-600 dark:hover:text-brand-400">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg> Código abierto
+            </a>
+          </div>
         </div>
       </div>
+    </footer>
     </div>
+
+    <nav class="dock" aria-label="Accesos rápidos">
+      <a href="/guia.html" class="dock-item">
+        <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/></svg><span>Guía</span>
+      </a>
+      <a href="/salario.html" class="dock-item">
+        <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg><span>Salario</span>
+      </a>
+      <a href="/liquidaciones.html" class="dock-item">
+        <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="14" x="2" y="7" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg><span>Prestaciones</span>
+      </a>
+      <a href="/isr-anual.html" class="dock-item" aria-current="page">
+        <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v5h5"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>F-11</span>
+      </a>
+      <a href="/comparador.html" class="dock-item">
+        <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg><span>Comparar</span>
+      </a>
+    </nav>
   </div>
-</footer>
 
-<!-- Bottom Nav (Mobile) -->
-<nav class="mobile-nav-dock">
-  <a href="/salario.html" class="dock-btn">
-    <span class="iconify" data-icon="lucide:circle-dollar-sign"></span> Salario
-  </a>
-  <a href="/liquidaciones.html" class="dock-btn">
-    <span class="iconify" data-icon="lucide:briefcase"></span> Indemnización
-  </a>
-  <a href="/isr-anual.html" class="dock-btn active">
-    <span class="iconify" data-icon="lucide:calculator"></span> F-11
-  </a>
-  <a href="/comparador.html" class="dock-btn">
-    <span class="iconify" data-icon="lucide:scale"></span> VS
-  </a>
-  <a href="/autor.html" class="dock-btn">
-    <span class="iconify" data-icon="lucide:user"></span> Autor
-  </a>
-</nav>
-
-</div>
-<script type="module">import '/js/app-isranual.js';</script>
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js?v=1.10').catch(() => {}));
-  }
-</script>
+  <script src="/js/shell.js" defer></script>
+  <script defer src="/vendor/vue.global.prod.js"></script>
+  <script type="module" src="/js/app-isranual.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      addEventListener('load', function () {
+        navigator.serviceWorker.register('/sw.js').catch(function () {});
+      });
+    }
+  </script>
 </body>
 </html>

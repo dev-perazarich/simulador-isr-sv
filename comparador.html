@@ -2,322 +2,500 @@
 <html lang="es-SV">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#0a1628" />
-  <meta name="description" content="Comparador de Salario en Planilla vs Servicios Profesionales (Freelancer) El Salvador." />
-  <title>RentaSV — Simulador ISR El Salvador 2025-2026</title>
-  <link rel="manifest" href="/manifest.json" />
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Planilla o servicios profesionales: comparador El Salvador 2026 | RentaSV</title>
+  <meta name="description" content="Calculadora gratuita y privada para El Salvador: compara cuánto recibes en planilla frente a honorarios con retención del 10%, incluyendo el valor real de las prestaciones que dejas de acumular." />
+  <link rel="canonical" href="https://simulador-isr-sv.vercel.app/comparador.html" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta name="author" content="Ricardo Peraza" />
+  <meta name="theme-color" content="#ffffff" />
 
-  <!-- Fuentes -->
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="RentaSV" />
+  <meta property="og:locale" content="es_SV" />
+  <meta property="og:title" content="Planilla o servicios profesionales: comparador El Salvador 2026 | RentaSV" />
+  <meta property="og:description" content="Calculadora gratuita y privada para El Salvador: compara cuánto recibes en planilla frente a honorarios con retención del 10%, incluyendo el valor real de las prestaciones que dejas de acumular." />
+  <meta property="og:url" content="https://simulador-isr-sv.vercel.app/comparador.html" />
+  <meta property="og:image" content="https://simulador-isr-sv.vercel.app/icons/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Planilla o servicios profesionales: comparador El Salvador 2026 | RentaSV" />
+  <meta name="twitter:description" content="Calculadora gratuita y privada para El Salvador: compara cuánto recibes en planilla frente a honorarios con retención del 10%, incluyendo el valor real de las prestaciones que dejas de acumular." />
+  <meta name="twitter:image" content="https://simulador-isr-sv.vercel.app/icons/og-image.png" />
+
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
 
-  <!-- Tailwind CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = { darkMode: ['selector', '[data-theme="dark"]'], theme: { extend: { fontFamily: { sans: ['Outfit', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'], }, colors: { ink: { DEFAULT: '#0a1628', 2: '#1e2d45', 3: '#334155' }, primary: { DEFAULT: '#1a56db', dark: '#1e40af', light: '#eff6ff', mid: '#3b82f6' }, }, }, }, };
-  </script>
-
-  <!-- Theme detection - runs before body renders to prevent flash -->
-  <script>
-    // Check for saved theme preference or use system preference
-    const THEME_KEY = 'sv-isr-theme';
-    let savedTheme = null;
-    try {
-      savedTheme = localStorage.getItem(THEME_KEY);
-    } catch (e) {
-      console.warn('localStorage not available');
-    }
-    
-    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    const themeToApply = savedTheme || systemTheme;
-    
-    // Apply theme immediately to prevent flash
-    if (themeToApply === 'dark') {
-      document.documentElement.setAttribute('data-theme', 'dark');
-    }
-  </script>
-
+  <!-- Sistema de diseño: tokens, base y componentes. Se edita a mano. -->
   <link rel="stylesheet" href="/css/app.css" />
-  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
-  <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
-  <!-- AOS para animaciones sutiles -->
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+  <!-- Tailwind vendorizado: resuelve en el navegador las clases
+       utilitarias del marcado. Sin CDN externo y sin compilar nada. -->
+  <script src="/vendor/tailwind.js"></script>
+  <script>
+    tailwind.config = {
+      darkMode: ['selector', '[data-theme="dark"]'],
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#eff5ff', 100: '#dbe8fe', 200: '#bfd7fe', 300: '#93bbfd',
+              400: '#6096fa', 500: '#3b76f6', 600: '#2557eb', 700: '#1d43d8',
+              800: '#1e39af', 900: '#1e348a', 950: '#172254',
+            },
+            ink: {
+              50: '#f6f7f9', 100: '#eceef2', 200: '#d5dae3', 300: '#b0b9ca',
+              400: '#8593ac', 500: '#657493', 600: '#505d7a', 700: '#424c63',
+              800: '#394153', 900: '#333947', 950: '#0d1220',
+            },
+          },
+          borderRadius: { card: '0.875rem' },
+          boxShadow: {
+            card: '0 1px 2px 0 rgb(16 24 40 / 0.04), 0 1px 3px 0 rgb(16 24 40 / 0.06)',
+            'card-hover': '0 4px 12px -2px rgb(16 24 40 / 0.08), 0 2px 6px -2px rgb(16 24 40 / 0.05)',
+            pop: '0 12px 32px -8px rgb(16 24 40 / 0.18)',
+          },
+          maxWidth: { content: '80rem', prose: '46rem' },
+          transitionTimingFunction: { soft: 'cubic-bezier(0.16, 1, 0.3, 1)' },
+        },
+      },
+    };
+  </script>
+
+  <!-- El tema claro es el predeterminado: es el que transmite confianza
+       en una herramienta de dinero. El oscuro solo se aplica si la
+       persona lo eligió expresamente. -->
+  <script>
+    (function () {
+      try {
+        if (localStorage.getItem('sv-isr-theme') === 'dark') {
+          document.documentElement.setAttribute('data-theme', 'dark');
+          return;
+        }
+      } catch (e) {}
+      document.documentElement.setAttribute('data-theme', 'light');
+    })();
+  </script>
 </head>
-<body class="font-sans antialiased bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen">
+<body>
+  <a href="#contenido" class="skip-link">Saltar al contenido</a>
 
-<div id="app-comparador">
-
-<!-- Navbar --><header class="glass-header sticky top-0 z-50">
-  <div class="max-w-[1100px] mx-auto px-5 h-16 flex items-center justify-between gap-4">
-    <div class="flex items-center gap-3">
-      <button @click="toggleMenu" class="hamburger" aria-label="Menu">
-        <span class="iconify text-xl" data-icon="lucide:menu"></span>
+  <div class="app-shell">
+    <div class="sidebar-backdrop hidden" data-sidebar-backdrop hidden></div>
+  <aside class="sidebar" data-sidebar aria-label="Navegación principal">
+    <div class="sidebar-brand">
+      <a href="/" class="flex items-center gap-2.5 ">
+      <svg class="h-8 w-8 shrink-0" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+  <rect width="32" height="32" rx="8" fill="#1d43d8"/>
+  <rect x="8" y="17" width="4" height="8" rx="1.5" fill="#93bbfd"/>
+  <rect x="14" y="12" width="4" height="13" rx="1.5" fill="#dbe8fe"/>
+  <rect x="20" y="7" width="4" height="18" rx="1.5" fill="#ffffff"/>
+</svg>
+      <span class="text-[1.0625rem] font-bold tracking-tight text-ink-950 dark:text-white">Renta<span class="text-brand-600 dark:text-brand-400">SV</span></span>
+    </a>
+      <button type="button" class="icon-btn lg:hidden" data-sidebar-close aria-label="Cerrar menú">
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
       </button>
-      <a href="/" class="flex items-center gap-2.5 shrink-0 group">
-        <img src="/favicon.svg" alt="RentaSV Logo" class="w-8 h-8 rounded-lg transition-transform group-hover:scale-105">
-        <span class="font-extrabold tracking-tight text-lg text-slate-900 dark:text-white">Renta<span class="text-blue-500">SV</span></span>
-      </a>
     </div>
-
-    <!-- Global Nav (Desktop) -->
-    <nav class="hidden md:flex items-center gap-6">
-      <a href="/" class="text-sm font-medium text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">Inicio</a>
-      <a href="/salario.html" class="text-sm font-medium text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">Calculadoras</a>
-      <a href="/autor.html" class="text-sm font-medium text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">Autor</a>
-      <a href="/donaciones.html" class="btn-secondary text-xs flex items-center gap-2 py-2 px-4 border-rose-200 text-rose-600 hover:bg-rose-50 dark:border-rose-900/30 dark:text-rose-400 dark:hover:bg-rose-900/10">
-        <span class="iconify text-rose-500" data-icon="lucide:heart"></span>
-        Apoyar Proyecto
-      </a>
-    </nav>
-
-    <!-- Theme toggle -->
-    <button @click="toggleTheme" class="theme-toggle shrink-0" :title="isDarkMode ? 'Modo claro' : 'Modo oscuro'">
-      <span class="iconify text-lg" :data-icon="isDarkMode ? 'lucide:moon' : 'lucide:sun'"></span>
-    </button>
-  </div>
-</header>
-
-
-<!-- Sidebar Overlay -->
-<div class="sidebar-overlay" :class="{ active: isMenuOpen }" @click="closeMenu"></div>
-
-<!-- Sidebar -->
-<aside class="sidebar" :class="{ active: isMenuOpen }">
-  <div class="sidebar-header">
-    <span class="font-bold text-lg">Menú Principal</span>
-    <button @click="closeMenu" class="p-2 text-slate-400 hover:text-slate-900 dark:hover:text-white">
-      <span class="iconify text-xl" data-icon="lucide:x"></span>
-    </button>
-  </div>
-  <nav class="sidebar-nav">
-    <a href="/" class="sidebar-link">
-      <span class="iconify" data-icon="lucide:home"></span> Inicio
-    </a>
-    <a href="/salario.html" class="sidebar-link">
-      <span class="iconify" data-icon="lucide:circle-dollar-sign"></span> Salario Neto
-    </a>
-    <a href="/liquidaciones.html" class="sidebar-link">
-      <span class="iconify" data-icon="lucide:briefcase"></span> Indemnización
-    </a>
-    <a href="/isr-anual.html" class="sidebar-link">
-      <span class="iconify" data-icon="lucide:calculator"></span> Declaración F-11
-    </a>
-    <a href="/comparador.html" class="sidebar-link active">
-      <span class="iconify" data-icon="lucide:scale"></span> Planilla vs Honorarios
-    </a>
-    <div class="h-px bg-slate-100 dark:bg-slate-800 my-4"></div>
-    <a href="/autor.html" class="sidebar-link">
-      <span class="iconify" data-icon="lucide:user"></span> Sobre el Autor
-    </a>
-    <a href="/donaciones.html" class="sidebar-link text-blue-600 dark:text-blue-400">
-      <span class="iconify" data-icon="lucide:heart"></span> Apoyar Proyecto
-    </a>
-  </nav>
-</aside>
-
-<main class="max-w-2xl mx-auto px-5 py-8">
-
-  <!-- Encabezado sutil -->
-  <div class="mb-8 text-center" data-aos="fade-down">
-    <h1 class="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white mb-2 tracking-tight">Comparativa <span v-text="DATA_2026.CURRENT_YEAR"></span> 🇸🇻</h1>
-    <p class="text-slate-500 font-medium">Planilla vs. Servicios Profesionales</p>
-  </div>
-
-  <!-- Tab nav (Responsive Scrollable) -->
-  <div class="desktop-tabs-container mb-10">
-    <div class="desktop-tabs">
-      <a href="/salario.html" class="tab-btn">
-        <span class="iconify" data-icon="lucide:circle-dollar-sign"></span> <span>Salario</span>
-      </a>
-      <a href="/liquidaciones.html" class="tab-btn">
-        <span class="iconify" data-icon="lucide:briefcase"></span> <span>Indemnización</span>
-      </a>
-      <a href="/isr-anual.html" class="tab-btn">
-        <span class="iconify" data-icon="lucide:calculator"></span> <span>F-11</span>
-      </a>
-      <a href="/comparador.html" class="tab-btn active">
-        <span class="iconify" data-icon="lucide:scale"></span> <span>VS</span>
-      </a>
-      <a href="/autor.html" class="tab-btn">
-        <span class="iconify" data-icon="lucide:user"></span> <span>Autor</span>
-      </a>
-    </div>
-  </div>
-
-  <div class="glass-panel mb-8">
-    <div class="p-7">
-      <p class="text-sm text-center text-slate-500 dark:text-slate-400 leading-relaxed mb-6">Ingresa el monto que la empresa está dispuesta a pagarte mensualmente. Compara el ingreso neto (libre) entre firmar contrato como asalariado o facturar como freelancer.</p>
-      
-      <div class="max-w-sm mx-auto mb-8">
-        <label class="field-label text-center">Salario ofertado (USD)</label>
-        <div class="inp-prefix">
-          <span class="inp-prefix-symbol">$</span>
-          <input v-model="montoInput" type="number" min="0" step="0.01" class="inp text-center font-bold font-mono" placeholder="1000.00" @keydown.enter="compararOpciones" style="padding-left: 16px;"/>
-        </div>
-        <div class="flex gap-2 mt-4">
-          <button class="btn-main flex-1" @click="compararOpciones">Simular Escenarios</button>
-        </div>
-      </div>
-
-      <!-- Tarjetas comparativas -->
-      <div v-if="resultadoPlanilla && resultadoHonorarios" class="grid md:grid-cols-2 gap-6 items-start">
-        
-        <!-- Tarjeta Planilla -->
-        <div class="result-panel h-full flex flex-col relative transition-all duration-300 hover:shadow-xl hover:border-blue-400">
-          <div v-if="resultadoPlanilla.salarioNeto > resultadoHonorarios.neto" class="absolute top-0 right-0 bg-emerald-500 text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg">MAYOR INGRESO NETO</div>
-          <div class="result-panel-header flex-col items-start gap-1 bg-blue-50 dark:bg-blue-900/20 border-b border-blue-100 dark:border-blue-800/50">
-            <div class="flex items-center gap-2">
-              <span class="p-1.5 bg-blue-100 dark:bg-blue-800 rounded-md text-blue-700 dark:text-blue-300"><span class="iconify" data-icon="lucide:building-2"></span></span>
-              <span class="font-bold text-blue-800 dark:text-blue-200 text-lg">Asalariado en Planilla</span>
-            </div>
-          </div>
-          <div class="p-5 grow flex flex-col gap-4">
-            <div class="border-b border-blue-50/50 pb-4">
-              <span class="text-xs text-slate-400 font-bold uppercase track-wide">Ingreso Bruto Mensual</span>
-              <div class="text-xl font-bold font-mono mt-1 text-slate-800 dark:text-white">{{ fmt(resultadoPlanilla.salarioBruto) }}</div>
-            </div>
-            
-            <div class="space-y-2.5 grow text-sm">
-              <div class="flex justify-between items-center"><span class="text-slate-500">Descuento ISSS (3%)</span><span class="font-mono text-red-500">- {{ fmt(resultadoPlanilla.descuentoISSS) }}</span></div>
-              <div class="flex justify-between items-center"><span class="text-slate-500">Descuento AFP (7.25%)</span><span class="font-mono text-red-500">- {{ fmt(resultadoPlanilla.descuentoAFP) }}</span></div>
-              <div class="flex justify-between items-center pt-2 border-t border-slate-100 dark:border-slate-700"><span class="text-blue-600 font-medium">Imponible</span><span class="font-mono font-medium">{{ fmt(resultadoPlanilla.rentaNetaImponible) }}</span></div>
-              <div class="flex justify-between items-center"><span class="text-slate-500">Deducción de Renta</span><span class="font-mono text-red-500">- {{ fmt(resultadoPlanilla.isrMensual) }}</span></div>
-            </div>
-
-            <div class="bg-blue-600 text-white rounded-xl p-4 mt-auto">
-              <span class="text-xs font-medium text-blue-100">Dinero Líquido a Recibir</span>
-              <div class="text-2xl font-bold font-mono mt-0.5">{{ fmt(resultadoPlanilla.salarioNeto) }}</div>
-            </div>
-          </div>
-
-          <div class="bg-slate-50 border-t border-slate-100 p-4 pt-3 flex flex-col gap-2">
-            <span class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Beneficios extra de ley ➕</span>
-            <span class="text-sm text-slate-600 flex items-center gap-1.5"><span class="iconify text-emerald-500" data-icon="lucide:check-circle-2"></span> Seguro Social y Jubilación (AFP).</span>
-            <span class="text-sm text-slate-600 flex items-center gap-1.5"><span class="iconify text-emerald-500" data-icon="lucide:check-circle-2"></span> Aguinaldo Anual.</span>
-            <span class="text-sm text-slate-600 flex items-center gap-1.5"><span class="iconify text-emerald-500" data-icon="lucide:check-circle-2"></span> 15 Días Remunerados + 30% Prima.</span>
-            <span class="text-sm text-slate-600 flex items-center gap-1.5"><span class="iconify text-emerald-500" data-icon="lucide:check-circle-2"></span> Estabilidad e Indemnización.</span>
-          </div>
-        </div>
-
-        <!-- Tarjeta Freelance -->
-        <div class="result-panel h-full flex flex-col relative transition-all duration-300 hover:shadow-xl hover:border-purple-400">
-          <div v-if="resultadoHonorarios.neto > resultadoPlanilla.salarioNeto" class="absolute top-0 right-0 bg-emerald-500 text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg">MAYOR INGRESO NETO</div>
-          <div class="result-panel-header flex-col items-start gap-1 bg-purple-50 dark:bg-purple-900/20 border-b border-purple-100 dark:border-purple-800/50">
-            <div class="flex items-center gap-2">
-              <span class="p-1.5 bg-purple-100 dark:bg-purple-800 rounded-md text-purple-700 dark:text-purple-300"><span class="iconify" data-icon="lucide:laptop"></span></span>
-              <span class="font-bold text-purple-800 dark:text-purple-200 text-lg">Servicios Profesionales / Freelance</span>
-            </div>
-          </div>
-          <div class="p-5 grow flex flex-col gap-4">
-            <div class="border-b border-purple-50/50 pb-4">
-              <span class="text-xs text-slate-400 font-bold uppercase track-wide">Ingreso Bruto Mensual</span>
-              <div class="text-xl font-bold font-mono mt-1 text-slate-800 dark:text-white">{{ fmt(resultadoHonorarios.montoBruto) }}</div>
-            </div>
-            
-            <div class="space-y-2.5 grow text-sm">
-              <div class="flex justify-between items-center"><span class="text-slate-500">Retención de Renta (10%)</span><span class="font-mono text-red-500">- {{ fmt(resultadoHonorarios.retencion) }}</span></div>
-              <div class="flex justify-between items-center"><span class="text-slate-400">ISSS</span><span class="font-mono text-slate-400">0.00</span></div>
-              <div class="flex justify-between items-center"><span class="text-slate-400">AFP</span><span class="font-mono text-slate-400">0.00</span></div>
-            </div>
-
-            <div class="bg-purple-600 text-white rounded-xl p-4 mt-auto">
-              <span class="text-xs font-medium text-purple-100">Dinero Líquido a Recibir</span>
-              <div class="text-2xl font-bold font-mono mt-0.5">{{ fmt(resultadoHonorarios.neto) }}</div>
-            </div>
-          </div>
-
-          <div class="bg-slate-50 border-t border-slate-100 p-4 pt-3 flex flex-col gap-2">
-            <span class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Responsabilidades Propias ⚠</span>
-            <span class="text-sm text-slate-600 flex items-center gap-1.5"><span class="iconify text-red-400" data-icon="lucide:x-circle"></span> Tú debes pagar tu AFP voluntaria.</span>
-            <span class="text-sm text-slate-600 flex items-center gap-1.5"><span class="iconify text-red-400" data-icon="lucide:x-circle"></span> Sin Aguinaldo ni Vacaciones pagadas.</span>
-            <span class="text-sm text-slate-600 flex items-center gap-1.5"><span class="iconify text-red-400" data-icon="lucide:x-circle"></span> Sin seguro médico.</span>
-            <span class="text-sm text-amber-600 flex items-center gap-1.5"><span class="iconify text-amber-500" data-icon="lucide:alert-circle"></span> Declaración Anual F-11 Obligatoria.</span>
-          </div>
-        </div>
-
-      </div>
-
-    </div>
-  </div>
-</main>
-
-<footer class="bg-white dark:bg-[#0a1628] border-t border-slate-200 dark:border-white/[0.06] pt-12 pb-8">
-  <div class="max-w-4xl mx-auto px-5">
-    <!-- Grid de Recursos/Links -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10 pb-10 border-b border-slate-100 dark:border-white/5">
-      <div>
-        <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">Base legal El Salvador</h4>
-        <div class="flex flex-col gap-3">
-          <a href="https://www.asamblea.gob.sv/sites/default/files/documents/decretos/D3E7B2C1-396C-4B44-B1F3-2B056D4C617F.pdf#page=35" target="_blank" class="text-xs text-slate-500 hover:text-blue-500 transition-colors flex items-center gap-2 group">
-            <span class="iconify group-hover:translate-x-0.5 transition-transform" data-icon="lucide:external-link"></span> Ley de Impuesto sobre la Renta
-          </a>
-          <a href="https://www.asamblea.gob.sv/sites/default/files/documents/decretos/AD778A29-F1B3-495E-AE19-E2B05D93685D.pdf" target="_blank" class="text-xs text-slate-500 hover:text-blue-500 transition-colors flex items-center gap-2 group">
-            <span class="iconify group-hover:translate-x-0.5 transition-transform" data-icon="lucide:external-link"></span> Código de Trabajo
-          </a>
-        </div>
-      </div>
-      <div class="flex flex-col md:items-end">
-        <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">Sostenibilidad</h4>
-        <a href="/donaciones.html" class="btn-main text-xs py-2 px-4">
-          <span class="iconify" data-icon="lucide:heart"></span> Apoyar proyecto
+    <div class="sidebar-scroll">
+        <div class="pt-3"></div>
+        <nav class="space-y-0.5"><a href="/" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg><span>Portada</span>
         </a>
-      </div>
-    </div>
-
-    <!-- Bottom Area -->
-    <div class="flex flex-col md:flex-row justify-between items-center gap-6">
-      <div class="max-w-xl text-center md:text-left">
-        <p class="text-[11px] text-slate-500 leading-relaxed flex items-start gap-2">
-          <span class="iconify shrink-0 text-amber-500 text-sm" data-icon="lucide:alert-triangle"></span>
-          <span><strong>Nota legal:</strong> Este simulador es informativo y no sustituye asesoría profesional. Cálculos basados en legislación <span v-text="DATA_2026.CURRENT_YEAR"></span>.</span>
+        <a href="/guia.html" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/></svg><span>Guía de usuario</span>
+        </a></nav>
+        <p class="sidebar-group">Calculadoras</p>
+        <nav class="space-y-0.5"><a href="/salario.html" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg><span>Salario neto</span>
+        </a>
+        <a href="/liquidaciones.html" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="14" x="2" y="7" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg><span>Prestaciones y liquidación</span>
+        </a>
+        <a href="/isr-anual.html" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v5h5"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Declaración anual F-11</span>
+        </a>
+        <a href="/comparador.html" class="nav-link" aria-current="page">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg><span>Planilla vs. honorarios</span>
+        </a></nav>
+        <p class="sidebar-group">Proyecto</p>
+        <nav class="space-y-0.5"><a href="/autor.html" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Sobre el autor</span>
+        </a>
+        <a href="/donaciones.html" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg><span>Apoyar el proyecto</span>
+        </a></nav>
+        <p class="sidebar-group">Legal</p>
+        <nav class="space-y-0.5"><a href="/legal/privacidad.html" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V6l8-3 8 3z"/></svg><span>Privacidad</span>
+        </a>
+        <a href="/legal/terminos.html" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v5h5"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Términos de uso</span>
+        </a></nav>
+      <div class="mt-6 rounded-lg border border-ink-200 bg-ink-50 p-3 dark:border-ink-800 dark:bg-ink-950/60">
+        <p class="text-[0.6875rem] font-semibold uppercase tracking-wide text-ink-500 dark:text-ink-400">Parámetros vigentes</p>
+        <p class="mt-1 text-xs leading-relaxed text-ink-600 dark:text-ink-300">
+          Tablas del <strong class="font-semibold text-ink-900 dark:text-white">Art. 37 LISR</strong> reformado por el D.L. 293 (30/04/2025) y salarios mínimos de junio 2025.
         </p>
       </div>
+    </div>
+  </aside>
 
-      <div class="flex items-center gap-6 shrink-0">
-        <div class="text-right hidden sm:block">
-          <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">v<span v-text="DATA_2026.VERSION"></span></p>
-          <p class="text-[10px] text-slate-500">El Salvador</p>
+    <div class="app-main">
+      <header class="topbar">
+      <button type="button" class="icon-btn lg:hidden" data-sidebar-open aria-label="Abrir menú" aria-expanded="false">
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/></svg>
+      </button>
+      <div class="flex min-w-0 flex-1 items-center gap-3">
+        <span class="truncate text-sm font-semibold text-ink-900 dark:text-white lg:text-[0.9375rem]">Planilla vs. honorarios</span>
+      </div>
+      <a href="/guia.html" class="btn btn-secondary btn-sm hidden sm:inline-flex">
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg> Guía de usuario
+      </a>
+      <a href="/guia.html" class="icon-btn sm:hidden" aria-label="Guía de usuario">
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+      </a>
+      <button type="button" class="icon-btn" data-theme-toggle aria-label="Cambiar entre tema claro y oscuro">
+        <span class="hidden dark:block"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9"/></svg></span>
+        <span class="block dark:hidden"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg></span>
+      </button>
+    </header>
+
+      <main id="contenido" class="app-content">
+        <div id="app-comparador" v-cloak>
+
+          <header class="mb-6">
+            <h1 class="text-2xl font-bold sm:text-3xl">Planilla vs. servicios profesionales</h1>
+            <p class="mt-2 max-w-prose text-sm leading-relaxed text-ink-500 dark:text-ink-400">
+              Por el mismo monto bruto, cobrar por honorarios deja más dinero en el bolsillo
+              cada mes. Aquí ve cuánto de esa diferencia se le va en prestaciones que deja
+              de acumular.
+            </p>
+          </header>
+
+          <!-- Entrada -->
+          <section class="card mb-5">
+            <div class="card-body">
+              <div class="flex flex-col gap-3 sm:flex-row sm:items-end">
+                <div class="min-w-0 flex-1">
+                  <label class="form-label" for="monto">Monto bruto mensual a comparar</label>
+                  <div class="input-money">
+                    <span class="input-money-symbol">$</span>
+                    <input id="monto" class="form-input" type="number" inputmode="decimal"
+                           min="0" step="0.01" placeholder="1,500.00" v-model="montoInput"
+                           @keydown.enter="comparar()" />
+                  </div>
+                </div>
+                <div class="flex gap-2">
+                  <button class="btn btn-primary flex-1 sm:flex-none" type="button" @click="comparar()">
+                    Comparar
+                  </button>
+                  <button class="btn btn-secondary" type="button" @click="limpiar">Limpiar</button>
+                </div>
+              </div>
+
+              <div v-if="errores.length" class="alert alert-danger mt-4" role="alert">
+                <svg class="alert-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <circle cx="12" cy="12" r="10" /><path d="M12 8v4" /><path d="M12 16h.01" />
+                </svg>
+                <ul class="space-y-1">
+                  <li v-for="e in errores" :key="e">{{ e }}</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <div v-if="!resultado" class="card">
+            <div class="card-body">
+              <div class="empty-state">
+                <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1" />
+                  <path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1" />
+                  <path d="M7 21h10" /><path d="M12 3v18" /><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2" />
+                </svg>
+                <p class="text-base font-semibold text-ink-900 dark:text-white">
+                  Ingrese un monto para comparar
+                </p>
+                <p class="mt-1 max-w-sm text-sm text-ink-500 dark:text-ink-400">
+                  Compararemos ambos esquemas con las tablas y retenciones vigentes.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <template v-else>
+            <!-- Comparación lado a lado -->
+            <div class="mb-5 grid grid-safe gap-5 md:grid-cols-2">
+
+              <!-- Planilla -->
+              <section class="card animate-in"
+                       :class="{ 'ring-2 ring-brand-500': ganadorReal === 'planilla' }">
+                <div class="card-header">
+                  <h2 class="card-title">En planilla</h2>
+                  <span v-if="ganadorReal === 'planilla'" class="badge badge-brand">Conviene más</span>
+                </div>
+                <div>
+                  <div class="result-row">
+                    <span class="result-label">Monto bruto</span>
+                    <span class="result-value">{{ fmt(resultado.planilla.salarioBruto) }}</span>
+                  </div>
+                  <div class="result-row">
+                    <span class="result-label">ISSS (3%)</span>
+                    <span class="result-value result-value-neg">− {{ fmt(resultado.planilla.descuentoISSS) }}</span>
+                  </div>
+                  <div class="result-row">
+                    <span class="result-label">AFP (7.25%)</span>
+                    <span class="result-value result-value-neg">− {{ fmt(resultado.planilla.descuentoAFP) }}</span>
+                  </div>
+                  <div class="result-row">
+                    <span class="result-label">Retención de ISR</span>
+                    <span class="result-value result-value-neg">− {{ fmt(resultado.planilla.isrMensual) }}</span>
+                  </div>
+                  <div class="result-total">
+                    <span class="result-total-label">Recibe</span>
+                    <span class="result-total-value">{{ fmt(resultado.planilla.salarioNeto) }}</span>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <ul class="space-y-1.5 text-xs text-ink-600 dark:text-ink-300">
+                    <li class="flex gap-2">
+                      <span class="text-emerald-500">✓</span> Aguinaldo, vacación e indemnización
+                    </li>
+                    <li class="flex gap-2">
+                      <span class="text-emerald-500">✓</span> Cobertura del ISSS y cotización a pensión
+                    </li>
+                    <li class="flex gap-2">
+                      <span class="text-emerald-500">✓</span> Estabilidad y prestaciones de ley
+                    </li>
+                  </ul>
+                </div>
+              </section>
+
+              <!-- Honorarios -->
+              <section class="card animate-in"
+                       :class="{ 'ring-2 ring-brand-500': ganadorReal === 'honorarios' }">
+                <div class="card-header">
+                  <h2 class="card-title">Por servicios profesionales</h2>
+                  <span v-if="ganadorReal === 'honorarios'" class="badge badge-brand">Conviene más</span>
+                </div>
+                <div>
+                  <div class="result-row">
+                    <span class="result-label">Monto bruto</span>
+                    <span class="result-value">{{ fmt(resultado.honorarios.montoBruto) }}</span>
+                  </div>
+                  <div class="result-row">
+                    <span class="result-label">Retención del 10% (Art. 156 CT)</span>
+                    <span class="result-value result-value-neg">− {{ fmt(resultado.honorarios.retencion) }}</span>
+                  </div>
+                  <div class="result-row">
+                    <span class="result-label">ISSS y AFP</span>
+                    <span class="result-value">No aplica</span>
+                  </div>
+                  <div class="result-row">
+                    <span class="result-label">&nbsp;</span>
+                    <span class="result-value">&nbsp;</span>
+                  </div>
+                  <div class="result-total">
+                    <span class="result-total-label">Recibe</span>
+                    <span class="result-total-value">{{ fmt(resultado.honorarios.neto) }}</span>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <ul class="space-y-1.5 text-xs text-ink-600 dark:text-ink-300">
+                    <li class="flex gap-2"><span class="text-rose-500">✕</span> Sin aguinaldo ni vacación pagada</li>
+                    <li class="flex gap-2"><span class="text-rose-500">✕</span> Sin indemnización por despido</li>
+                    <li class="flex gap-2"><span class="text-rose-500">✕</span> Salud y pensión corren por su cuenta</li>
+                  </ul>
+                </div>
+              </section>
+            </div>
+
+            <!-- El veredicto -->
+            <section class="card mb-5">
+              <div class="card-header">
+                <h2 class="card-title">La cuenta completa</h2>
+                <span class="card-subtitle">Diferencia real, no solo la del mes</span>
+              </div>
+              <div>
+                <div class="result-row">
+                  <span class="result-label">Diferencia visible cada mes</span>
+                  <span class="result-value"
+                        :class="resultado.diferenciaNetoMensual >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'result-value-neg'">
+                    {{ resultado.diferenciaNetoMensual >= 0 ? '+' : '−' }}
+                    {{ fmt(Math.abs(resultado.diferenciaNetoMensual)) }}
+                  </span>
+                </div>
+                <div class="result-row result-row-emphasis">
+                  <span class="result-label font-medium text-ink-900 dark:text-white">
+                    Prestaciones que dejas de acumular
+                  </span>
+                  <span class="result-value"></span>
+                </div>
+                <div class="result-row">
+                  <span class="result-label">Aguinaldo anual</span>
+                  <span class="result-value">{{ fmt(resultado.prestaciones.aguinaldoAnual) }}</span>
+                </div>
+                <div class="result-row">
+                  <span class="result-label">Vacación anual (15 días + 30%)</span>
+                  <span class="result-value">{{ fmt(resultado.prestaciones.vacacionAnual) }}</span>
+                </div>
+                <div class="result-row">
+                  <span class="result-label">Aporte patronal a pensión (8.75%)</span>
+                  <span class="result-value">{{ fmt(resultado.prestaciones.pensionPatronalAnual) }}</span>
+                </div>
+                <div class="result-row">
+                  <span class="result-label">Aporte patronal a salud (7.5%)</span>
+                  <span class="result-value">{{ fmt(resultado.prestaciones.saludPatronalAnual) }}</span>
+                </div>
+                <div class="result-row">
+                  <span class="result-label font-medium">Equivalente mensual</span>
+                  <span class="result-value">{{ fmt(resultado.prestaciones.equivalenteMensual) }}</span>
+                </div>
+                <div class="result-total">
+                  <span class="result-total-label">Ventaja real de los honorarios</span>
+                  <span class="result-total-value"
+                        :class="resultado.ventajaRealMensual >= 0
+                          ? 'text-emerald-600 dark:text-emerald-400'
+                          : 'text-rose-600 dark:text-rose-400'">
+                    {{ resultado.ventajaRealMensual >= 0 ? '+' : '−' }}
+                    {{ fmt(Math.abs(resultado.ventajaRealMensual)) }}
+                  </span>
+                </div>
+              </div>
+            </section>
+
+            <div class="alert" :class="ganadorReal === 'honorarios' ? 'alert-info' : 'alert-warning'">
+              <svg class="alert-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="10" /><path d="M12 16v-4" /><path d="M12 8h.01" />
+              </svg>
+              <div>
+                <p class="font-semibold">
+                  {{ ganadorReal === 'honorarios'
+                     ? 'Los honorarios salen adelante, incluso descontando prestaciones'
+                     : 'La planilla resulta mejor una vez contadas las prestaciones' }}
+                </p>
+                <p class="mt-1 leading-relaxed">
+                  Recibes {{ fmt(Math.abs(resultado.diferenciaNetoMensual)) }} más al mes por
+                  honorarios, pero dejas de acumular
+                  {{ fmt(resultado.prestaciones.equivalenteMensual) }} mensuales en prestaciones.
+                  Además, como persona independiente debe cubrir su propia salud y pensión, y
+                  presentar su declaración anual de renta.
+                </p>
+              </div>
+            </div>
+          </template>
+
+          <div v-if="toast" role="status" aria-live="polite"
+               class="fixed inset-x-4 bottom-[calc(var(--dock-h)+1rem)] z-50 mx-auto max-w-sm lg:inset-x-auto lg:bottom-6 lg:right-6 lg:mx-0">
+            <div class="alert shadow-pop" :class="'alert-' + toast.tipo">
+              <span class="min-w-0 flex-1">{{ toast.mensaje }}</span>
+              <button type="button" class="shrink-0 opacity-60 hover:opacity-100"
+                      @click="cerrarToast" aria-label="Cerrar aviso">✕</button>
+            </div>
+          </div>
         </div>
-        <div class="h-8 w-px bg-slate-200 dark:bg-white/10 hidden sm:block"></div>
-        <div class="flex items-center gap-3">
-           <button @click="toggleTheme" class="theme-toggle" :title="isDarkMode ? 'Modo claro' : 'Modo oscuro'">
-             <span class="iconify text-lg" :data-icon="isDarkMode ? 'lucide:moon' : 'lucide:sun'"></span>
-           </button>
+      </main>
+
+      <footer class="border-t border-ink-200 bg-white dark:border-ink-800 dark:bg-ink-900">
+      <div class="mx-auto w-full max-w-content px-4 py-10 sm:px-6">
+        <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          <div class="lg:col-span-2">
+            <a href="/" class="flex items-center gap-2.5 mb-3">
+      <svg class="h-8 w-8 shrink-0" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+  <rect width="32" height="32" rx="8" fill="#1d43d8"/>
+  <rect x="8" y="17" width="4" height="8" rx="1.5" fill="#93bbfd"/>
+  <rect x="14" y="12" width="4" height="13" rx="1.5" fill="#dbe8fe"/>
+  <rect x="20" y="7" width="4" height="18" rx="1.5" fill="#ffffff"/>
+</svg>
+      <span class="text-[1.0625rem] font-bold tracking-tight text-ink-950 dark:text-white">Renta<span class="text-brand-600 dark:text-brand-400">SV</span></span>
+    </a>
+            <p class="max-w-sm text-sm leading-relaxed text-ink-500 dark:text-ink-400">
+              Herramienta gratuita y sin servidores para que cualquier persona en El Salvador
+              calcule su salario, sus prestaciones y su renta con las tablas oficiales vigentes.
+            </p>
+            <a href="/guia.html" class="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-brand-600 hover:underline dark:text-brand-400">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/></svg> Leer la guía de usuario
+            </a>
+          </div>
+          <div>
+            <p class="mb-3 text-[0.6875rem] font-semibold uppercase tracking-wide text-ink-500 dark:text-ink-400">Calculadoras</p>
+            <ul class="space-y-2 text-sm">
+              <li><a href="/salario.html" class="text-ink-600 hover:text-brand-600 dark:text-ink-300 dark:hover:text-brand-400">Salario neto</a></li>
+              <li><a href="/liquidaciones.html" class="text-ink-600 hover:text-brand-600 dark:text-ink-300 dark:hover:text-brand-400">Prestaciones y liquidación</a></li>
+              <li><a href="/isr-anual.html" class="text-ink-600 hover:text-brand-600 dark:text-ink-300 dark:hover:text-brand-400">Declaración anual F-11</a></li>
+              <li><a href="/comparador.html" class="text-ink-600 hover:text-brand-600 dark:text-ink-300 dark:hover:text-brand-400">Planilla vs. honorarios</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="mb-3 text-[0.6875rem] font-semibold uppercase tracking-wide text-ink-500 dark:text-ink-400">Base legal</p>
+            <ul class="space-y-2 text-sm">
+              <li><a href="https://www.asamblea.gob.sv/node/13558" target="_blank" rel="noopener" class="text-ink-600 hover:text-brand-600 dark:text-ink-300 dark:hover:text-brand-400">Art. 37 LISR (D.L. 293)</a></li>
+              <li><a href="https://www.asamblea.gob.sv/node/13399" target="_blank" rel="noopener" class="text-ink-600 hover:text-brand-600 dark:text-ink-300 dark:hover:text-brand-400">Aguinaldo exento (D.L. 596)</a></li>
+              <li><a href="https://webapps.ilo.org/public/spanish/region/ampro/mdtsanjose/papers/cod_elsa.htm" target="_blank" rel="noopener" class="text-ink-600 hover:text-brand-600 dark:text-ink-300 dark:hover:text-brand-400">Código de Trabajo</a></li>
+              <li><a href="/legal/privacidad.html" class="text-ink-600 hover:text-brand-600 dark:text-ink-300 dark:hover:text-brand-400">Privacidad</a></li>
+              <li><a href="/legal/terminos.html" class="text-ink-600 hover:text-brand-600 dark:text-ink-300 dark:hover:text-brand-400">Términos de uso</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="mt-8 flex flex-col gap-4 border-t border-ink-200 pt-6 dark:border-ink-800 sm:flex-row sm:items-center sm:justify-between">
+          <p class="flex items-start gap-2 text-xs leading-relaxed text-ink-500 dark:text-ink-400">
+            <svg class="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+            <span><strong class="font-semibold text-ink-700 dark:text-ink-200">Aviso:</strong> simulador informativo. No sustituye asesoría profesional ni el dictamen del Ministerio de Hacienda.</span>
+          </p>
+          <div class="flex shrink-0 items-center gap-4 text-xs text-ink-500 dark:text-ink-400">
+            <span>© 2026 RentaSV</span>
+            <a href="https://github.com/dev-perazarich/simulador-isr-sv" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 hover:text-brand-600 dark:hover:text-brand-400">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg> Código abierto
+            </a>
+          </div>
         </div>
       </div>
+    </footer>
     </div>
+
+    <nav class="dock" aria-label="Accesos rápidos">
+      <a href="/guia.html" class="dock-item">
+        <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/></svg><span>Guía</span>
+      </a>
+      <a href="/salario.html" class="dock-item">
+        <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg><span>Salario</span>
+      </a>
+      <a href="/liquidaciones.html" class="dock-item">
+        <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="14" x="2" y="7" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg><span>Prestaciones</span>
+      </a>
+      <a href="/isr-anual.html" class="dock-item">
+        <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v5h5"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>F-11</span>
+      </a>
+      <a href="/comparador.html" class="dock-item" aria-current="page">
+        <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg><span>Comparar</span>
+      </a>
+    </nav>
   </div>
-</footer>
 
-<!-- Bottom Nav (Mobile) -->
-<nav class="mobile-nav-dock">
-  <a href="/salario.html" class="dock-btn">
-    <span class="iconify" data-icon="lucide:circle-dollar-sign"></span> Salario
-  </a>
-  <a href="/liquidaciones.html" class="dock-btn">
-    <span class="iconify" data-icon="lucide:briefcase"></span> Indemnización
-  </a>
-  <a href="/isr-anual.html" class="dock-btn">
-    <span class="iconify" data-icon="lucide:calculator"></span> F-11
-  </a>
-  <a href="/comparador.html" class="dock-btn active">
-    <span class="iconify" data-icon="lucide:scale"></span> VS
-  </a>
-  <a href="/autor.html" class="dock-btn">
-    <span class="iconify" data-icon="lucide:user"></span> Autor
-  </a>
-</nav>
-
-</div>
-<script type="module">import '/js/app-comparador.js';</script>
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js?v=1.10').catch(() => {}));
-  }
-</script>
+  <script src="/js/shell.js" defer></script>
+  <script defer src="/vendor/vue.global.prod.js"></script>
+  <script type="module" src="/js/app-comparador.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      addEventListener('load', function () {
+        navigator.serviceWorker.register('/sw.js').catch(function () {});
+      });
+    }
+  </script>
 </body>
 </html>

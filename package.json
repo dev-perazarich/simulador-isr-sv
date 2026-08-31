@@ -1,0 +1,18 @@
+{
+  "name": "simulador-isr-sv",
+  "version": "2.2.0",
+  "private": true,
+  "type": "module",
+  "description": "RentaSV — Calculadora de ISR, salario neto, prestaciones y declaración F-11 para El Salvador. Sitio estático, sin compilación.",
+  "license": "MIT",
+  "scripts": {
+    "test": "node --test \"tests/*.test.js\"",
+    "serve": "npx --yes serve . -l 4173",
+    "audit:visual": "node scripts/audit-visual.mjs . ./capturas-audit",
+    "icons": "node scripts/generate-icons.mjs",
+    "vendor": "node scripts/update-vendor.mjs"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.62.1"
+  }
+}
