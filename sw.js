@@ -11,7 +11,7 @@
 //     No cambian y son lo pesado.
 // ============================================================
 
-const VERSION = 'v2.2.0';
+const VERSION = 'v2.2.1';
 const CACHE = `rentasv-${VERSION}`;
 
 const PRECACHE = [
